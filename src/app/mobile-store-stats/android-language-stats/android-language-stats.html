@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Daily Device Installs/Uninstalls for {{androidLanguageStatsVm.selectedLanguage | language}} Language</h3>
+        <button ng-click="androidLanguageStatsVm.updateData()" id="android-language-stats-update-btn" class="hidden"></button>
+      </div>
+      <div class="panel-body">
+        <highchart id="android-language-stats" config="androidLanguageStatsVm.lineChartConfig"></highchart>
+      </div>
+      <div class="panel-footer">
+        <div class="dropup">
+          <button class="btn btn-default dropdown-toggle" type="button" id="android-language-stats-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{androidLanguageStatsVm.selectedLanguage | language}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
+            <li ng-repeat="language in androidLanguageStatsVm.availableLanguages | orderBy:language">
+              <a href="" ng-click="androidLanguageStatsVm.selectDropdownLanguage(language)">{{language | language}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <table class="table table-striped table-bordered table-hover" id="android-language-stats-table">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th class="text-right">Total Daily Device Installs</th>
+            <th class="text-right">Total Daily Device Uninstalls</th>
+            <th class="text-right">Total Daily Device Upgrades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in androidLanguageStatsVm.convertObjectToArray(androidLanguageStatsVm.tableData) | orderBy:'\u0022Daily Device Installs\u0022':true | limitTo:15">
+            <td>{{item.name | language}}</td>
+            <td class="text-right">{{item['Daily Device Installs'] | number}}</td>
+            <td class="text-right">{{item['Daily Device Uninstalls'] | number}}</td>
+            <td class="text-right">{{item['Daily Device Upgrades'] | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Card Rate</h1>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-footer">
+    <form name="cardRateForm" novalidate>
+      <div class="row">
+        <div class="col-sm-4 form-group" show-errors>
+          <label class="control-label">Rate Count (Count ≥ {{cardRateVm.selectedRateCnt}}): </label>
+          <input class="form-control" type="number" min="0" max="100" name="rateCnt"
+                 ng-model="cardRateVm.selectedRateCnt" ng-change="cardRateVm.getCardRate()"
+                 required="required">
+          <ng-messages for="cardRateForm['rateCnt'].$error" class="help-block">
+            <p class="error-message" ng-message="required">
+              Rate count is required!
+            </p>
+            <p class="error-message" ng-message=min>
+              Rate count should be bigger than 0
+            </p>
+            <p class="error-message" ng-message=max>
+              Rate count should be smaller than 100
+            </p>
+          </ng-messages>
+        </div>
+
+        <div class="col-sm-4 form-group" show-errors>
+          <label class="control-label">Minimum Average Rate (Count ≥ {{cardRateVm.selectedMinAvgRate}}): </label>
+          <input class="form-control" type="number" min="0" max="5" name="avgRate"
+                 ng-model="cardRateVm.selectedMinAvgRate" ng-change="cardRateVm.getCardRate()"
+                 required="required">
+          <ng-messages for="cardRateForm['avgRate'].$error" class="help-block">
+            <p class="error-message" ng-message="required">
+              Minimum Average Rate is required!
+            </p>
+            <p class="error-message" ng-message=min>
+              Minimum Average Rate should be bigger than 0
+            </p>
+            <p class="error-message" ng-message=max>
+              Class count should be smaller than 5
+            </p>
+          </ng-messages>
+        </div>
+
+        <div class="col-sm-4 form-group">
+          <label>Type: </label>
+          <select class="form-control" ng-model="cardRateVm.selectedTypeFilter"
+                  ng-change="cardRateVm.getCardRate()">
+            <option value="all">All</option>
+            <option ng-repeat="type in cardRateVm.availableTypes" value="{{type}}">{{type}}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <div>
+      <h3>Total Card : {{cardRateVm.totalItem}}</h3>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-3 clickable-thead">
+            Card Id
+          <th class="col-sm-3 clickable-thead" ng-click="cardRateVm.sortType('avg_rate')">
+            Avg Rate
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='avg_rate'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='avg_rate'"></i>
+          </th>
+          <th class="col-sm-3 clickable-thead" ng-click="cardRateVm.sortType('rate_cnt')">
+            Rate Cnt
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='rate_cnt'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='rate_cnt'"></i>
+          </th>
+
+          <th class="col-sm-3 clickable-thead">
+            Type
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in cardRateVm.dataContainer">
+          <td class="col-sm-3">{{item[0]}}</td>
+          <td class="col-sm-3">{{item[1]| number}}</td>
+          <td class="col-sm-3">{{item[2]| number}}</td>
+          <td class="col-sm-3">{{item[3]}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="cardRateVm.totalItem" ng-model="cardRateVm.currentPage"
+                      ng-change="cardRateVm.pageChanged(cardRateVm.currentPage)" items-per-page="20" max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+    </div>
+  </div>
+</div>

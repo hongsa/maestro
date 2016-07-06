@@ -1,0 +1,123 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header"> Total Users</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="startDate">Range: </label>
+            <input type="date" id="start-date" class="form-control" name="startDate" ng-model="cumulativeUserDataVm.dateRange.startDate"
+                   placeholder="yyyy-MM-dd"/>
+          </div>
+          <div class="form-group">
+            <label for="endDate">-</label>
+            <input type="date" id="end-date" class="form-control" name="endDate" ng-model="cumulativeUserDataVm.dateRange.endDate"
+                   placeholder="yyyy-MM-dd"/>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-primary" name="date-update" ng-click="cumulativeUserDataVm.lineChartFilter()">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"> Total Users: {{cumulativeUserDataVm.reversedData[0][1]| number}}
+        </h3>
+      </div>
+      <div class="panel-body">
+        <highchart id="linechart" config="cumulativeUserDataVm.lineChartConfig"></highchart>
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+        <form>
+          <div class="col-sm-6 form-group">
+            <label for="rangeSelectBtn">Range: </label>
+            <select class="form-control" ng-model="cumulativeUserDataVm.selectedRange" name="rangeSelectBtn" id="range-select-btn" ng-change="cumulativeUserDataVm.lineChartFilter()">
+              <option ng-repeat="range in cumulativeUserDataVm.availableRanges" value="{{range}}">{{range | titleCase}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label for="roleSelectBtn">Paid: </label>
+            <select class="form-control" ng-model="cumulativeUserDataVm.selectedPaidFilter" name="paidSelectBtn" id="paid-select-btn" ng-change="cumulativeUserDataVm.lineChartFilter()">
+              <option value="all">All</option>
+              <option ng-repeat="paid in cumulativeUserDataVm.availablePaid" value="{{paid}}">{{paid | titleCase}}</option>
+            </select>
+          </div>
+        </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{cumulativeUserDataVm.selectedRange | titleCase}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li ng-repeat="range in cumulativeUserDataVm.availableRanges">
+              <a href="" ng-click="cumulativeUserDataVm.selectDropdownRange(range)">{{range | titleCase}}</a>
+            </li>
+          </ul>
+          <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn" ng-click="cumulativeUserDataVm.fetchAndDownloadCSV(cumulativeUserDataVm.reversedDataContainer)">
+              export CSV
+          </button>
+        </div>
+      </div>
+      <table class="table table-striped table-bordered table-hover" id="linechart-table">
+        <thead>
+          <tr>
+            <th class="col-sm-4">Date</th>
+            <th class="col-sm-4 text-right">Total Users</th>
+            <th class="col-sm-4 text-right">Change Net / %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in cumulativeUserDataVm.reversedDataContainer">
+            <td class="col-sm-4" ng-style="cumulativeUserDataVm.getDateColor({{item[0]}})">{{item[0] | date:'yyyy. MM. dd (EEE)'}}</td>
+            <td class="col-sm-4 text-right">{{item[1] | number}}</td>
+            <td class="col-sm-4 text-right increased" ng-if="item[2] > 0">
+              {{(item[2]) | number}}
+              <i class="fa fa-sort-asc fa-fw"></i>
+              {{(item[3]) | percentage:2}}
+            </td>
+            <td class="col-sm-4 text-right decreased" ng-if="item[2] < 0">
+              {{(item[2]) | number}}
+              <i class="fa fa-sort-desc fa-fw"></i>
+              {{(item[3]) | percentage:2}}
+            </td>
+            <td class="col-sm-4 text-right" ng-if="item[2] === 0">
+              0 <i class="fa fa-fw">-</i> 0.00%
+            </td>
+            <td class="col-sm-4 text-right" ng-if="item[2] === '-'">
+               -
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="cumulativeUserDataVm.totalItem + 1" ng-model="cumulativeUserDataVm.currentPage"
+                      ng-change="cumulativeUserDataVm.pageChanged(cumulativeUserDataVm.currentPage)" items-per-page="20" max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+    </div>
+  </div>
+</div>

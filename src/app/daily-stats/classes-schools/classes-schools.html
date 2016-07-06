@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Classes Up/Down</h3>
+      </div>
+      <div class="panel-body">
+        <highchart id="classes-schools" config="classesSchoolsStatsVm.lineChartConfig"></highchart>
+      </div>
+      <div class="panel-footer">
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="deviceSelectBtn" id="class-device-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <b>Device:</b> {{classesSchoolsStatsVm.selectedDeviceFilter}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="class-device-select-btn">
+                <li ng-repeat="device in classesSchoolsStatsVm.availableDevices">
+                  <a href="" ng-click="classesSchoolsStatsVm.selectDropdownDevice(device)"><i class="fa {{classesSchoolsStatsVm.iconAliases[device]}} fa-fw"></i> {{device}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="countrySelectBtn" id="class-country-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <b>Country:</b> {{classesSchoolsStatsVm.selectedCountryFilter}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="class-country-select-btn">
+                <li ng-repeat="country in classesSchoolsStatsVm.availableCountries">
+                  <a href="" ng-click="classesSchoolsStatsVm.selectDropdownCountry(country)"><span class="flag-icon {{classesSchoolsStatsVm.iconAliases[country]}}"></span> {{country}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-primary" name="update" ng-click="classesSchoolsStatsVm.updateData()" id="class-stats-update-btn"><i class="fa fa-refresh fa-fw"></i> update</button>
+          </div>
+          <div class="form-group">
+            <div class="dropdown">
+              <button class="btn btn-success" type="button" name="downloadCSV" id="class-stats-download-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                export CSV
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="class-stats-download-btn">
+                <li ng-repeat="option in classesSchoolsStatsVm.availableDownloadOptions">
+                  <a href="" ng-click="classesSchoolsStatsVm.fetchAndDownloadCSV(option)">{{option}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <table class="table table-striped table-bordered table-hover" id="linechart-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th class="text-right">Min. Count</th>
+            <th class="text-right">Max. Count</th>
+            <th class="text-right">Average</th>
+            <th class="text-right">Total Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in classesSchoolsStatsVm.lineChartData">
+            <td>{{item.name | titleCase}}</td>
+            <td class="text-right">{{classesSchoolsStatsVm.getMinimum(item.data) | number}}</td>
+            <td class="text-right">{{classesSchoolsStatsVm.getMaximum(item.data) | number}}</td>
+            <td class="text-right">{{classesSchoolsStatsVm.getAverage(item.data) | number:0}}</td>
+            <td class="text-right">{{classesSchoolsStatsVm.getSum(item.data) | number}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

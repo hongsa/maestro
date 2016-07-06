@@ -1,6 +1,6 @@
-## Classting Data Dashboard
+## Learning Card Data Dashboard
 
-This dashboard displays statistics and patterns of Classting data which is based on logs sent from clients.
+This dashboard displays statistics and patterns of Learning Card data which is based on logs sent from clients.
 
 
 - [SB Admin for Angular](https://github.com/start-angular/sb-admin-angular) is used for base theme.
@@ -14,7 +14,7 @@ This dashboard displays statistics and patterns of Classting data which is based
 ####1. Clone this project or Download that ZIP file
 
 ```sh
-$ git clone http://{your-stash-id}@stash.classting.net/scm/op/da-dashboard.git
+$ git clone http://{your-stash-id}@stash.classting.net/scm/op/lc-dashboard.git
 ```
 
 

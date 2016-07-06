@@ -13,7 +13,7 @@
         url: APP_CONFIG.BACKEND_ADDRESS + '/user/session/',
         method: 'POST',
         headers: {
-          'X-DreamFactory-Application-Name' : APP_CONFIG.DSP_API_KEY
+          'X-DreamFactory-Application-Name' : APP_CONFIG.DSP_API_NAME
         },
         data: data
       }).then(function(result) {

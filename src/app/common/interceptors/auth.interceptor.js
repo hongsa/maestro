@@ -28,13 +28,13 @@
 
         $http.defaults.headers.common['X-DreamFactory-Session-Token'] = undefined;
         $cookies.session_token = undefined;
-        
+
         $rootScope.user = undefined;
         $rootScope.isLoggedIn = false;
 
         try {
           window.localStorage.user = undefined;
-        } catch (e) {}      
+        } catch (e) {}
 
         $state.go('signin');
       }

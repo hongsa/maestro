@@ -4,8 +4,8 @@
   function Controller(SigninService, $rootScope) {
     var vm = this;
 
-    vm.userName = $rootScope.user.display_name;
-    vm.signout = SigninService.signout;
+    //vm.userName = $rootScope.user.display_name;
+    //vm.signout = SigninService.signout;
   }
 
   Controller.$inject = ['SigninService', '$rootScope'];

@@ -118,6 +118,10 @@
 
         beginDate.setDate(beginDate.getDate() - 29);
 
+        if (beginDate < 1464706800000) {
+          beginDate = new Date(2016,5,1)
+        }
+
         var query = createQueryString('1d', beginDate, baseDate, deviceFilter, roleFilter),
             datePoint = [baseDate.getTime(), 0];
 

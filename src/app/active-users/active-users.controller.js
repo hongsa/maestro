@@ -93,22 +93,22 @@
                                             vm.selectedRoleFilter,
                                             vm.selectedActivenessCnt,
                                             setReversedContainer);
-        //ActiveUsers.getWeeklyActiveUsersData(vm.weeklyActiveUsersDataForLineChart,
-        //                                     vm.dateRange.startDate,
-        //                                     vm.dateRange.endDate,
-        //                                     vm.dateRange.dateArray,
-        //                                     vm.selectedDeviceFilter,
-        //                                     vm.selectedRoleFilter,
-        //                                     vm.selectedActivenessCnt,
-        //                                     setReversedContainer);
-        //ActiveUsers.getMonthlyActiveUsersData(vm.monthlyActiveUsersDataForLineChart,
-        //                                      vm.dateRange.startDate,
-        //                                      vm.dateRange.endDate,
-        //                                      vm.dateRange.dateArray,
-        //                                      vm.selectedDeviceFilter,
-        //                                      vm.selectedRoleFilter,
-        //                                      vm.selectedActivenessCnt,
-        //                                      setReversedContainer);
+        ActiveUsers.getWeeklyActiveUsersData(vm.weeklyActiveUsersDataForLineChart,
+                                             vm.dateRange.startDate,
+                                             vm.dateRange.endDate,
+                                             vm.dateRange.dateArray,
+                                             vm.selectedDeviceFilter,
+                                             vm.selectedRoleFilter,
+                                             vm.selectedActivenessCnt,
+                                             setReversedContainer);
+        ActiveUsers.getMonthlyActiveUsersData(vm.monthlyActiveUsersDataForLineChart,
+                                              vm.dateRange.startDate,
+                                              vm.dateRange.endDate,
+                                              vm.dateRange.dateArray,
+                                              vm.selectedDeviceFilter,
+                                              vm.selectedRoleFilter,
+                                              vm.selectedActivenessCnt,
+                                              setReversedContainer);
       }
     }
 

@@ -7,30 +7,12 @@
   <div class="panel-footer">
     <form name="cardRateForm" novalidate>
       <div class="row">
-        <div class="col-sm-4 form-group" show-errors>
-          <label class="control-label">Rate Count (Count ≥ {{cardRateVm.selectedRateCnt}}): </label>
-          <input class="form-control" type="number" min="0" max="100" name="rateCnt"
-                 ng-model="cardRateVm.selectedRateCnt" ng-change="cardRateVm.getCardRate()"
-                 required="required">
-          <ng-messages for="cardRateForm['rateCnt'].$error" class="help-block">
-            <p class="error-message" ng-message="required">
-              Rate count is required!
-            </p>
-            <p class="error-message" ng-message=min>
-              Rate count should be bigger than 0
-            </p>
-            <p class="error-message" ng-message=max>
-              Rate count should be smaller than 100
-            </p>
-          </ng-messages>
-        </div>
-
-        <div class="col-sm-4 form-group" show-errors>
-          <label class="control-label">Minimum Average Rate (Count ≥ {{cardRateVm.selectedMinAvgRate}}): </label>
-          <input class="form-control" type="number" min="0" max="5" name="avgRate"
+        <div class="col-sm-2 form-group" show-errors>
+          <label class="control-label">Min Average Rate (Count ≥ {{cardRateVm.selectedMinAvgRate}}): </label>
+          <input class="form-control" type="number" min="0" max="5" name="minAvgRate"
                  ng-model="cardRateVm.selectedMinAvgRate" ng-change="cardRateVm.getCardRate()"
                  required="required">
-          <ng-messages for="cardRateForm['avgRate'].$error" class="help-block">
+          <ng-messages for="cardRateForm['minAvgRate'].$error" class="help-block">
             <p class="error-message" ng-message="required">
               Minimum Average Rate is required!
             </p>
@@ -42,7 +24,57 @@
             </p>
           </ng-messages>
         </div>
-
+        <div class="col-sm-2 form-group" show-errors>
+          <label class="control-label">Max Average Rate (Count ≤ {{cardRateVm.selectedMaxAvgRate}}): </label>
+          <input class="form-control" type="number" min="0" max="5" name="maxAvgRate"
+                 ng-model="cardRateVm.selectedMaxAvgRate" ng-change="cardRateVm.getCardRate()"
+                 required="required">
+          <ng-messages for="cardRateForm['maxAvgRate'].$error" class="help-block">
+            <p class="error-message" ng-message="required">
+              Minimum Average Rate is required!
+            </p>
+            <p class="error-message" ng-message=min>
+              Minimum Average Rate should be bigger than 0
+            </p>
+            <p class="error-message" ng-message=max>
+              Class count should be smaller than 5
+            </p>
+          </ng-messages>
+        </div>
+        <div class="col-sm-2 form-group" show-errors>
+          <label class="control-label">Min Rate Count (Count ≥ {{cardRateVm.selectedMinRateCnt}}): </label>
+          <input class="form-control" type="number" min="0" max="100" name="minRateCnt"
+                 ng-model="cardRateVm.selectedMinRateCnt" ng-change="cardRateVm.getCardRate()"
+                 required="required">
+          <ng-messages for="cardRateForm['minRateCnt'].$error" class="help-block">
+            <p class="error-message" ng-message="required">
+              Rate count is required!
+            </p>
+            <p class="error-message" ng-message=min>
+              Rate count should be bigger than 0
+            </p>
+            <p class="error-message" ng-message=max>
+              Rate count should be smaller than 100
+            </p>
+          </ng-messages>
+        </div>
+        <div class="col-sm-2 form-group" show-errors>
+          <label class="control-label">Max Rate Count (Count ≤ {{cardRateVm.selectedMaxRateCnt}}): </label>
+          <input class="form-control" type="number" min="0" max="100" name="maxRateCnt"
+                 ng-model="cardRateVm.selectedMaxRateCnt" ng-change="cardRateVm.getCardRate()"
+                 required="required">
+          <ng-messages for="cardRateForm['maxRateCnt'].$error" class="help-block">
+            <p class="error-message" ng-message="required">
+              Rate count is required!
+            </p>
+            <p class="error-message" ng-message=min>
+              Rate count should be bigger than 0
+            </p>
+            <p class="error-message" ng-message=max>
+              Rate count should be smaller than 100
+            </p>
+          </ng-messages>
+        </div>
         <div class="col-sm-4 form-group">
           <label>Type: </label>
           <select class="form-control" ng-model="cardRateVm.selectedTypeFilter"

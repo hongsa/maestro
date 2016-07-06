@@ -6,9 +6,9 @@
       getCardRate: getCardRate,
     };
 
-    function getCardRate(dataContainer, minAvgFilter, rateCountFilter, typeFilter) {
+    function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
       var deferred = $q.defer(),
-          query = createQueryString(minAvgFilter, rateCountFilter, typeFilter);
+          query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter);
 
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
@@ -37,30 +37,30 @@
       return deferred.promise;
     }
 
-    function createQueryString (minAvgFilter, rateCountFilter, typeFilter) {
+    function createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
       var query = 'SELECT * FROM lcrate';
-      query += createWhereFilterString(minAvgFilter, rateCountFilter, typeFilter);
+      query += createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter);
       query += createOrderByString();
 
       return query
     }
 
-    function createWhereFilterString(minAvgFilter, rateCountFilter, typeFilter) {
+    function createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
       var where = '';
 
-      where += getMinAvfFilterClause(minAvgFilter);
-      where += getRateCountFilterClause(rateCountFilter);
+      where += getMinAvfFilterClause(minAvgFilter, maxAvgFilter);
+      where += getRateCountFilterClause(minRateCountFilter, maxRateCountFilter);
       where += getTypeFilterClause(typeFilter);
 
       return where;
     }
 
-    function getMinAvfFilterClause(minAvgFilter) {
-      return ' WHERE avg_rate>=' + minAvgFilter
+    function getMinAvfFilterClause(minAvgFilter, maxAvgFilter) {
+      return ' WHERE (avg_rate>=' + minAvgFilter + ' and avg_rate<=' + maxAvgFilter + ')'
     }
 
-    function getRateCountFilterClause(rateCountFilter) {
-      return ' AND rate_cnt>=' + rateCountFilter
+    function getRateCountFilterClause(rateCountFilter, maxRateCountFilter) {
+      return ' AND (rate_cnt>=' + rateCountFilter + ' and rate_cnt<=' + maxRateCountFilter + ')'
     }
 
     function getTypeFilterClause(typeFilter) {

@@ -9,15 +9,20 @@
     vm.totalItem = 0;
 
     vm.selectedTypeFilter = 'all';
-    vm.selectedRateCnt = 0;
+
+    vm.selectedMinRateCnt = 0;
+    vm.selectedMaxRateCnt = 100;
+
     vm.selectedMinAvgRate = 0;
+    vm.selectedMaxAvgRate = 5;
+
     vm.selectedOrderBy = 'DESC';
     vm.selectedSortType = 'avg_rate';
 
     vm.availableTypes = ['official', 'extra'];
 
     vm.cardRates = [];
-    vm.dataContainer = []
+    vm.dataContainer = [];
 
     vm.getCardRate = getCardRate;
     vm.pageChanged = pageChanged;
@@ -33,9 +38,9 @@
     }
 
     function getCardRate() {
-      if (vm.selectedRateCnt >= 0 && vm.selectedRateCnt <= 100
-      && vm.selectedMinAvgRate >= 0 && vm.selectedMinAvgRate <= 5) {
-        CardRate.getCardRate(vm.cardRates, vm.selectedMinAvgRate, vm.selectedRateCnt, vm.selectedTypeFilter).then(function (result) {
+      if (vm.selectedMinRateCnt >= 0 && vm.selectedMinRateCnt <= 100 && vm.selectedMaxRateCnt >= 0 && vm.selectedMaxRateCnt <= 100
+      && vm.selectedMinAvgRate >= 0 && vm.selectedMinAvgRate <= 5 && vm.selectedMaxAvgRate >= 0 && vm.selectedMaxAvgRate <= 5) {
+        CardRate.getCardRate(vm.cardRates, vm.selectedMinAvgRate, vm.selectedMaxAvgRate, vm.selectedMinRateCnt, vm.selectedMaxRateCnt, vm.selectedTypeFilter).then(function (result) {
           if (result.name === 'success') {
             pageChanged(1)
           }

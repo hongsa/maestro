@@ -83,7 +83,7 @@
               <a href="" ng-click="newCancelUserDataVm.selectDropdownRange(range)">{{range | titleCase}}</a>
             </li>
           </ul>
-          <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn" ng-click="newCancelUserDataVm.fetchAndDownloadCSV(newCancelUserDataVm.reversedCumulativeSumDataContainer,'LineChart')">
+          <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn" ng-click="newCancelUserDataVm.fetchAndDownloadCSV(newCancelUserDataVm.reversedData,'LineChart')">
               export CSV
           </button>
         </div>

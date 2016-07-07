@@ -26,7 +26,8 @@
             subject_id: row._source.subject_id,
             grade_id: row._source.grade_id,
             curr_type: row._source.curr_type,
-            publisher_id: row._source.publisher_id
+            publisher_id: row._source.publisher_id,
+            series_id: row._source.series_id
           });
         });
         deferred.resolve({

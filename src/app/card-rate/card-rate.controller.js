@@ -119,6 +119,8 @@
             sortable[i]['id'],
             sortable[i]['avg_rate'],
             sortable[i]['rate_cnt'],
+            sortable[i]['series_id'],
+            sortable[i]['publisher_id'],
             sortable[i]['curr_type']
           ])
         }

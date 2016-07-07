@@ -127,7 +127,7 @@
 
     function init() {
       lineChartFilter();
-      //getPieChart();
+      createEmptyData()
     }
 
     function getTableIndex(index) {
@@ -147,25 +147,93 @@
           if(result.name === 'success') {
             count+=1;
             if (count === 6 ) {
-              concatContainer();
+              createEmptyData(vm.selectedRange);
             }
           }
         });
       });
     }
 
-    function concatContainer() {
+    function createEmptyData(selectedRange) {
+      var range,
+          startDateCopy = new Date(vm.dateRange.startDate.getTime());
+
       vm.reversedData = [];
-      for(var i = 0; i < vm.freeToBasicDataForLineChart.data.length; i++) {
+
+      if (selectedRange === 'daily') {
+        range = 1
+      } else if (selectedRange === 'weekly') {
+        range = 7;
+        startDateCopy.setDate(startDateCopy.getDate() + range)
+      } else if (selectedRange === 'monthly') {
+        startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), vm.dateRange.startDate.getMonth() + 1, 0, 23, 59, 59);
+      } else {
+        range = 365;
+        startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), 11, 31);
+      }
+
+      while (startDateCopy < vm.dateRange.endDate) {
         vm.reversedData.push([
-          vm.freeToBasicDataForLineChart.data[i][0],
-          vm.freeToBasicDataForLineChart.data[i][1],
-          vm.freeToStandardDataForLineChart.data[i][1],
-          vm.freeToPremiumDataForLineChart.data[i][1],
-          vm.basicToStandardDataForLineChart.data[i][1],
-          vm.basicToPremiumDataForLineChart.data[i][1],
-          vm.standardToPremiumDataForLineChart.data[i][1]
-        ])
+          startDateCopy.setHours(12,0,0,0), 0, 0, 0, 0, 0, 0
+        ]);
+
+        if (selectedRange === 'monthly') {
+          startDateCopy = new Date(startDateCopy.getFullYear(), startDateCopy.getMonth() + 2, 0, 23, 59, 59);
+        } else {
+          startDateCopy = new Date(startDateCopy.getTime());
+          startDateCopy.setDate(startDateCopy.getDate() + range);
+        }
+      }
+
+      vm.reversedData.push([
+        vm.dateRange.endDate.setHours(12,0,0,0), 0, 0, 0, 0, 0, 0
+      ]);
+      concatContainer();
+    }
+
+
+    function concatContainer() {
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.freeToBasicDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.freeToBasicDataForLineChart.data[j][0]) {
+            vm.reversedData[i][1] = vm.freeToBasicDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.freeToStandardDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.freeToStandardDataForLineChart.data[j][0]) {
+            vm.reversedData[i][2] = vm.freeToStandardDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.freeToPremiumDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.freeToPremiumDataForLineChart.data[j][0]) {
+            vm.reversedData[i][3] = vm.freeToPremiumDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.basicToStandardDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.basicToStandardDataForLineChart.data[j][0]) {
+            vm.reversedData[i][4] = vm.basicToStandardDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.basicToPremiumDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.basicToPremiumDataForLineChart.data[j][0]) {
+            vm.reversedData[i][5] = vm.basicToPremiumDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.standardToPremiumDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardToPremiumDataForLineChart.data[j][0]) {
+            vm.reversedData[i][6] = vm.standardToPremiumDataForLineChart.data[j][1]
+          }
+        }
       }
       vm.reversedData.reverse();
       vm.totalItem = vm.reversedData.length - 1;
@@ -184,23 +252,46 @@
           vm.reversedDataContainer.push([
             vm.reversedData[i][0],
             vm.reversedData[i][1],
-            vm.reversedData[i][1],
+            '-',
+            '-',
             vm.reversedData[i][2],
+            '-',
+            '-',
             vm.reversedData[i][3],
+            '-',
+            '-',
             vm.reversedData[i][4],
+            '-',
+            '-',
             vm.reversedData[i][5],
-            vm.reversedData[i][6]
+            '-',
+            '-',
+            vm.reversedData[i][6],
+            '-',
+            '-',
           ]);
           break
         } else {
           vm.reversedDataContainer.push([
             vm.reversedData[i][0],
             vm.reversedData[i][1],
+            vm.reversedData[i][1] - vm.reversedData[i+1][1],
+            (vm.reversedData[i][1] - vm.reversedData[i+1][1]) / (vm.reversedData[i+1][1]|| 1),
             vm.reversedData[i][2],
+            vm.reversedData[i][2] - vm.reversedData[i+1][2],
+            (vm.reversedData[i][2] - vm.reversedData[i+1][2]) / (vm.reversedData[i+1][2]|| 1),
             vm.reversedData[i][3],
+            vm.reversedData[i][3] - vm.reversedData[i+1][3],
+            (vm.reversedData[i][3] - vm.reversedData[i+1][3]) / (vm.reversedData[i+1][3]|| 1),
             vm.reversedData[i][4],
+            vm.reversedData[i][4] - vm.reversedData[i+1][4],
+            (vm.reversedData[i][4] - vm.reversedData[i+1][4]) / (vm.reversedData[i+1][4]|| 1),
             vm.reversedData[i][5],
-            vm.reversedData[i][6]
+            vm.reversedData[i][5] - vm.reversedData[i+1][5],
+            (vm.reversedData[i][5] - vm.reversedData[i+1][5]) / (vm.reversedData[i+1][5]|| 1),
+            vm.reversedData[i][6],
+            vm.reversedData[i][6] - vm.reversedData[i+1][6],
+            (vm.reversedData[i][6] - vm.reversedData[i+1][6]) / (vm.reversedData[i+1][6]|| 1)
           ]);
         }
       }
@@ -241,32 +332,24 @@
       var copyContainer = [],
           fields;
       if (type === 'LineChart') {
-        fields = ['date', 'totalUsers', 'changeNet/%'];
-        var prevData = dataContainer[0][3];
+        fields = ['date', 'free to basic', 'free to standard', 'free to premium', 'basic to standard',
+          'basic to premium', 'standard to premium'];
         dataContainer.forEach(function(item, i) {
-          var changeNet = (prevData - item[3] );
-          var percentage = ((prevData - item[3]) / prevData) * 100;
-
           var tmp = [];
           tmp[0] = item[0];
-          tmp[1] = item[3];
-
+          tmp[1] = item[1];
+          tmp[2] = item[2];
+          tmp[3] = item[3];
+          tmp[4] = item[4];
+          tmp[5] = item[5];
+          tmp[6] = item[6];
           copyContainer.push(tmp);
-
-          if (i === 0) {
-            //pass
-          } else {
-            copyContainer[i-1][2] = changeNet.toString() + '/' + percentage.toFixed(2).toString() + '%';
-          }
-
-          prevData = item[3];
         });
 
         CSVparserUtils.downloadCSV2(copyContainer,
                                   false,
-                                  'cumulative_userdata_' +
-                                  vm.selectedRange +
-                                  '_' + vm.selectedLineChartFilter + '.csv',
+                                  'new_paid_userdata_' +
+                                  vm.selectedRange + '.csv',
                                   fields);
       // PieChart
       } else {

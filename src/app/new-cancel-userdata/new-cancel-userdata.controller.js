@@ -147,25 +147,93 @@
           if(result.name === 'success') {
             count+=1;
             if (count === 6 ) {
-              concatContainer();
+              createEmptyData(vm.selectedRange);
             }
           }
         });
       });
     }
 
-    function concatContainer() {
+    function createEmptyData(selectedRange) {
+      var range,
+          startDateCopy = new Date(vm.dateRange.startDate.getTime());
+
       vm.reversedData = [];
-      for(var i = 0; i < vm.basicToFreeUserDataForLineChart.data.length; i++) {
+
+      if (selectedRange === 'daily') {
+        range = 1
+      } else if (selectedRange === 'weekly') {
+        range = 7;
+        startDateCopy.setDate(startDateCopy.getDate() + range)
+      } else if (selectedRange === 'monthly') {
+        startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), vm.dateRange.startDate.getMonth() + 1, 0, 23, 59, 59);
+      } else {
+        range = 365;
+        startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), 11, 31);
+      }
+
+      while (startDateCopy < vm.dateRange.endDate) {
         vm.reversedData.push([
-          vm.basicToFreeUserDataForLineChart.data[i][0],
-          vm.basicToFreeUserDataForLineChart.data[i][1],
-          vm.standardToFreeUserDataForLineChart.data[i][1],
-          vm.premiumToFreeUserDataForLineChart.data[i][1],
-          vm.standardToBasicUserDataForLineChart.data[i][1],
-          vm.premiumToStandardUserDataForLineChart.data[i][1],
-          vm.premiumToBasicUserDataForLineChart.data[i][1]
-        ])
+          startDateCopy.setHours(12,0,0,0), 0, 0, 0, 0, 0, 0
+        ]);
+
+        if (selectedRange === 'monthly') {
+          startDateCopy = new Date(startDateCopy.getFullYear(), startDateCopy.getMonth() + 2, 0, 23, 59, 59);
+        } else {
+          startDateCopy = new Date(startDateCopy.getTime());
+          startDateCopy.setDate(startDateCopy.getDate() + range);
+        }
+      }
+
+      vm.reversedData.push([
+        vm.dateRange.endDate.setHours(12,0,0,0), 0, 0, 0, 0, 0, 0
+      ]);
+      concatContainer();
+    }
+
+
+    function concatContainer() {
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.basicToFreeUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.basicToFreeUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][1] = vm.basicToFreeUserDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.standardToFreeUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardToFreeUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][2] = vm.standardToFreeUserDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.premiumToFreeUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumToFreeUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][3] = vm.premiumToFreeUserDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.standardToBasicUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardToBasicUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][4] = vm.standardToBasicUserDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.premiumToStandardUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumToStandardUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][5] = vm.premiumToStandardUserDataForLineChart.data[j][1]
+          }
+        }
+      }
+      for(var i = 0; i < vm.reversedData.length; i++) {
+        for (var j = 0; j < vm.premiumToBasicUserDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumToBasicUserDataForLineChart.data[j][0]) {
+            vm.reversedData[i][6] = vm.premiumToBasicUserDataForLineChart.data[j][1]
+          }
+        }
       }
       vm.reversedData.reverse();
       vm.totalItem = vm.reversedData.length - 1;
@@ -241,34 +309,26 @@
       var copyContainer = [],
           fields;
       if (type === 'LineChart') {
-        fields = ['date', 'totalUsers', 'changeNet/%'];
-        var prevData = dataContainer[0][3];
+        fields = ['date', 'basic to free', 'standard to free', 'premium to free', 'standard to basic',
+          'premium to basic', 'premium to standard'];
         dataContainer.forEach(function(item, i) {
-          var changeNet = (prevData - item[3] );
-          var percentage = ((prevData - item[3]) / prevData) * 100;
-
           var tmp = [];
           tmp[0] = item[0];
-          tmp[1] = item[3];
-
+          tmp[1] = item[1];
+          tmp[2] = item[2];
+          tmp[3] = item[3];
+          tmp[4] = item[4];
+          tmp[5] = item[5];
+          tmp[6] = item[6];
           copyContainer.push(tmp);
-
-          if (i === 0) {
-            //pass
-          } else {
-            copyContainer[i-1][2] = changeNet.toString() + '/' + percentage.toFixed(2).toString() + '%';
-          }
-
-          prevData = item[3];
         });
 
         CSVparserUtils.downloadCSV2(copyContainer,
-                                  false,
-                                  'cumulative_userdata_' +
-                                  vm.selectedRange +
-                                  '_' + vm.selectedLineChartFilter + '.csv',
-                                  fields);
-      // PieChart
+            false,
+            'new_cancel_userdata_' +
+            vm.selectedRange + '.csv',
+            fields);
+        // PieChart
       } else {
         fields = [vm.selectedPieChartFilter, 'count', 'proportion'];
         dataContainer.forEach(function(item) {
@@ -280,11 +340,11 @@
         });
 
         CSVparserUtils.downloadCSV2(copyContainer,
-                                  false,
-                                  'cumulative_userdata_' +
-                                  vm.selectedPieChartFilter +
-                                  '_count_proportion' + '.csv',
-                                  fields);
+            false,
+            'cumulative_userdata_' +
+            vm.selectedPieChartFilter +
+            '_count_proportion' + '.csv',
+            fields);
       }
     }
 

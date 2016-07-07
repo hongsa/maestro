@@ -1,6 +1,8 @@
 (function () {
   'use strict';
-  var dayInMS = 86400000;
+  var dayInMS = 86400000,
+      dayInMSHalf = 43200000,
+      today = new Date();
 
   function NewCancelUserData($http, $q, $filter, APP_CONFIG) {
     return {
@@ -10,7 +12,8 @@
 
     function getNewCancelData(dataContainer, selectedRange, roleFilter, deviceFilter, startDate, endDate) {
       var deferred = $q.defer(),
-          query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate);
+          query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate),
+          addDate;
 
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL+ '?sql=' + query,
@@ -19,10 +22,16 @@
           'Content-Type': undefined
         },
       }).then(function (result) {
+        addDate = getAddDate(selectedRange);
         dataContainer.data.splice(0);
         result.data.aggregations.timestamp.buckets.forEach(function (row) {
+          var key;
+          key = row.key + addDate + dayInMSHalf;
+          if(key > today) {
+            key = today.setHours(12, 0, 0, 0)
+          }
           dataContainer.data.push([
-            row.key,
+            key,
             row.doc_count
           ]);
         });
@@ -80,8 +89,26 @@
     function getTimeStampFromStr(date) {
       return new Date(date).getTime();
     }
+
+    function getAddDate(selectedRange) {
+      var addDate;
+
+      if(selectedRange === 'daily') {
+        addDate = 0;
+      } else if (selectedRange === 'weekly') {
+        addDate = (dayInMS * 8);
+      } else if (selectedRange === 'monthly') {
+        addDate = dayInMS * 29;
+      } else {
+        addDate = dayInMS * 365;
+      }
+
+      return addDate
+    }
+
     function createQueryString(paymentFilter, roleFilter, deviceFilter, selectedRange, startDate, endDate) {
       var query = 'SELECT count(*) FROM dashboard-2016.*';
+
       query += createWhereFilterString(paymentFilter, roleFilter, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
@@ -101,70 +128,90 @@
     }
 
     function getPaymentFilterClause(paymentFilter) {
+      var payment;
+
       if (paymentFilter === 'basic-free') {
-        return ' WHERE now_payment="1" AND change_payment="0"';
+        payment =  ' WHERE now_payment="1" AND change_payment="0"';
       } else if (paymentFilter === 'standard-free') {
-        return ' WHERE now_payment="2" AND change_payment="0"';
+        payment = ' WHERE now_payment="2" AND change_payment="0"';
       } else if (paymentFilter === 'premium-free') {
-        return ' WHERE now_payment="3" AND change_payment="0"';
+        payment = ' WHERE now_payment="3" AND change_payment="0"';
       } else if (paymentFilter === 'standard-basic') {
-        return ' WHERE now_payment="2" AND change_payment="1"';
+        payment = ' WHERE now_payment="2" AND change_payment="1"';
       } else if (paymentFilter === 'premium-basic') {
-        return ' WHERE now_payment="3" AND change_payment="1"';
+        payment = ' WHERE now_payment="3" AND change_payment="1"';
       } else if (paymentFilter === 'premium-standard') {
-        return ' WHERE now_payment="3" AND change_payment="2"';
+        payment = ' WHERE now_payment="3" AND change_payment="2"';
       }
+
+      return payment
     }
 
     function createPieChartQueryWhereFilter(typeFilter) {
       var where = '';
+
       if (typeFilter == 'User Signups') {
         where = ' WHERE _type="user"';
       } else {
         where = ' WHERE _type="user-del"';
       }
+
       return where;
     }
 
     function getRoleFilterClause(roleFilter) {
+      var role;
+
       if (roleFilter === 'teacher') {
-        return ' AND role="teacher"';
+        role = ' AND role="teacher"';
       } else if (roleFilter === 'student') {
-        return ' AND role="student"';
+        role = ' AND role="student"';
       } else if (roleFilter === 'parent') {
-        return ' AND role="parent"';
+        role = ' AND role="parent"';
       } else {
-        return '';
+        role = '';
       }
+
+      return role
     }
 
     function getDeviceFilterString(deviceFilter) {
+      var device;
+
       if (deviceFilter === 'android') {
-        return ' AND app_version="a"';
+        device = ' AND app_version="a"';
       } else if (deviceFilter === 'ios') {
-        return ' AND app_version="i"';
+        device = ' AND app_version="i"';
       } else {
-        return '';
+        device = '';
       }
+
+      return device
     }
 
     function getDateFilterString(startDate, endDate) {
       var dayInMS = 86400000,
+
           startDateStr = getTimeStampFromStr(startDate) - dayInMS,
           endDateStr = getTimeStampFromStr(endDate);
+
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
 
     function createGroupByString(selectedRange) {
+      var groupBy;
+
       if (selectedRange === 'daily') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        groupBy =  ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
       } else if (selectedRange === 'weekly') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        groupBy = ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
       } else if (selectedRange === 'monthly'){
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        groupBy = ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
       } else {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        groupBy = ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
       }
+
+      return groupBy
     }
 
     function createOrderByString() {

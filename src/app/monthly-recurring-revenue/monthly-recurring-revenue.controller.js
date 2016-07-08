@@ -65,7 +65,7 @@
 
     vm.totalDataForLineChart = {
       name: 'Total',
-      data: [[new Date().getTime(), 0]],
+      data: [],
       id: 'total',
       color: APP_CONFIG.COLORS[2]
     };
@@ -108,7 +108,7 @@
                                        vm.selectedDeviceFilter,
                                        vm.dateRange.startDate,
                                        vm.dateRange.endDate).then(function (result) {
-          if(result.length === 6) {
+          if (result.length === 6) {
             MonthlyRecurringRevenue.getMRR(vm.outcomeDataForLineChart,
                                          vm.paymentTypeLoop,
                                          vm.selectedRange,
@@ -116,12 +116,61 @@
                                          vm.dateRange.startDate,
                                          vm.dateRange.endDate).then(function(result) {
 
+              if (result.length === 6) {
+                sumData();
+              }
             })
           }
         })
-
     }
 
+    function sumData() {
+      var lastDay;
+      vm.totalDataForLineChart.data.splice(0)
+
+      for(var i = 0; i < vm.incomeDataForLineChart.data.length; i++) {
+        var flag = false;
+        for (var j = 0; j < vm.outcomeDataForLineChart.data.length; j++) {
+          if (vm.incomeDataForLineChart.data[i][0] === vm.outcomeDataForLineChart.data[j][0]) {
+            vm.totalDataForLineChart.data.push([
+              vm.incomeDataForLineChart.data[i][0],
+              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[j][1]
+            ]);
+            flag = true;
+          }
+        }
+        if (flag === false && vm.outcomeDataForLineChart.data.length !== 0) {
+          if (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] < vm.incomeDataForLineChart.data[i][0]) {
+            vm.totalDataForLineChart.data.push([
+              vm.incomeDataForLineChart.data[i][0],
+              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+            ]);
+          } else if(vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > vm.incomeDataForLineChart.data[i][0]) {
+            vm.totalDataForLineChart.data.push([
+              vm.incomeDataForLineChart.data[i][0],
+              vm.incomeDataForLineChart.data[i][1]
+            ]);
+          }
+        } else if (flag === false && vm.outcomeDataForLineChart.data.length === 0) {
+          vm.totalDataForLineChart.data.push([
+            vm.incomeDataForLineChart.data[i][0],
+            vm.incomeDataForLineChart.data[i][1]
+          ]);
+        }
+      }
+
+      lastDay = vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][0];
+      while (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > lastDay) {
+        vm.totalDataForLineChart.data.push([
+          lastDay + dayInMS,
+          vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+        ]);
+        lastDay += dayInMS
+      }
+      setReversedSumContainer();
+
+
+    }
 
     function setReversedSumContainer() {
       vm.reversedData = [];

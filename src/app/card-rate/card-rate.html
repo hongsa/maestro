@@ -75,13 +75,19 @@
             </p>
           </ng-messages>
         </div>
-        <div class="col-sm-6 form-group">
+        <div class="col-sm-4 form-group">
+          <label>Series Id (default = 0): </label>
+          <input class="form-control" type="number" min="0" max="100" name="maxRateCnt"
+                 ng-model="cardRateVm.selectedSeriesId" ng-change="cardRateVm.getCardRate()"
+                 required="required" placeholder="id로 검색">
+        </div>
+        <div class="col-sm-4 form-group">
           <label>Publisher Id (default = 0): </label>
           <input class="form-control" type="number" min="0" max="100" name="maxRateCnt"
                  ng-model="cardRateVm.selectedPublisherId" ng-change="cardRateVm.getCardRate()"
                  required="required" placeholder="id로 검색">
         </div>
-        <div class="col-sm-6 form-group">
+        <div class="col-sm-4 form-group">
           <label>Type: </label>
           <select class="form-control" ng-model="cardRateVm.selectedTypeFilter"
                   ng-change="cardRateVm.getCardRate()">
@@ -146,7 +152,7 @@
           <td class="col-sm-2">{{item[0]}}</td>
           <td class="col-sm-2">{{item[1]| number}}</td>
           <td class="col-sm-2">{{item[2]| number}}</td>
-          <td class="col-sm-2">{{item[3]| number}}</td>
+          <td class="col-sm-2">{{item[3]| series}} ( {{item[3]| number}} )</td>
           <td class="col-sm-2">{{item[4]| publisher}} ( {{item[4]|number}} )</td>
           <td class="col-sm-2">{{item[5]}}</td>
         </tr>

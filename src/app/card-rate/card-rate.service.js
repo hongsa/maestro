@@ -6,9 +6,9 @@
       getCardRate: getCardRate,
     };
 
-    function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
+    function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter) {
       var deferred = $q.defer(),
-          query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter);
+          query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter);
 
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
@@ -38,21 +38,22 @@
       return deferred.promise;
     }
 
-    function createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
+    function createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter) {
       var query = 'SELECT * FROM lcrate';
-      query += createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter);
+      query += createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter);
       query += createOrderByString();
 
       return query
     }
 
-    function createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
+    function createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter) {
       var where = '';
 
       where += getMinAvfFilterClause(minAvgFilter, maxAvgFilter);
       where += getRateCountFilterClause(minRateCountFilter, maxRateCountFilter);
       where += getTypeFilterClause(typeFilter);
       where += getPublisherFilterClause(publisherFilter);
+      where += getSeriesFilterClause(seriesFilter);
 
       return where;
     }
@@ -80,6 +81,14 @@
         return ''
       } else {
         return ' AND publisher_id=' + publisherFilter
+      }
+    }
+
+    function getSeriesFilterClause(seriesFilter) {
+      if (seriesFilter === 0) {
+        return ''
+      } else {
+        return ' AND series_id=' + seriesFilter
       }
     }
 

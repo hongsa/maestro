@@ -19,6 +19,7 @@
     vm.selectedOrderBy = 'DESC';
     vm.selectedSortType = 'avg_rate';
     vm.selectedPublisherId = 0;
+    vm.selectedSeriesId = 0;
 
     vm.availableTypes = ['official', 'extra'];
 
@@ -41,7 +42,14 @@
     function getCardRate() {
       if (vm.selectedMinRateCnt >= 0 && vm.selectedMinRateCnt <= 100 && vm.selectedMaxRateCnt >= 0 && vm.selectedMaxRateCnt <= 100
       && vm.selectedMinAvgRate >= 0 && vm.selectedMinAvgRate <= 5 && vm.selectedMaxAvgRate >= 0 && vm.selectedMaxAvgRate <= 5) {
-        CardRate.getCardRate(vm.cardRates, vm.selectedMinAvgRate, vm.selectedMaxAvgRate, vm.selectedMinRateCnt, vm.selectedMaxRateCnt, vm.selectedTypeFilter, vm.selectedPublisherId).then(function (result) {
+        CardRate.getCardRate(vm.cardRates,
+                             vm.selectedMinAvgRate,
+                             vm.selectedMaxAvgRate,
+                             vm.selectedMinRateCnt,
+                             vm.selectedMaxRateCnt,
+                             vm.selectedTypeFilter,
+                             vm.selectedPublisherId,
+                             vm.selectedSeriesId).then(function (result) {
           if (result.name === 'success') {
             pageChanged(1)
           }

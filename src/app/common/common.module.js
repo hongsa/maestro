@@ -34,6 +34,7 @@
     'dataDashboard.common.filter.device',
     'dataDashboard.common.filter.month',
     'dataDashboard.common.filter.publisher',
+    'dataDashboard.common.filter.series',
 
     // Utils
     'dataDashboard.common.utils.LinechartUtils',

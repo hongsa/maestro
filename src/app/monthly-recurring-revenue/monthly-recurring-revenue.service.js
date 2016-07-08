@@ -1,147 +1,115 @@
 (function () {
   'use strict';
+  var dayInMS = 86400000,
+      dayInMSHalf = 43200000,
+      today = new Date();
 
   function MonthlyRecurringRevenue($http, $q, $filter, APP_CONFIG) {
     return {
-      getMonthlyRecurringRevenue: getMonthlyRecurringRevenue,
+      getMRR: getMRR
     };
 
-    function getMonthlyRecurringRevenue(baseCumulativeData, lineChartDataContainer, selectedFilter, selectedRange, roleFilter, deviceFilter, countryFilter, languageFilter, currentTotal, reversedContainerCb, startDate, endDate) {
-      var deferred = $q.defer(),
-          query = createQueryString(roleFilter, deviceFilter, countryFilter, languageFilter, selectedRange, lineChartDataContainer.name, startDate, endDate),
-          prevValue = 0,
-          flag = false;
+    function getMRR(dataContainer, paymentTypeLoop, selectedRange, deviceFilter, startDate, endDate) {
+      var promises = [],
+          keyList = [];
+      dataContainer.data.splice(0);
+
+      paymentTypeLoop.forEach(function (paymentType) {
+        var deferred = $q.defer(),
+            query = createQueryString(dataContainer.id, paymentType, deviceFilter, selectedRange, startDate, endDate),
+            checkType;
+
+      if(dataContainer.id === 'income') {
+        checkType = 1;
+      } else {
+        checkType = -1;
+      }
 
       $http({
-        url: APP_CONFIG.NEW_ELASTIC_SEARCH_SQL+ '?sql=' + query,
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL+ '?sql=' + query,
         method: 'GET',
         headers: {
           'Content-Type': undefined
         },
       }).then(function (result) {
-
         if (!result.data.timed_out) {
-          lineChartDataContainer.data.splice(0);
-          currentTotal.value = 0;
-          currentTotal.first = 0;
+          result.data.aggregations.timestamp.buckets.forEach(function (row) {
 
-          result.data.aggregations.timestamp.buckets.forEach(function (item, i) {
-            if (i === 0) {
-              prevValue = (baseCumulativeData[selectedFilter] || 0);
-            }
-            if (getTimeStampFromStr(startDate) - 86400000 >= changeWeeklyMonthlyYearlyDate(selectedRange, item.key)) {
-              prevValue += item.doc_count
-            } else if (getTimeStampFromStr(startDate) - 86400000  < changeWeeklyMonthlyYearlyDate(selectedRange, item.key)
-                && getTimeStampFromStr(endDate) - 86400000 >= changeWeeklyMonthlyYearlyDate(selectedRange, item.key)) {
-              lineChartDataContainer.data.push([
-                changeWeeklyMonthlyYearlyDate(selectedRange, item.key),
-                prevValue + (item.doc_count || 0)
-              ]);
-              prevValue = lineChartDataContainer.data[lineChartDataContainer.data.length - 1][1];
-              if (flag === false) {
-                currentTotal.first = item.doc_count;
+            if (keyList.indexOf(row.key) === -1) {
+              var idx = 0,
+                  flag = false;
+              for (var i = 0; i < keyList.length; i++) {
+                if (keyList[i] > row.key) {
+                  idx = i;
+                  dataContainer.data.splice(idx,  0, [
+                        row.key + dayInMSHalf,
+                        row.doc_count * paymentType[2] * checkType
+                  ]);
+                  flag = true;
+                  break
+                }
               }
-              flag = true;
+              if (flag === false) {
+                dataContainer.data.push([
+                  row.key + dayInMSHalf,
+                  row.doc_count * paymentType[2] * checkType
+                ])
+              }
+              keyList.push(row.key);
+              keyList.sort(sortNumber)
+            } else {
+              dataContainer.data[keyList.indexOf(row.key)][1] += (row.doc_count * paymentType[2] * checkType)
             }
           });
-
-          if (lineChartDataContainer.data.length !== 0) {
-            currentTotal.value = lineChartDataContainer.data[lineChartDataContainer.data.length-1][1];
-          }
-          if (reversedContainerCb) {
-            reversedContainerCb();
-          }
         }
         deferred.resolve({
           name :'success'
         });
       }, deferred.reject);
-      return deferred.promise;
+
+      promises.push(deferred.promise);
+      });
+      console.log(dataContainer)
+      return $q.all(promises)
     }
 
-
-    function changeWeeklyMonthlyYearlyDate(selectedRange, key) {
-      if(selectedRange === 'weekly') {
-        key += (86400000 * 6);
-        return key
-      } else if (selectedRange === 'monthly') {
-        var now = new Date(key);
-        key = getTimeStampFromStr(new Date(new Date(now).setMonth(now.getMonth()+1))) - 86400000;
-        return key
-      } else if (selectedRange === 'yearly') {
-        key += (86400000 * 364);
-        return key
-      } else {
-        return key
-      }
-    }
 
     function getTimeStampFromStr(date) {
       return new Date(date).getTime();
     }
 
-    function createQueryString(roleFilter, deviceFilter, countryFilter, languageFilter, selectedRange, typeFilter, startDate, endDate) {
-      var query = 'SELECT count(*) FROM accum-stats-201*';
-      query += createWhereFilterString(roleFilter, deviceFilter, countryFilter, languageFilter, typeFilter, startDate, endDate);
+    function sortNumber(a,b) {
+      return a - b;
+    }
+
+
+    function createQueryString(dataId, paymentType, deviceFilter, selectedRange, startDate, endDate) {
+      var query = 'SELECT count(*) FROM dashboard-2016.*';
+      query += createWhereFilterString(dataId, paymentType, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
 
       return encodeURIComponent(query);
     }
 
-    function createWhereFilterString(roleFilter, deviceFilter, countryFilter, languageFilter, typeFilter, startDate, endDate) {
+    function createWhereFilterString(dataId, paymentType, deviceFilter, startDate, endDate) {
       var where = '';
-      if (typeFilter === 'User Signups') {
-        where = ' WHERE _type="user"';
-      } else {
-        where = ' WHERE _type="user-del"';
-      }
 
-      where += getRoleFilterClause(roleFilter);
-      where += getCountryFilterClause(countryFilter);
+      where += getPaymentFilterClause(dataId, paymentType);
       where += getDeviceFilterString(deviceFilter);
-      where += getLanguageFilterClause(languageFilter);
-      //where += ' AND' + getDateFilterString(startDate, endDate);
+      where +=  getDateFilterString(startDate, endDate);
 
       return where;
     }
 
-    function createPieChartQueryWhereFilter(typeFilter) {
-      var where = '';
-      if (typeFilter == 'User Signups') {
-        where = ' WHERE _type="user"';
+    function getPaymentFilterClause(dataId, paymentType) {
+      var payment;
+      if (dataId === 'income') {
+        payment = ' WHERE now_payment=' + '"' + paymentType[0] + '"' + ' AND change_payment=' + '"'  + paymentType[1] + '"';
       } else {
-        where = ' WHERE _type="user-del"';
+        payment = ' WHERE now_payment=' + '"' + paymentType[1] + '"' + ' AND change_payment=' + '"'  + paymentType[0] + '"';
       }
-      return where;
-    }
-
-    function getRoleFilterClause(roleFilter) {
-      if (roleFilter === 'teacher') {
-        return ' AND role="teacher"';
-      } else if (roleFilter === 'student') {
-        return ' AND role="student"';
-      } else if (roleFilter === 'parent') {
-        return ' AND role="parent"';
-      } else {
-        return '';
-      }
-    }
-
-    function getCountryFilterClause(countryFilter) {
-      if (countryFilter && countryFilter !== 'all') {
-        return ' AND country="' + countryFilter + '"';
-      } else {
-        return '';
-      }
-    }
-
-    function getLanguageFilterClause(languageFilter) {
-      if (languageFilter && languageFilter !== 'all') {
-        return ' AND lang="' + languageFilter + '"';
-      } else {
-        return '';
-      }
+      return payment
     }
 
     function getDeviceFilterString(deviceFilter) {
@@ -160,7 +128,7 @@
       var dayInMS = 86400000,
           startDateStr = getTimeStampFromStr(startDate) - dayInMS,
           endDateStr = getTimeStampFromStr(endDate);
-      return ' @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
+      return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
 
       function createGroupByString(selectedRange) {
@@ -176,7 +144,7 @@
     }
 
     function createOrderByString() {
-      return ' ORDER BY date ASC';
+      return ' ORDER BY @timestamp ASC';
     }
   }
 

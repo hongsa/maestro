@@ -33,6 +33,7 @@
     'dataDashboard.common.filter.language',
     'dataDashboard.common.filter.device',
     'dataDashboard.common.filter.month',
+    'dataDashboard.common.filter.publisher',
 
     // Utils
     'dataDashboard.common.utils.LinechartUtils',

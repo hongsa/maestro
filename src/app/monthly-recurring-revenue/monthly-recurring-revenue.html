@@ -38,20 +38,13 @@
       <div class="panel-footer">
         <div class="row">
         <form>
-          <div class="col-sm-4 form-group">
+          <div class="col-sm-6 form-group">
             <label for="rangeSelectBtn">Range: </label>
             <select class="form-control" ng-model="monthlyRecurringRevenueVm.selectedRange" name="rangeSelectBtn" id="range-select-btn" ng-change="monthlyRecurringRevenueVm.lineChartFilter()">
               <option ng-repeat="range in monthlyRecurringRevenueVm.availableRanges" value="{{range}}">{{range | titleCase}}</option>
             </select>
           </div>
-          <div class="col-sm-4 form-group">
-            <label for="roleSelectBtn">Role: </label>
-            <select class="form-control" ng-model="monthlyRecurringRevenueVm.selectedRoleFilter" name="roleSelectBtn" id="role-select-btn" ng-change="monthlyRecurringRevenueVm.lineChartFilter()">
-              <option value="all">All</option>
-              <option ng-repeat="role in monthlyRecurringRevenueVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
-            </select>
-          </div>
-          <div class="col-sm-4 form-group">
+          <div class="col-sm-6 form-group">
             <label for="deviceSelectBtn">Device: </label>
             <select class="form-control" ng-model="monthlyRecurringRevenueVm.selectedDeviceFilter" name="deviceSelectBtn" id="device-select-btn" ng-change="monthlyRecurringRevenueVm.lineChartFilter()">
               <option value="all">All</option>

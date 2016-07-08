@@ -5,7 +5,7 @@
       defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth()-1)),
       defaultPieChartStartDate = new Date('2015-11-01');
 
-  function MonthlyRecurringRevenueController(NewPaidUserData, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
+  function MonthlyRecurringRevenueController(MonthlyRecurringRevenue, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
     var vm = this;
 
     vm.currentPage = 1;
@@ -37,19 +37,30 @@
       first:0
     };
 
+    vm.paymentTypeLoop = [
+        [0, 1, 19800],
+        [0, 2, 29800],
+        [0, 3, 49800],
+        [1, 2, 10000],
+        [1, 3, 30000],
+        [2, 3, 20000]
+    ];
+
+    vm.keyList = {};
+
     // New Paid Line Chart
     vm.incomeDataForLineChart = {
       name: 'Income',
-      data: [[new Date().getTime(), 0]],
+      data: [],
       id: 'income',
-      color: APP_CONFIG.COLORS[0]
+      color: APP_CONFIG.COLORS[1]
     };
 
     vm.outcomeDataForLineChart = {
       name: 'Outcome',
-      data: [[new Date().getTime(), 0]],
+      data: [],
       id: 'outcome',
-      color: APP_CONFIG.COLORS[1]
+      color: APP_CONFIG.COLORS[0]
     };
 
     vm.totalDataForLineChart = {
@@ -91,19 +102,33 @@
 
 
     function lineChartFilter() {
-        NewPaidUserData.getNewPaidUserData(vm.cumulativeUserDataForLineChart,
-                                           vm.selectedLineChartFilter,
-                                           vm.selectedRange,
-                                           vm.selectedRoleFilter,
-                                           vm.selectedDeviceFilter,
-                                           vm.currentTotalUsers,
-                                           vm.dateRange.startDate,
-                                           vm.dateRange.endDate)
-      }
+        MonthlyRecurringRevenue.getMRR(vm.incomeDataForLineChart,
+                                       vm.paymentTypeLoop,
+                                       vm.selectedRange,
+                                       vm.selectedDeviceFilter,
+                                       vm.dateRange.startDate,
+                                       vm.dateRange.endDate).then(function (result) {
+          if(result.length === 6) {
+            MonthlyRecurringRevenue.getMRR(vm.outcomeDataForLineChart,
+                                         vm.paymentTypeLoop,
+                                         vm.selectedRange,
+                                         vm.selectedDeviceFilter,
+                                         vm.dateRange.startDate,
+                                         vm.dateRange.endDate).then(function(result) {
+
+            })
+          }
+        })
+
+    }
 
 
     function setReversedSumContainer() {
       vm.reversedData = [];
+    }
+
+    function sortNumber(a,b) {
+      return a - b;
     }
 
     function pageChanged(currentPage) {
@@ -198,7 +223,7 @@
 
   }
 
-  MonthlyRecurringRevenueController.$inject = ['NewPaidUserData', 'LinechartUtils', 'PiechartUtils', 'APP_CONFIG', '$filter','CSVparserUtils'];
+  MonthlyRecurringRevenueController.$inject = ['MonthlyRecurringRevenue', 'LinechartUtils', 'PiechartUtils', 'APP_CONFIG', '$filter','CSVparserUtils'];
 
   angular.module('dataDashboard.monthlyRecurringRevenue.controller.MonthlyRecurringRevenueController', [])
     .controller('MonthlyRecurringRevenueController', MonthlyRecurringRevenueController);

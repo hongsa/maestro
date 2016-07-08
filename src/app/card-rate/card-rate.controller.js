@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  function CardRateController(CardRate, PiechartUtils, APP_CONFIG, CSVparserUtils) {
+  function CardRateController(CardRate, PiechartUtils, APP_CONFIG, CSVparserUtils, $filter) {
     var vm = this;
 
     vm.currentPage = 1;
@@ -100,12 +100,19 @@
         sortable.sort(function(a,b) {
           return a.rate_cnt > b.rate_cnt ? orderFirst : a.rate_cnt < b.rate_cnt ? orderSecond : 0;
         });
-      } else {
+      } else if (vm.selectedSortType === 'series_id') {
         sortable.sort(function(a,b) {
-          return a.name < b.name ? orderFirst : a.name > b.name ? orderSecond : 0;
+          return a.series_id < b.series_id ? orderFirst : a.series_id > b.series_id ? orderSecond : 0;
+        });
+      } else if (vm.selectedSortType === 'publisher_id') {
+        sortable.sort(function (a, b) {
+          return a.publisher_id < b.publisher_id ? orderFirst : a.publisher_id > b.publisher_id ? orderSecond : 0;
+        });
+      } else if (vm.selectedSortType === 'card_id') {
+        sortable.sort(function (a, b) {
+          return a.id < b.id ? orderFirst : a.id > b.id ? orderSecond : 0;
         });
       }
-
 
       vm.currentPage = currentPage;
       vm.totalItem = vm.cardRates.length -1;
@@ -129,7 +136,7 @@
 
   }
 
-  CardRateController.$inject = ['CardRate','PiechartUtils', 'APP_CONFIG', 'CSVparserUtils'];
+  CardRateController.$inject = ['CardRate','PiechartUtils', 'APP_CONFIG', 'CSVparserUtils', '$filter'];
 
   angular.module('dataDashboard.cardRate.controller.CardRateController', [])
     .controller('CardRateController', CardRateController);

@@ -96,8 +96,12 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-          <th class="col-sm-2 clickable-thead">
+          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('card_id')">
             Card Id
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='card_id'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='card_id'"></i>
           <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('avg_rate')">
             Avg Rate
             <i class="fa fa-caret-down fa-fw"
@@ -112,11 +116,19 @@
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='rate_cnt'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead">
+          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('series_id')">
             Series Id
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='series_id'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='series_id'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead">
+          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('publisher_id')">
             Publisher Id
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='publisher_id'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='publisher_id'"></i>
           </th>
           <th class="col-sm-2 clickable-thead">
             Type
@@ -129,7 +141,7 @@
           <td class="col-sm-2">{{item[1]| number}}</td>
           <td class="col-sm-2">{{item[2]| number}}</td>
           <td class="col-sm-2">{{item[3]| number}}</td>
-          <td class="col-sm-2">{{item[4]| number}}</td>
+          <td class="col-sm-2">{{item[4]| publisher}}</td>
           <td class="col-sm-2">{{item[5]}}</td>
         </tr>
         </tbody>

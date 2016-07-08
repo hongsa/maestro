@@ -6,9 +6,9 @@
       getCardRate: getCardRate,
     };
 
-    function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
+    function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
       var deferred = $q.defer(),
-          query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter);
+          query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter);
 
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
@@ -38,20 +38,21 @@
       return deferred.promise;
     }
 
-    function createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
+    function createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
       var query = 'SELECT * FROM lcrate';
-      query += createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter);
+      query += createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter);
       query += createOrderByString();
 
       return query
     }
 
-    function createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter) {
+    function createWhereFilterString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter) {
       var where = '';
 
       where += getMinAvfFilterClause(minAvgFilter, maxAvgFilter);
       where += getRateCountFilterClause(minRateCountFilter, maxRateCountFilter);
       where += getTypeFilterClause(typeFilter);
+      where += getPublisherFilterClause(publisherFilter);
 
       return where;
     }
@@ -71,6 +72,14 @@
         return ' AND curr_type="extra"'
       } else {
         return ''
+      }
+    }
+
+    function getPublisherFilterClause(publisherFilter) {
+      if (publisherFilter === 0) {
+        return ''
+      } else {
+        return ' AND publisher_id=' + publisherFilter
       }
     }
 

@@ -60,21 +60,21 @@
       name: 'Basic to Standard',
       data: [[new Date().getTime(), 0]],
       id: 'basic-standard',
-      color: APP_CONFIG.COLORS[3]
+      color: APP_CONFIG.COLORS[0]
     };
 
     vm.basicToPremiumDataForLineChart = {
       name: 'Basic to Premium',
       data: [[new Date().getTime(), 0]],
       id: 'basic-premium',
-      color: APP_CONFIG.COLORS[4]
+      color: APP_CONFIG.COLORS[1]
     };
 
     vm.standardToPremiumDataForLineChart = {
       name: 'Standard to Premium',
       data: [[new Date().getTime(), 0]],
       id: 'standard-premium',
-      color: APP_CONFIG.COLORS[5]
+      color: APP_CONFIG.COLORS[2]
     };
 
     vm.lineChartDataLoop = [

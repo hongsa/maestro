@@ -72,7 +72,7 @@
               <a href="" ng-click="monthlyRecurringRevenueVm.selectDropdownRange(range)">{{range | titleCase}}</a>
             </li>
           </ul>
-          <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn" ng-click="monthlyRecurringRevenueVm.fetchAndDownloadCSV(monthlyRecurringRevenueVm.reversedCumulativeSumDataContainer,'LineChart')">
+          <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn" ng-click="monthlyRecurringRevenueVm.fetchAndDownloadCSV(monthlyRecurringRevenueVm.reversedDataContainer,'LineChart')">
               export CSV
           </button>
         </div>
@@ -86,9 +86,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in monthlyRecurringRevenueVm.reversedCumulativeSumDataContainer">
+          <tr ng-repeat="item in monthlyRecurringRevenueVm.reversedDataContainer">
             <td class="col-sm-4" ng-style="monthlyRecurringRevenueVm.getDateColor({{item[0]}})">{{item[0] | date:'yyyy. MM. dd (EEE)'}}</td>
-            <td class="col-sm-4 text-right">{{item[3] | number}}</td>
+            <td class="col-sm-4 text-right increased" ng-if="item[3] > 0" >{{item[3] | number}}</td>
+            <td class="col-sm-4 text-right decreased" ng-if="item[3] < 0" >{{item[3] | number}}</td>
+            <td class="col-sm-4 text-right" ng-if="item[3] == 0" >{{item[3] | number}}</td>
             <td class="col-sm-4 text-right increased" ng-if="item[4] > 0">
               <b>{{item[4] | number}}</b>
               ( {{item[5] | number}} - {{item[6] | number}})

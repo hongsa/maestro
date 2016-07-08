@@ -41,7 +41,7 @@
       name: 'User Signups',
       data: [[new Date().getTime(), 0]],
       id: 'user-signups',
-      color: APP_CONFIG.COLORS[2]
+      color: APP_CONFIG.COLORS[9]
     };
 
     vm.reversedData;

@@ -61,21 +61,21 @@
       name: 'Standard to Basic',
       data: [[new Date().getTime(), 0]],
       id: 'standard-basic',
-      color: APP_CONFIG.COLORS[3]
+      color: APP_CONFIG.COLORS[30]
     };
 
     vm.premiumToStandardUserDataForLineChart = {
       name: 'Premium to Standard',
       data: [[new Date().getTime(), 0]],
       id: 'premium-standard',
-      color: APP_CONFIG.COLORS[4]
+      color: APP_CONFIG.COLORS[1]
     };
 
     vm.premiumToBasicUserDataForLineChart = {
       name: 'Premium to Basic',
       data: [[new Date().getTime(), 0]],
       id: 'premium-basic',
-      color: APP_CONFIG.COLORS[5]
+      color: APP_CONFIG.COLORS[2]
     };
 
     vm.lineChartDataLoop = [
@@ -252,23 +252,46 @@
           vm.reversedDataContainer.push([
             vm.reversedData[i][0],
             vm.reversedData[i][1],
-            vm.reversedData[i][1],
+            '-',
+            '-',
             vm.reversedData[i][2],
+            '-',
+            '-',
             vm.reversedData[i][3],
+            '-',
+            '-',
             vm.reversedData[i][4],
+            '-',
+            '-',
             vm.reversedData[i][5],
-            vm.reversedData[i][6]
+            '-',
+            '-',
+            vm.reversedData[i][6],
+            '-',
+            '-',
           ]);
           break
         } else {
           vm.reversedDataContainer.push([
             vm.reversedData[i][0],
             vm.reversedData[i][1],
+            vm.reversedData[i][1] - vm.reversedData[i+1][1],
+            (vm.reversedData[i][1] - vm.reversedData[i+1][1]) / (vm.reversedData[i+1][1]|| 1),
             vm.reversedData[i][2],
+            vm.reversedData[i][2] - vm.reversedData[i+1][2],
+            (vm.reversedData[i][2] - vm.reversedData[i+1][2]) / (vm.reversedData[i+1][2]|| 1),
             vm.reversedData[i][3],
+            vm.reversedData[i][3] - vm.reversedData[i+1][3],
+            (vm.reversedData[i][3] - vm.reversedData[i+1][3]) / (vm.reversedData[i+1][3]|| 1),
             vm.reversedData[i][4],
+            vm.reversedData[i][4] - vm.reversedData[i+1][4],
+            (vm.reversedData[i][4] - vm.reversedData[i+1][4]) / (vm.reversedData[i+1][4]|| 1),
             vm.reversedData[i][5],
-            vm.reversedData[i][6]
+            vm.reversedData[i][5] - vm.reversedData[i+1][5],
+            (vm.reversedData[i][5] - vm.reversedData[i+1][5]) / (vm.reversedData[i+1][5]|| 1),
+            vm.reversedData[i][6],
+            vm.reversedData[i][6] - vm.reversedData[i+1][6],
+            (vm.reversedData[i][6] - vm.reversedData[i+1][6]) / (vm.reversedData[i+1][6]|| 1)
           ]);
         }
       }

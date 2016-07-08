@@ -101,15 +101,122 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in newCancelUserDataVm.reversedDataContainer">
-            <td class="col-sm-2" ng-style="newCancelUserDataVm.getDateColor({{item[0]}})">{{item[0]| date:'yyyy. MM. dd (EEE)'}}</td>
-            <td class="col-sm-1">{{item[1]}}</td>
-            <td class="col-sm-1">{{item[2]}}</td>
-            <td class="col-sm-1">{{item[3]}}</td>
-            <td class="col-sm-1">{{item[4]}}</td>
-            <td class="col-sm-1">{{item[5]}}</td>
-            <td class="col-sm-1">{{item[6]}}</td>
-          </tr>
+        <tr ng-repeat="item in newCancelUserDataVm.reversedDataContainer">
+          <td class="col-sm-2" ng-style="newCancelUserDataVm.getDateColor({{item[0]}})">{{item[0]| date:'yyyy. MM. dd (EEE)'}}</td>
+          <td class="col-sm-1 text-left">{{item[1] | number}} (
+          <span class="text-right increased" ng-if="item[2] > 0">
+            {{(item[2]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[3]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[2] < 0">
+            {{(item[2]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[3]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[2] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[2] === '-'">
+            - )
+          </span>
+          </td>
+
+          <td class="col-sm-1 text-left">{{item[4] | number}} (
+          <span class="text-right increased" ng-if="item[5] > 0">
+            {{(item[5]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[6]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[5] < 0">
+            {{(item[5]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[6]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[5] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[5] === '-'">
+            - )
+          </span>
+          </td>
+
+          <td class="col-sm-1 text-left">{{item[7] | number}} (
+          <span class="text-right increased" ng-if="item[8] > 0">
+            {{(item[8]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[9]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[8] < 0">
+            {{(item[8]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[9]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[8] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[8] === '-'">
+            - )
+          </span>
+          </td>
+
+          <td class="col-sm-1 text-left">{{item[10] | number}} (
+          <span class="text-right increased" ng-if="item[11] > 0">
+            {{(item[12]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[12]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[11] < 0">
+            {{(item[11]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[12]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[11] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[11] === '-'">
+            - )
+          </span>
+          </td>
+
+          <td class="col-sm-1 text-left">{{item[13] | number}} (
+          <span class="text-right increased" ng-if="item[14] > 0">
+            {{(item[14]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[15]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[14] < 0">
+            {{(item[14]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[15]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[14] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[14] === '-'">
+            - )
+          </span>
+          </td>
+
+          <td class="col-sm-1 text-left">{{item[16] | number}} (
+          <span class="text-right increased" ng-if="item[17] > 0">
+            {{(item[17]) | number}}
+            <i class="fa fa-sort-asc fa-fw"></i>
+            {{(item[18]) | percentage:2}} )
+          </span>
+          <span class="text-right decreased" ng-if="item[17] < 0">
+            {{(item[17]) | number}}
+            <i class="fa fa-sort-desc fa-fw"></i>
+            {{(item[18]) | percentage:2}} )
+          </span>
+          <span class="text-right" ng-if="item[17] === 0">
+            0 <i class="fa fa-fw">-</i> 0.00% )
+          </span>
+          <span class="text-right" ng-if="item[17] === '-'">
+            - )
+          </span>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>

@@ -69,7 +69,6 @@
 
       promises.push(deferred.promise);
       });
-      console.log(dataContainer)
       return $q.all(promises)
     }
 
@@ -104,6 +103,7 @@
 
     function getPaymentFilterClause(dataId, paymentType) {
       var payment;
+
       if (dataId === 'income') {
         payment = ' WHERE now_payment=' + '"' + paymentType[0] + '"' + ' AND change_payment=' + '"'  + paymentType[1] + '"';
       } else {
@@ -113,15 +113,16 @@
     }
 
     function getDeviceFilterString(deviceFilter) {
+      var device;
+
       if (deviceFilter === 'android') {
-        return ' AND device="android"';
+        device =  ' AND app_version="a"';
       } else if (deviceFilter === 'ios') {
-        return ' AND device="ios"';
-      } else if (deviceFilter === 'web') {
-        return ' AND device="web"';
+        device =  ' AND app_version="i"';
       } else {
-        return '';
+        device =  '';
       }
+      return device
     }
 
     function getDateFilterString(startDate, endDate) {

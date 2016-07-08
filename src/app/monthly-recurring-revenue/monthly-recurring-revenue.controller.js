@@ -3,6 +3,7 @@
 
   var today = new Date(),
       defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth()-1)),
+      dayInMS = 86400000,
       defaultPieChartStartDate = new Date('2015-11-01');
 
   function MonthlyRecurringRevenueController(MonthlyRecurringRevenue, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
@@ -24,7 +25,7 @@
 
     vm.availableRanges = ['daily', 'weekly', 'monthly', 'yearly'];
     vm.availableRoles = ['student', 'teacher', 'parent'];
-    vm.availableDevices = ['android', 'ios', 'web'];
+    vm.availableDevices = ['android', 'ios'];
 
     vm.selectedRange = 'daily';
     vm.selectedType = 'User Signups';
@@ -50,14 +51,14 @@
 
     // New Paid Line Chart
     vm.incomeDataForLineChart = {
-      name: 'Income',
+      name: 'Increasement',
       data: [],
       id: 'income',
       color: APP_CONFIG.COLORS[1]
     };
 
     vm.outcomeDataForLineChart = {
-      name: 'Outcome',
+      name: 'Decreasement',
       data: [],
       id: 'outcome',
       color: APP_CONFIG.COLORS[0]
@@ -70,12 +71,14 @@
       color: APP_CONFIG.COLORS[2]
     };
 
-    vm.reversedData = [];
+    vm.reversedIncomeData = [];
+    vm.reversedOutcomeData = [];
+    vm.reversedTotalData = [];
     vm.reversedDataContainer = [];
 
     vm.lineChartData = [
-        vm.incomeDataForLineChart,
-        vm.outcomeDataForLineChart,
+        //vm.incomeDataForLineChart,
+        //vm.outcomeDataForLineChart,
         vm.totalDataForLineChart
     ];
 
@@ -92,7 +95,7 @@
     init();
 
     function init() {
-      //lineChartFilter();
+      lineChartFilter();
       //getPieChart();
     }
 
@@ -125,16 +128,21 @@
     }
 
     function sumData() {
-      var lastDay;
-      vm.totalDataForLineChart.data.splice(0)
+      var lastDay,
+          addDate = getAddDate(),
+          key;
+
+      vm.totalDataForLineChart.data.splice(0);
 
       for(var i = 0; i < vm.incomeDataForLineChart.data.length; i++) {
+
         var flag = false;
         for (var j = 0; j < vm.outcomeDataForLineChart.data.length; j++) {
+          key = getTimeKey(vm.incomeDataForLineChart.data, i, addDate);
           if (vm.incomeDataForLineChart.data[i][0] === vm.outcomeDataForLineChart.data[j][0]) {
             vm.totalDataForLineChart.data.push([
-              vm.incomeDataForLineChart.data[i][0],
-              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[j][1]
+              key,
+              vm.incomeDataForLineChart.data[i][1] + vm.outcomeDataForLineChart.data[j][1]
             ]);
             flag = true;
           }
@@ -142,18 +150,18 @@
         if (flag === false && vm.outcomeDataForLineChart.data.length !== 0) {
           if (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] < vm.incomeDataForLineChart.data[i][0]) {
             vm.totalDataForLineChart.data.push([
-              vm.incomeDataForLineChart.data[i][0],
-              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+              key,
+              vm.incomeDataForLineChart.data[i][1] + vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
             ]);
           } else if(vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > vm.incomeDataForLineChart.data[i][0]) {
             vm.totalDataForLineChart.data.push([
-              vm.incomeDataForLineChart.data[i][0],
+              key,
               vm.incomeDataForLineChart.data[i][1]
             ]);
           }
         } else if (flag === false && vm.outcomeDataForLineChart.data.length === 0) {
           vm.totalDataForLineChart.data.push([
-            vm.incomeDataForLineChart.data[i][0],
+            key,
             vm.incomeDataForLineChart.data[i][1]
           ]);
         }
@@ -163,56 +171,136 @@
       while (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > lastDay) {
         vm.totalDataForLineChart.data.push([
           lastDay + dayInMS,
-          vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+          vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][1] + vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
         ]);
         lastDay += dayInMS
       }
       setReversedSumContainer();
-
-
     }
 
     function setReversedSumContainer() {
-      vm.reversedData = [];
-    }
+      var lastDay;
 
-    function sortNumber(a,b) {
-      return a - b;
+      vm.reversedIncomeData = vm.incomeDataForLineChart.data.slice();
+      vm.reversedOutcomeData = vm.outcomeDataForLineChart.data.slice();
+      vm.reversedTotalData = [];
+
+      for (var i = 0; i < vm.reversedIncomeData.length; i++) {
+        var flag = false;
+        for (var j = 0; j < vm.reversedOutcomeData.length; j++) {
+          if (vm.reversedOutcomeData[j][0] && vm.reversedIncomeData[i][0] === vm.reversedOutcomeData[j][0]) {
+            vm.reversedTotalData.push([
+              vm.reversedIncomeData[i][0],
+              vm.reversedIncomeData[i][1],
+              vm.reversedOutcomeData[j][1],
+              vm.reversedIncomeData[i][1] + vm.reversedOutcomeData[j][1]
+            ]);
+            flag = true;
+          }
+        }
+        if (flag === false && vm.reversedOutcomeData.length !== 0) {
+          if (vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][0] < vm.reversedIncomeData[i][0]) {
+            vm.reversedTotalData.push([
+              vm.reversedIncomeData[i][0],
+              vm.reversedIncomeData[i][1],
+              vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1],
+              vm.reversedIncomeData[i][1] + vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
+            ]);
+          } else if (vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][0] > vm.reversedIncomeData[i][0]) {
+            vm.reversedTotalData.push([
+              vm.reversedIncomeData[i][0],
+              vm.reversedIncomeData[i][1],
+              0,
+              vm.reversedIncomeData[i][1]
+            ]);
+          }
+        } else if (flag === false && vm.reversedOutcomeData.length === 0) {
+          vm.reversedTotalData.push([
+            vm.reversedIncomeData[i][0],
+            vm.reversedIncomeData[i][1],
+            0,
+            vm.reversedIncomeData[i][1]
+          ])
+        }
+      }
+
+      lastDay = vm.reversedIncomeData[vm.reversedIncomeData.length-1][0];
+      while(vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][0] > lastDay) {
+        vm.reversedTotalData.push([
+          lastDay + dayInMS,
+          vm.reversedIncomeData[vm.reversedIncomeData.length-1][1],
+          vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1],
+          vm.reversedIncomeData[vm.reversedIncomeData.length-1][1] + vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
+        ]);
+        lastDay += dayInMS
+      }
+
+      vm.reversedIncomeData = vm.reversedIncomeData.reverse();
+      vm.reversedOutcomeData = vm.reversedOutcomeData.reverse();
+      vm.reversedTotalData = vm.reversedTotalData.reverse();
+      vm.totalItem = vm.reversedTotalData.length - 1;
+      pageChanged(1);
     }
 
     function pageChanged(currentPage) {
+      var addDate = getAddDate();
+      var key;
+
       vm.currentPage = currentPage;
-      vm.reversedCumulativeSumDataContainer = [];
-      var start = (vm.currentPage - 1) * 20;
-      for (var i = start; i < start + 20; i++) {
-        if (vm.reversedData.length === 0) {
+      vm.reversedDataContainer = [];
+      var start = (vm.currentPage - 1) * vm.pageSize;
+      for (var i = start; i < start + vm.pageSize; i++) {
+        key = getTimeKey(vm.reversedTotalData, i, addDate);
+
+        if (vm.reversedTotalData.length === 0) {
           break
         }
         if (i === vm.totalItem) {
-          vm.reversedCumulativeSumDataContainer.push([
-            vm.reversedData[i][0],
-            vm.reversedData[i][1],
-            vm.reversedData[i][2],
-            vm.reversedData[i][3],
-            vm.currentTotalUsers.first - vm.currentTotalDeleteUsers.first,
-            vm.currentTotalUsers.first,
-            vm.currentTotalDeleteUsers.first,
+          vm.reversedDataContainer.push([
+            key,
+            vm.reversedTotalData[i][1],
+            vm.reversedTotalData[i][2],
+            vm.reversedTotalData[i][3],
             '-'
           ]);
           break
         } else {
-          vm.reversedCumulativeSumDataContainer.push([
-            vm.reversedData[i][0],
-            vm.reversedData[i][1],
-            vm.reversedData[i][2],
-            vm.reversedData[i][3],
-            vm.reversedData[i][3] - vm.reversedData[i+1][3],
-            vm.reversedData[i][1] - vm.reversedData[i+1][1],
-            vm.reversedData[i][2] - vm.reversedData[i+1][2],
-            (vm.reversedData[i][3] - vm.reversedData[i+1][3]) / vm.reversedData[i][3]
+          vm.reversedDataContainer.push([
+            key,
+            vm.reversedTotalData[i][1],
+            vm.reversedTotalData[i][2],
+            vm.reversedTotalData[i][3],
+            vm.reversedTotalData[i][3] - vm.reversedTotalData[i+1][3],
+            vm.reversedTotalData[i][1] - vm.reversedTotalData[i+1][1],
+            vm.reversedTotalData[i][2] - vm.reversedTotalData[i+1][2],
+            (vm.reversedTotalData[i][3] - vm.reversedTotalData[i+1][3]) / (vm.reversedTotalData[i][3] || 1)
           ]);
         }
       }
+    }
+
+    function getTimeKey(dataContainer, i, addDate) {
+      var key;
+      if (vm.selectedRange === 'monthly') {
+        key = new Date(new Date(dataContainer[i][0]).getFullYear(), new Date(dataContainer[i][0]).getMonth() + 1, 0, 23, 59, 59);
+      } else {
+        key = dataContainer[i][0] + (dayInMS * addDate)
+      }
+      return key
+    }
+
+    function getAddDate() {
+      var addDate;
+      if (vm.selectedRange === 'daily') {
+        addDate = 0;
+      } else if (vm.selectedRange === 'weekly') {
+        addDate = 7
+      } else if (vm.selectedRoleFilter === 'monthly') {
+        addDate = 30
+      } else {
+        addDate = 265
+      }
+      return addDate
     }
 
     function selectDropdownRange(range) {

@@ -35,6 +35,7 @@
     'dataDashboard.common.filter.month',
     'dataDashboard.common.filter.publisher',
     'dataDashboard.common.filter.series',
+    'dataDashboard.common.filter.grade',
 
     // Utils
     'dataDashboard.common.utils.LinechartUtils',

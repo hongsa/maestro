@@ -121,6 +121,10 @@
         sortable.sort(function (a, b) {
           return a.id < b.id ? orderFirst : a.id > b.id ? orderSecond : 0;
         });
+      } else if (vm.selectedSortType === 'grade_id') {
+        sortable.sort(function (a, b) {
+          return a.grade_id < b.grade_id ? orderFirst : a.grade_id > b.grade_id ? orderSecond : 0;
+        });
       }
 
       vm.currentPage = currentPage;
@@ -137,6 +141,7 @@
             sortable[i]['rate_cnt'],
             sortable[i]['series_id'],
             sortable[i]['publisher_id'],
+            sortable[i]['grade_id'],
             sortable[i]['curr_type']
           ])
         }

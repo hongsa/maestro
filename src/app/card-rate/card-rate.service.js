@@ -21,6 +21,7 @@
         result.data.hits.hits.forEach(function(row) {
           dataContainer.push({
             id: row._source.id,
+            title: row._source.title,
             avg_rate: row._source.avg_rate,
             rate_cnt: row._source.rate_cnt,
             subject_id: row._source.subject_id,

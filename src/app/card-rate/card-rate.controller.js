@@ -125,6 +125,10 @@
         sortable.sort(function (a, b) {
           return a.grade_id < b.grade_id ? orderFirst : a.grade_id > b.grade_id ? orderSecond : 0;
         });
+      } else if (vm.selectedSortType === 'title') {
+        sortable.sort(function (a, b) {
+          return a.title < b.title ? orderFirst : a.title > b.title ? orderSecond : 0;
+        });
       }
 
       vm.currentPage = currentPage;
@@ -137,6 +141,7 @@
         } else {
           vm.dataContainer.push([
             sortable[i]['id'],
+            sortable[i]['title'],
             sortable[i]['avg_rate'],
             sortable[i]['rate_cnt'],
             sortable[i]['series_id'],

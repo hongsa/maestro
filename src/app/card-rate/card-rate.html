@@ -108,12 +108,18 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
-          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('card_id')">
+          <th class="col-sm-1 clickable-thead" ng-click="cardRateVm.sortType('card_id')">
             Card Id
             <i class="fa fa-caret-down fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='card_id'"></i>
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='card_id'"></i>
+          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('title')">
+            Title
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='title'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='title'"></i>
           <th class="col-sm-1 clickable-thead" ng-click="cardRateVm.sortType('avg_rate')">
             Avg Rate
             <i class="fa fa-caret-down fa-fw"
@@ -156,14 +162,15 @@
         </thead>
         <tbody>
         <tr ng-repeat="item in cardRateVm.dataContainer">
-          <td class="col-sm-2">{{item[0]}}</td>
-          <td class="col-sm-1">{{item[1]| number}}</td>
+          <td class="col-sm-1">{{item[0]}}</td>
+          <td class="col-sm-2">{{item[1]}}</td>
           <td class="col-sm-1">{{item[2]| number}}</td>
-          <td class="col-sm-2">{{item[3]| series}} ( {{item[3]| number}} )</td>
-          <td class="col-sm-2">{{item[4]| publisher}} ( {{item[4]|number}} )</td>
-          <td class="col-sm-2">{{item[5]| grade}}
-            <span ng-if="item[5] != null">( {{item[5]|number}} )</span></td>
-          <td class="col-sm-2">{{item[6]}}</td>
+          <td class="col-sm-1">{{item[3]| number}}</td>
+          <td class="col-sm-2">{{item[4]| series}} ( {{item[4]| number}} )</td>
+          <td class="col-sm-2">{{item[5]| publisher}} ( {{item[5]|number}} )</td>
+          <td class="col-sm-2">{{item[6]| grade}}
+            <span ng-if="item[6] != null">( {{item[6]|number}} )</span></td>
+          <td class="col-sm-2">{{item[7]}}</td>
         </tr>
         </tbody>
       </table>

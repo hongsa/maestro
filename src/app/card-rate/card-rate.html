@@ -43,7 +43,7 @@
         </div>
         <div class="col-sm-3 form-group" show-errors>
           <label class="control-label">Min Rate Count (Count ≥ {{cardRateVm.selectedMinRateCnt}}): </label>
-          <input class="form-control" type="number" min="0" max="100" name="minRateCnt"
+          <input class="form-control" type="number" min="0" max="1000" name="minRateCnt"
                  ng-model="cardRateVm.selectedMinRateCnt" ng-change="cardRateVm.getCardRate()"
                  required="required">
           <ng-messages for="cardRateForm['minRateCnt'].$error" class="help-block">
@@ -54,13 +54,13 @@
               Rate count should be bigger than 0
             </p>
             <p class="error-message" ng-message=max>
-              Rate count should be smaller than 100
+              Rate count should be smaller than 1000
             </p>
           </ng-messages>
         </div>
         <div class="col-sm-3 form-group" show-errors>
           <label class="control-label">Max Rate Count (Count ≤ {{cardRateVm.selectedMaxRateCnt}}): </label>
-          <input class="form-control" type="number" min="0" max="100" name="maxRateCnt"
+          <input class="form-control" type="number" min="0" max="1000" name="maxRateCnt"
                  ng-model="cardRateVm.selectedMaxRateCnt" ng-change="cardRateVm.getCardRate()"
                  required="required">
           <ng-messages for="cardRateForm['maxRateCnt'].$error" class="help-block">
@@ -71,7 +71,7 @@
               Rate count should be bigger than 0
             </p>
             <p class="error-message" ng-message=max>
-              Rate count should be smaller than 100
+              Rate count should be smaller than 1000
             </p>
           </ng-messages>
         </div>
@@ -134,29 +134,36 @@
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='rate_cnt'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('series_id')">
+          <th class="col-sm-1 clickable-thead" ng-click="cardRateVm.sortType('series_id')">
             Series Id
             <i class="fa fa-caret-down fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='series_id'"></i>
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='series_id'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('publisher_id')">
+          <th class="col-sm-1 clickable-thead" ng-click="cardRateVm.sortType('publisher_id')">
             Publisher Id
             <i class="fa fa-caret-down fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='publisher_id'"></i>
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='publisher_id'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('grade_id')">
+          <th class="col-sm-1 clickable-thead" ng-click="cardRateVm.sortType('grade_id')">
             Grade Id
             <i class="fa fa-caret-down fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='grade_id'"></i>
             <i class="fa fa-caret-up fa-fw"
                ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='grade_id'"></i>
           </th>
-          <th class="col-sm-2 clickable-thead">
+          <th class="col-sm-1 clickable-thead">
             Type
+          </th>
+          <th class="col-sm-2 clickable-thead" ng-click="cardRateVm.sortType('recc_end')">
+            Recommend Date
+            <i class="fa fa-caret-down fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'DESC' && cardRateVm.selectedSortType =='recc_end'"></i>
+            <i class="fa fa-caret-up fa-fw"
+               ng-if="cardRateVm.selectedOrderBy == 'ASC' && cardRateVm.selectedSortType =='recc_end'"></i>
           </th>
         </tr>
         </thead>
@@ -166,11 +173,13 @@
           <td class="col-sm-2">{{item[1]}}</td>
           <td class="col-sm-1">{{item[2]| number}}</td>
           <td class="col-sm-1">{{item[3]| number}}</td>
-          <td class="col-sm-2">{{item[4]| series}} ( {{item[4]| number}} )</td>
-          <td class="col-sm-2">{{item[5]| publisher}} ( {{item[5]|number}} )</td>
-          <td class="col-sm-2">{{item[6]| grade}}
+          <td class="col-sm-1">{{item[4]| series}} ( {{item[4]| number}} )</td>
+          <td class="col-sm-1">{{item[5]| publisher}} ( {{item[5]|number}} )</td>
+          <td class="col-sm-1">{{item[6]| grade}}
             <span ng-if="item[6] != null">( {{item[6]|number}} )</span></td>
-          <td class="col-sm-2">{{item[7]}}</td>
+          <td class="col-sm-1">{{item[7]}}</td>
+          <td class="col-sm-2" ng-if="item[8] !== 0">{{item[8] | date:'yyyy. MM. dd (EEE)'}}</td>
+          <td class="col-sm-2" ng-if="item[8] === 0">{{item[8]}}</td>
         </tr>
         </tbody>
       </table>

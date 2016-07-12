@@ -22,7 +22,7 @@
       if(dataContainer.id === 'income') {
         checkType = 1;
       } else {
-        checkType = -1;
+        checkType = 1;
       }
 
       $http({

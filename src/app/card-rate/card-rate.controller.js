@@ -11,7 +11,7 @@
     vm.selectedTypeFilter = 'all';
 
     vm.selectedMinRateCnt = 0;
-    vm.selectedMaxRateCnt = 100;
+    vm.selectedMaxRateCnt = 1000;
 
     vm.selectedMinAvgRate = 0;
     vm.selectedMaxAvgRate = 5;
@@ -40,7 +40,7 @@
     }
 
     function getCardRate() {
-      if (vm.selectedMinRateCnt >= 0 && vm.selectedMinRateCnt <= 100 && vm.selectedMaxRateCnt >= 0 && vm.selectedMaxRateCnt <= 100
+      if (vm.selectedMinRateCnt >= 0 && vm.selectedMinRateCnt <= 1000 && vm.selectedMaxRateCnt >= 0 && vm.selectedMaxRateCnt <= 1000
       && vm.selectedMinAvgRate >= 0 && vm.selectedMinAvgRate <= 5 && vm.selectedMaxAvgRate >= 0 && vm.selectedMaxAvgRate <= 5) {
         CardRate.getCardRate(vm.cardRates,
                              vm.selectedMinAvgRate,
@@ -129,6 +129,10 @@
         sortable.sort(function (a, b) {
           return a.title < b.title ? orderFirst : a.title > b.title ? orderSecond : 0;
         });
+      } else if (vm.selectedSortType === 'recc_end') {
+        sortable.sort(function (a, b) {
+          return a.recc_end < b.recc_end ? orderFirst : a.recc_end > b.recc_end ? orderSecond : 0;
+        });
       }
 
       vm.currentPage = currentPage;
@@ -139,6 +143,12 @@
         if (i === vm.totalItem) {
           break;
         } else {
+          if (sortable[i]['recc_end'] === null) {
+            sortable[i]['recc_end'] = 0
+          } else {
+            sortable[i]['recc_end'] = new Date(sortable[i]['recc_end'])
+          }
+
           vm.dataContainer.push([
             sortable[i]['id'],
             sortable[i]['title'],
@@ -147,7 +157,8 @@
             sortable[i]['series_id'],
             sortable[i]['publisher_id'],
             sortable[i]['grade_id'],
-            sortable[i]['curr_type']
+            sortable[i]['curr_type'],
+            sortable[i]['recc_end']
           ])
         }
       }

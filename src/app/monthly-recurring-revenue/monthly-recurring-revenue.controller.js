@@ -68,7 +68,7 @@
       name: 'Total',
       data: [],
       id: 'total',
-      color: APP_CONFIG.COLORS[2]
+      color: APP_CONFIG.COLORS[9]
     };
 
     vm.reversedIncomeData = [];
@@ -142,7 +142,7 @@
           if (vm.incomeDataForLineChart.data[i][0] === vm.outcomeDataForLineChart.data[j][0]) {
             vm.totalDataForLineChart.data.push([
               key,
-              vm.incomeDataForLineChart.data[i][1] + vm.outcomeDataForLineChart.data[j][1]
+              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[j][1]
             ]);
             flag = true;
           }
@@ -151,7 +151,7 @@
           if (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] < vm.incomeDataForLineChart.data[i][0]) {
             vm.totalDataForLineChart.data.push([
               key,
-              vm.incomeDataForLineChart.data[i][1] + vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+              vm.incomeDataForLineChart.data[i][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
             ]);
           } else if(vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > vm.incomeDataForLineChart.data[i][0]) {
             vm.totalDataForLineChart.data.push([
@@ -171,7 +171,7 @@
       while (vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][0] > lastDay) {
         vm.totalDataForLineChart.data.push([
           lastDay + dayInMS,
-          vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][1] + vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
+          vm.incomeDataForLineChart.data[vm.incomeDataForLineChart.data.length-1][1] - vm.outcomeDataForLineChart.data[vm.outcomeDataForLineChart.data.length-1][1]
         ]);
         lastDay += dayInMS
       }
@@ -193,7 +193,7 @@
               vm.reversedIncomeData[i][0],
               vm.reversedIncomeData[i][1],
               vm.reversedOutcomeData[j][1],
-              vm.reversedIncomeData[i][1] + vm.reversedOutcomeData[j][1]
+              vm.reversedIncomeData[i][1] - vm.reversedOutcomeData[j][1]
             ]);
             flag = true;
           }
@@ -204,7 +204,7 @@
               vm.reversedIncomeData[i][0],
               vm.reversedIncomeData[i][1],
               vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1],
-              vm.reversedIncomeData[i][1] + vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
+              vm.reversedIncomeData[i][1] - vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
             ]);
           } else if (vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][0] > vm.reversedIncomeData[i][0]) {
             vm.reversedTotalData.push([
@@ -230,7 +230,7 @@
           lastDay + dayInMS,
           vm.reversedIncomeData[vm.reversedIncomeData.length-1][1],
           vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1],
-          vm.reversedIncomeData[vm.reversedIncomeData.length-1][1] + vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
+          vm.reversedIncomeData[vm.reversedIncomeData.length-1][1] - vm.reversedOutcomeData[vm.reversedOutcomeData.length-1][1]
         ]);
         lastDay += dayInMS
       }

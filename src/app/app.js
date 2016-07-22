@@ -49,5 +49,8 @@
     // Card Rate
     'dataDashboard.cardRate',
 
+    // Downloaded Cards
+    'dataDashboard.downloadedCard',
+
   ]);
 })();

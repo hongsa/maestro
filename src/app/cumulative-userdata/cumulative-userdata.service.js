@@ -22,9 +22,8 @@
             'X-DreamFactory-Api-Key' : APP_CONFIG.DSP_API_KEY
           }
         }).then(function (result) {
-
-          if (!result.data.timed_out) {
-            dataContainer.data.splice(0);
+          dataContainer.data.splice(0);
+          if (!result.data.timed_out && result.data.length > 0) {
 
             result.data.forEach(function (item) {
               if (getTimeStampFromStr(startDate) >= getTimeStampFromStr(item.created_at)) {

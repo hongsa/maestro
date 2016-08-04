@@ -1,6 +1,7 @@
 (function () {
   'use strict';
-  var dayInMS = 86400000;
+  var dayInMS = 86400000,
+      today = new Date().setHours(12,0,0,0);
 
   function DownloadedCard($http, $q, $filter, APP_CONFIG) {
     return {
@@ -25,8 +26,7 @@
             dataContainer.data.splice(0);
 
             result.data.aggregations.timestamp.buckets.forEach(function (item) {
-              var key,
-                  today = new Date().setHours(12,0,0,0);
+              var key;
 
               if (selectedRange === 'daily') {
                 compareNum = 0;
@@ -42,7 +42,7 @@
                 key = getTimeStampFromStr(item.key) + (compareNum * dayInMS);
               }
               if (key > today) {
-                key = today
+                key = today;
               }
 
               dataContainer.data.push([

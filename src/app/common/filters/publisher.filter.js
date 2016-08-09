@@ -4,6 +4,10 @@
   var publisherId = {
     "resource": [
       {
+        "id": -1,
+        "name": "Total"
+      },
+      {
         "id": 1,
         "name": "Classting"
       },

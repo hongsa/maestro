@@ -28,7 +28,7 @@
 
     vm.selectedRange = 'daily';
     vm.selectedPaidFilter = 'all';
-    vm.selectedPublisherFilter = '5';
+    vm.selectedPublisherFilter = '-1';
 
 
     // Line Chart

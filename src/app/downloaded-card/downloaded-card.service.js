@@ -72,6 +72,7 @@
       }).then(function(result) {
         if (!result.data.timed_out && result.data.aggregations) {
           publisherKeyContainer.splice(0);
+          publisherKeyContainer.push(-1)
           result.data.aggregations.publisher_id.buckets.forEach(function(row) {
             if (publisherKeyContainer.indexOf(row.key) === -1) {
               publisherKeyContainer.push(row.key);
@@ -154,7 +155,10 @@
     }
 
     function getPublisherFilterClause(publisherFilter) {
-      return ' AND publisher_id=' + publisherFilter
+      if (publisherFilter === '-1') {
+        return '';
+      }
+      return ' AND publisher_id=' + publisherFilter;
     }
 
 

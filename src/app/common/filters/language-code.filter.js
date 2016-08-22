@@ -1,8 +1,7 @@
 (function () {
   'use strict';
-
   var languageCodeToNames = {
-    'af':'Afrikaans',
+    'af': 'Afrikaans',
     'ar': 'Arabic',
     'ar_ae': 'Arabic (U.A.E.)',
     'ar_bh': 'Arabic (Bahrain)',
@@ -22,31 +21,31 @@
     'ar_ye': 'Arabic (Yemen)',
     'az': 'Azeri (Latin)',
     'bs_ba': 'Bosnian (Bosnia and Herzegovina)',
-    'be' :'Belarusian',
-    'bg' :'Bulgarian',
-    'ca' :'Catalan',
+    'be': 'Belarusian',
+    'bg': 'Bulgarian',
+    'ca': 'Catalan',
     'ca_es': 'Catalan (Spain)',
-    'cs' :'Czech',
+    'cs': 'Czech',
     'cs_cz': 'Czech (Czech Republic)',
-    'da' :'Danish',
+    'da': 'Danish',
     'da_dk': 'Danish (Denmark)',
-    'de' :'German (Standard)',
-    'de_at' :'German (Austria)',
-    'de_ch' :'German (Switzerland)',
-    'de_li' :'German (Liechtenstein)',
-    'de_lu' :'German (Luxembourg)',
-    'el' :'Greek',
+    'de': 'German (Standard)',
+    'de_at': 'German (Austria)',
+    'de_ch': 'German (Switzerland)',
+    'de_li': 'German (Liechtenstein)',
+    'de_lu': 'German (Luxembourg)',
+    'el': 'Greek',
     'el_gr': 'Greek (Greece)',
-    'en' :'English',
-    'en_au' :'English (Australia)',
-    'en_bz' :'English (Belize)',
-    'en_ca' :'English (Canada)',
-    'en_gb' :'English (United Kingdom)',
+    'en': 'English',
+    'en_au': 'English (Australia)',
+    'en_bz': 'English (Belize)',
+    'en_ca': 'English (Canada)',
+    'en_gb': 'English (United Kingdom)',
     'en_hk': 'English (Hong Kong)',
     'en_hu': 'English (Hungary)',
     'en_id': 'English (Indonesia)',
-    'en_ie' :'English (Ireland)',
-    'en_in' :'English (India)',
+    'en_ie': 'English (Ireland)',
+    'en_in': 'English (India)',
     'en_jm': 'English (Jamaica)',
     'en_kr': 'English (South Korea)',
     'en_mm': 'English (Myanmar)',
@@ -171,22 +170,19 @@
     'zu': 'Zulu'
   };
   var langCult;
-
   function languageCodeFilter() {
-    return function(input) {
+    return function (input) {
       input = input.toLowerCase();
       langCult = input.split('_');
       if (langCult.length === 2 && langCult[0] === langCult[1]) {
         input = langCult[0];
       }
       if (languageCodeToNames[input]) {
-        return languageCodeToNames[input];        
+        return languageCodeToNames[input];
       } else {
         return input;
       }
     };
   }
-
-  angular.module('dataDashboard.common.filter.language', [])
-    .filter('language', languageCodeFilter);
-})();
+  angular.module('dataDashboard.common.filter.language', []).filter('language', languageCodeFilter);
+}());

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
-    <h1 class="page-header"> New Paid Users</h1>
+    <h1 class="page-header"> Subscribers</h1>
   </div>
 </div>
 
@@ -12,18 +12,18 @@
           <div class="form-group">
             <label for="startDate">Range: </label>
             <input type="date" id="start-date" class="form-control" name="startDate"
-                   ng-model="newPaidUserDataVm.dateRange.startDate"
+                   ng-model="subscribeUserDataVm.dateRange.startDate"
                    placeholder="yyyy-MM-dd"/>
           </div>
           <div class="form-group">
             <label for="endDate">-</label>
             <input type="date" id="end-date" class="form-control" name="endDate"
-                   ng-model="newPaidUserDataVm.dateRange.endDate"
+                   ng-model="subscribeUserDataVm.dateRange.endDate"
                    placeholder="yyyy-MM-dd"/>
           </div>
           <div class="form-group">
             <button type="button" class="btn btn-primary" name="date-update"
-                    ng-click="newPaidUserDataVm.lineChartFilter()">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
+                    ng-click="subscribeUserDataVm.lineChartFilter()">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
           </div>
         </form>
       </div>
@@ -36,11 +36,11 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="col-sm-6">
-          <highchart config="newPaidUserDataVm.lineChartPaidDataConfig"></highchart>
+          <highchart config="subscribeUserDataVm.lineChartPaidDataConfig"></highchart>
         </div>
 
         <div class="col-sm-6">
-          <highchart config="newPaidUserDataVm.lineChartUpgradeDataConfig"></highchart>
+          <highchart config="subscribeUserDataVm.lineChartUpgradeDataConfig"></highchart>
         </div>
       </div>
 
@@ -49,27 +49,27 @@
           <form>
             <div class="col-sm-6 form-group">
               <label for="rangeSelectBtn">Range: </label>
-              <select class="form-control" ng-model="newPaidUserDataVm.selectedRange" name="rangeSelectBtn"
-                      id="range-select-btn" ng-change="newPaidUserDataVm.lineChartFilter()">
-                <option ng-repeat="range in newPaidUserDataVm.availableRanges" value="{{range}}">{{range | titleCase}}
+              <select class="form-control" ng-model="subscribeUserDataVm.selectedRange" name="rangeSelectBtn"
+                      id="range-select-btn" ng-change="subscribeUserDataVm.lineChartFilter()">
+                <option ng-repeat="range in subscribeUserDataVm.availableRanges" value="{{range}}">{{range | titleCase}}
                 </option>
               </select>
             </div>
             <!--<div class="col-sm-4 form-group">-->
               <!--<label for="roleSelectBtn">Role: </label>-->
-              <!--<select class="form-control" ng-model="newPaidUserDataVm.selectedRoleFilter" name="roleSelectBtn"-->
-                      <!--id="role-select-btn" ng-change="newPaidUserDataVm.lineChartFilter()">-->
+              <!--<select class="form-control" ng-model="subscribeUserDataVm.selectedRoleFilter" name="roleSelectBtn"-->
+                      <!--id="role-select-btn" ng-change="subscribeUserDataVm.lineChartFilter()">-->
                 <!--<option value="all">All</option>-->
-                <!--<option ng-repeat="role in newPaidUserDataVm.availableRoles" value="{{role}}">{{role | titleCase}}-->
+                <!--<option ng-repeat="role in subscribeUserDataVm.availableRoles" value="{{role}}">{{role | titleCase}}-->
                 <!--</option>-->
               <!--</select>-->
             <!--</div>-->
             <div class="col-sm-6 form-group">
               <label for="deviceSelectBtn">Device: </label>
-              <select class="form-control" ng-model="newPaidUserDataVm.selectedDeviceFilter" name="deviceSelectBtn"
-                      id="device-select-btn" ng-change="newPaidUserDataVm.lineChartFilter()">
+              <select class="form-control" ng-model="subscribeUserDataVm.selectedDeviceFilter" name="deviceSelectBtn"
+                      id="device-select-btn" ng-change="subscribeUserDataVm.lineChartFilter()">
                 <option value="all">All</option>
-                <option ng-repeat="device in newPaidUserDataVm.availableDevices" value="{{device}}">{{device |
+                <option ng-repeat="device in subscribeUserDataVm.availableDevices" value="{{device}}">{{device |
                   device}}
                 </option>
               </select>
@@ -88,16 +88,16 @@
         <div class="dropdown">
           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="true">
-            {{newPaidUserDataVm.selectedRange | titleCase}}
+            {{subscribeUserDataVm.selectedRange | titleCase}}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li ng-repeat="range in newPaidUserDataVm.availableRanges">
-              <a href="" ng-click="newPaidUserDataVm.selectDropdownRange(range)">{{range | titleCase}}</a>
+            <li ng-repeat="range in subscribeUserDataVm.availableRanges">
+              <a href="" ng-click="subscribeUserDataVm.selectDropdownRange(range)">{{range | titleCase}}</a>
             </li>
           </ul>
           <button class="btn btn-success pull-right" type="button" name="downloadCSV" id="user-stats-download-btn"
-                  ng-click="newPaidUserDataVm.fetchAndDownloadCSV(newPaidUserDataVm.reversedData,'LineChart')">
+                  ng-click="subscribeUserDataVm.fetchAndDownloadCSV(subscribeUserDataVm.reversedData,'LineChart')">
             export CSV
           </button>
         </div>
@@ -106,17 +106,17 @@
         <thead>
         <tr>
           <th class="col-sm-2">Date</th>
-          <th class="col-sm-1">Free to Basic</th>
-          <th class="col-sm-1">Free to Standard</th>
-          <th class="col-sm-1">Free to Premium</th>
-          <th class="col-sm-1">Basic to Standard</th>
-          <th class="col-sm-1">Basic to Premium</th>
-          <th class="col-sm-1">Standard to Premium</th>
+          <th class="col-sm-1">Trial to Basic</th>
+          <th class="col-sm-1">Trial to Standard</th>
+          <th class="col-sm-1">Trial to Premium</th>
+          <th class="col-sm-1">Basic subscribers</th>
+          <th class="col-sm-1">Standard subscribers</th>
+          <th class="col-sm-1">Premium subscribers</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="item in newPaidUserDataVm.reversedDataContainer">
-          <td class="col-sm-2" ng-style="newPaidUserDataVm.getDateColor({{item[0]}})">{{item[0]| date:'yyyy. MM. dd (EEE)'}}</td>
+        <tr ng-repeat="item in subscribeUserDataVm.reversedDataContainer">
+          <td class="col-sm-2" ng-style="subscribeUserDataVm.getDateColor({{item[0]}})">{{item[0]| date:'yyyy. MM. dd (EEE)'}}</td>
           <td class="col-sm-1 text-left">{{item[1] | number}} (
           <span class="text-right increased" ng-if="item[2] > 0">
             {{(item[2]) | number}}
@@ -235,9 +235,9 @@
       </table>
     </div>
     <div class="text-center">
-      <uib-pagination boundary-links="true" total-items="newPaidUserDataVm.totalItem"
-                      ng-model="newPaidUserDataVm.currentPage"
-                      ng-change="newPaidUserDataVm.pageChanged(newPaidUserDataVm.currentPage)" items-per-page="20"
+      <uib-pagination boundary-links="true" total-items="subscribeUserDataVm.totalItem"
+                      ng-model="subscribeUserDataVm.currentPage"
+                      ng-change="subscribeUserDataVm.pageChanged(subscribeUserDataVm.currentPage)" items-per-page="20"
                       max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                       last-text="&raquo;"></uib-pagination>
     </div>
@@ -257,18 +257,18 @@
                   <!--<div class="form-group">-->
                     <!--<label for="startDate">Range: </label>-->
                     <!--<input type="date" class="form-control" name="startDate"-->
-                           <!--ng-model="newPaidUserDataVm.dateRangePieChart.startDate"-->
+                           <!--ng-model="subscribeUserDataVm.dateRangePieChart.startDate"-->
                            <!--placeholder="yyyy-MM-dd"/>-->
                   <!--</div>-->
                   <!--<div class="form-group">-->
                     <!--<label for="endDate">-</label>-->
                     <!--<input type="date" class="form-control" name="endDate"-->
-                           <!--ng-model="newPaidUserDataVm.dateRangePieChart.endDate"-->
+                           <!--ng-model="subscribeUserDataVm.dateRangePieChart.endDate"-->
                            <!--placeholder="yyyy-MM-dd"/>-->
                   <!--</div>-->
                   <!--<div class="form-group">-->
                     <!--<button type="button" class="btn btn-primary" name="date-update"-->
-                            <!--ng-click="newPaidUserDataVm.getPieChart()">Go! <i class="fa fa-arrow-right fa-fw"></i>-->
+                            <!--ng-click="subscribeUserDataVm.getPieChart()">Go! <i class="fa fa-arrow-right fa-fw"></i>-->
                     <!--</button>-->
                   <!--</div>-->
                 <!--</form>-->
@@ -277,42 +277,42 @@
           <!--</div>-->
         <!--</div>-->
         <!--<div class="col-sm-5">-->
-          <!--<highchart id="piechart" config="newPaidUserDataVm.pieChartConfig"></highchart>-->
+          <!--<highchart id="piechart" config="subscribeUserDataVm.pieChartConfig"></highchart>-->
         <!--</div>-->
         <!--<div class="col-sm-7">-->
           <!--<div class="dropdown">-->
             <!--<button class="btn btn-default dropdown-toggle" type="button" id="pie-filter-select-btn"-->
                     <!--data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-              <!--{{newPaidUserDataVm.selectedPieChartFilter | titleCase}}-->
+              <!--{{subscribeUserDataVm.selectedPieChartFilter | titleCase}}-->
               <!--<span class="caret"></span>-->
             <!--</button>-->
             <!--<ul class="dropdown-menu" aria-labelledby="pie-filter-select-btn">-->
-              <!--<li ng-repeat="filter in newPaidUserDataVm.availablePieChartFilters">-->
-                <!--<a href="" ng-click="newPaidUserDataVm.pieChartFilter(filter)">{{filter | titleCase}}</a>-->
+              <!--<li ng-repeat="filter in subscribeUserDataVm.availablePieChartFilters">-->
+                <!--<a href="" ng-click="subscribeUserDataVm.pieChartFilter(filter)">{{filter | titleCase}}</a>-->
               <!--</li>-->
             <!--</ul>-->
             <!--<button class="btn btn-success" type="button" name="downloadCSV"-->
-                    <!--ng-click="newPaidUserDataVm.fetchAndDownloadCSV(newPaidUserDataVm.pieChartSumData,'PieChart')">-->
+                    <!--ng-click="subscribeUserDataVm.fetchAndDownloadCSV(subscribeUserDataVm.pieChartSumData,'PieChart')">-->
               <!--export CSV-->
             <!--</button>-->
           <!--</div>-->
-          <!--<h3>Total Users by {{newPaidUserDataVm.selectedPieChartFilter | titleCase}}</h3>-->
-          <!--<h5>Total Users: {{newPaidUserDataVm.currentPieChartTotalUsers.value - -->
-            <!--newPaidUserDataVm.currentPieChartDeleteUsers.value | number}}</h5>-->
+          <!--<h3>Total Users by {{subscribeUserDataVm.selectedPieChartFilter | titleCase}}</h3>-->
+          <!--<h5>Total Users: {{subscribeUserDataVm.currentPieChartTotalUsers.value - -->
+            <!--subscribeUserDataVm.currentPieChartDeleteUsers.value | number}}</h5>-->
           <!--<br>-->
           <!--<table class="table table-striped table-bordered table-hover" id="piechart-table">-->
             <!--<thead>-->
             <!--<tr>-->
-              <!--<th>{{newPaidUserDataVm.selectedPieChartFilter | titleCase}}</th>-->
+              <!--<th>{{subscribeUserDataVm.selectedPieChartFilter | titleCase}}</th>-->
               <!--<th class="text-right">Count</th>-->
               <!--<th class="text-right">Proportion</th>-->
             <!--</tr>-->
             <!--</thead>-->
             <!--<tbody>-->
-            <!--<tr ng-repeat="item in newPaidUserDataVm.pieChartSumData | orderBy:'y':true | limitTo:5">-->
+            <!--<tr ng-repeat="item in subscribeUserDataVm.pieChartSumData | orderBy:'y':true | limitTo:5">-->
               <!--<td>{{item.name | titleCase | device}}</td>-->
               <!--<td class="text-right">{{item.y | number}}</td>-->
-              <!--<td class="text-right">{{newPaidUserDataVm.getPieChartProportion(item.y) | percentage:1}}</td>-->
+              <!--<td class="text-right">{{subscribeUserDataVm.getPieChartProportion(item.y) | percentage:1}}</td>-->
             <!--</tr>-->
             <!--</tbody>-->
           <!--</table>-->

@@ -88,29 +88,22 @@
         <tbody>
           <tr ng-repeat="item in monthlyRecurringRevenueVm.reversedDataContainer">
             <td class="col-sm-4" ng-style="monthlyRecurringRevenueVm.getDateColor({{item[0]}})">{{item[0] | date:'yyyy. MM. dd (EEE)'}}</td>
-            <td class="col-sm-4 text-right increased" ng-if="item[3] > 0" >{{item[3] | number}}</td>
-            <td class="col-sm-4 text-right decreased" ng-if="item[3] < 0" >{{item[3] | number}}</td>
-            <td class="col-sm-4 text-right" ng-if="item[3] == 0" >{{item[3] | number}}</td>
-            <td class="col-sm-4 text-right increased" ng-if="item[4] > 0">
-              <b>{{item[4] | number}}</b>
-              ( {{item[5] | number}} - {{item[6] | number}})
-              <span ng-if="item[7] === '-'"> - </span>
-              <span ng-if="item[7] != '-'">
+            <td class="col-sm-4 text-right">{{item[1] | number}}</td>
+            <td class="col-sm-4 text-right increased" ng-if="item[2] > 0">
+              {{(item[2]) | number}}
               <i class="fa fa-sort-asc fa-fw"></i>
-              {{(item[7]) | percentage:2}}
-              </span>
+              {{(item[3]) | percentage:2}}
             </td>
-            <td class="col-sm-4 text-right decreased" ng-if="item[4] < 0">
-              <b>{{item[4] | number}}</b>
-              ( {{item[5] | number}} - {{item[6] | number}})
-              <span ng-if="item[7] === '-'"> - </span>
-              <span ng-if="item[7] != '-'">
+            <td class="col-sm-4 text-right decreased" ng-if="item[2] < 0">
+              {{(item[2]) | number}}
               <i class="fa fa-sort-desc fa-fw"></i>
-              {{(item[7]) | percentage:2}}
-              </span>
+              {{(item[3]) | percentage:2}}
             </td>
-            <td class="col-sm-4 text-right" ng-if="item[4] === 0 && item[7]!== '-'">
+            <td class="col-sm-4 text-right" ng-if="item[2] === 0">
               0 <i class="fa fa-fw">-</i> 0.00%
+            </td>
+            <td class="col-sm-4 text-right" ng-if="item[2] === '-'">
+              -
             </td>
           </tr>
         </tbody>

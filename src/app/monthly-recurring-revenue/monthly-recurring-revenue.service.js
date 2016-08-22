@@ -1,156 +1,125 @@
 (function () {
   'use strict';
-  var dayInMS = 86400000,
-      dayInMSHalf = 43200000,
-      today = new Date();
-
+  var dayInMS = 86400000, dayInMSHalf = 43200000, today = new Date();
   function MonthlyRecurringRevenue($http, $q, $filter, APP_CONFIG) {
-    return {
-      getMRR: getMRR
-    };
-
-    function getMRR(dataContainer, paymentTypeLoop, selectedRange, deviceFilter, startDate, endDate) {
-      var promises = [],
-          keyList = [];
-      dataContainer.data.splice(0);
-
-      paymentTypeLoop.forEach(function (paymentType) {
-        var deferred = $q.defer(),
-            query = createQueryString(dataContainer.id, paymentType, deviceFilter, selectedRange, startDate, endDate),
-            checkType;
-
-      if(dataContainer.id === 'income') {
-        checkType = 1;
-      } else {
-        checkType = 1;
+    return { getMRR: getMRR };
+    function getMRR(dataContainer, queryType, selectedRange, deviceFilter, startDate, endDate) {
+      var deferred = $q.defer(), query = createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate), addDate;
+      if (queryType === 'increase') {
+        dataContainer.data.splice(0);
       }
-
       $http({
-        url: APP_CONFIG.ELASTIC_SEARCH_SQL+ '?sql=' + query,
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
-        headers: {
-          'Content-Type': undefined
-        },
+        headers: { 'Content-Type': undefined }
       }).then(function (result) {
         if (!result.data.timed_out) {
           result.data.aggregations.timestamp.buckets.forEach(function (row) {
-
-            if (keyList.indexOf(row.key) === -1) {
-              var idx = 0,
-                  flag = false;
-              for (var i = 0; i < keyList.length; i++) {
-                if (keyList[i] > row.key) {
-                  idx = i;
-                  dataContainer.data.splice(idx,  0, [
-                        row.key + dayInMSHalf,
-                        row.doc_count * paymentType[2] * checkType
-                  ]);
-                  flag = true;
-                  break
+            var datePrice = 0, key;
+            key = getKey(row.key, selectedRange);
+            row.price.buckets.forEach(function (p) {
+              if (p.key === 32 || p.key === 54) {
+                datePrice += (p.key + 1) * p.doc_count * 1120;
+              } else {
+                datePrice += p.key * p.doc_count;
+              }
+            });
+            if (queryType === 'increase') {
+              dataContainer.data.push([
+                key,
+                datePrice
+              ]);
+            } else {
+              for (var i = 0; i < dataContainer.data.length; i++) {
+                if (row.key + dayInMSHalf === dataContainer.data[i][0]) {
+                  dataContainer.data[i][1] -= datePrice;
                 }
               }
-              if (flag === false) {
-                dataContainer.data.push([
-                  row.key + dayInMSHalf,
-                  row.doc_count * paymentType[2] * checkType
-                ])
-              }
-              keyList.push(row.key);
-              keyList.sort(sortNumber)
-            } else {
-              dataContainer.data[keyList.indexOf(row.key)][1] += (row.doc_count * paymentType[2] * checkType)
             }
           });
         }
-        deferred.resolve({
-          name :'success'
-        });
+        deferred.resolve({ name: 'success' });
       }, deferred.reject);
-
-      promises.push(deferred.promise);
-      });
-      return $q.all(promises)
+      return deferred.promise;
     }
-
-
     function getTimeStampFromStr(date) {
       return new Date(date).getTime();
     }
-
-    function sortNumber(a,b) {
-      return a - b;
+    function getKey(key, selectedRange) {
+      var calculateKey;
+      if (selectedRange === 'daily') {
+        calculateKey = key;
+      } else if (selectedRange === 'weekly') {
+        calculateKey = key + 6 * dayInMS;
+      } else if (selectedRange === 'monthly') {
+        calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 2, 0, 23, 59, 59);
+      } else {
+        calculateKey = key * (364 * dayInMS);
+      }
+      if (calculateKey > today) {
+        calculateKey = today.setHours(0, 0, 0, 0);
+      }
+      return calculateKey + dayInMSHalf;
     }
-
-
-    function createQueryString(dataId, paymentType, deviceFilter, selectedRange, startDate, endDate) {
-      var query = 'SELECT count(*) FROM dashboard-2016.*';
-      query += createWhereFilterString(dataId, paymentType, deviceFilter, startDate, endDate);
+    function createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate) {
+      var query = 'SELECT count(*) FROM stg-2016';
+      query += createWhereFilterString(queryType, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
-
       return encodeURIComponent(query);
     }
-
-    function createWhereFilterString(dataId, paymentType, deviceFilter, startDate, endDate) {
+    function createWhereFilterString(queryType, deviceFilter, startDate, endDate) {
       var where = '';
-
-      where += getPaymentFilterClause(dataId, paymentType);
+      where += getPaymentFilterClause(queryType);
       where += getDeviceFilterString(deviceFilter);
-      where +=  getDateFilterString(startDate, endDate);
-
+      where += getDateFilterString(startDate, endDate);
       return where;
     }
-
-    function getPaymentFilterClause(dataId, paymentType) {
+    function getPaymentFilterClause(queryType) {
       var payment;
-
-      if (dataId === 'income') {
-        payment = ' WHERE now_payment=' + '"' + paymentType[0] + '"' + ' AND change_payment=' + '"'  + paymentType[1] + '"';
+      if (queryType === 'increase') {
+        payment = ' WHERE (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
       } else {
-        payment = ' WHERE now_payment=' + '"' + paymentType[1] + '"' + ' AND change_payment=' + '"'  + paymentType[0] + '"';
+        //payment = ' WHERE event<>"_null" and event<>"continue" and event<>"resume" and event<>"stop"';
+        payment = ' WHERE event="stop"';
       }
-      return payment
+      return payment;
     }
-
     function getDeviceFilterString(deviceFilter) {
       var device;
-
       if (deviceFilter === 'android') {
-        device =  ' AND app_version="a"';
+        device = ' AND app_version="a"';
       } else if (deviceFilter === 'ios') {
-        device =  ' AND app_version="i"';
+        device = ' AND app_version="i"';
       } else {
-        device =  '';
+        device = '';
       }
-      return device
+      return device;
     }
-
     function getDateFilterString(startDate, endDate) {
-      var dayInMS = 86400000,
-          startDateStr = getTimeStampFromStr(startDate) - dayInMS,
-          endDateStr = getTimeStampFromStr(endDate);
+      var dayInMS = 86400000, startDateStr = getTimeStampFromStr(startDate) - dayInMS, endDateStr = getTimeStampFromStr(endDate);
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
-
-      function createGroupByString(selectedRange) {
+    function createGroupByString(selectedRange) {
       if (selectedRange === 'daily') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
       } else if (selectedRange === 'weekly') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
-      } else if (selectedRange === 'monthly'){
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+      } else if (selectedRange === 'monthly') {
+        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
       } else {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00")'
+        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
       }
     }
-
     function createOrderByString() {
       return ' ORDER BY @timestamp ASC';
     }
   }
-
-  MonthlyRecurringRevenue.$inject = ['$http', '$q', '$filter', 'APP_CONFIG'];
-
-  angular.module('dataDashboard.monthlyRecurringRevenue.service.MonthlyRecurringRevenue', [])
-      .factory('MonthlyRecurringRevenue', MonthlyRecurringRevenue);
-})();
+  MonthlyRecurringRevenue.$inject = [
+    '$http',
+    '$q',
+    '$filter',
+    'APP_CONFIG'
+  ];
+  angular.module('dataDashboard.monthlyRecurringRevenue.service.MonthlyRecurringRevenue', []).factory('MonthlyRecurringRevenue', MonthlyRecurringRevenue);
+}());

@@ -1,12 +1,9 @@
-(function() {
+(function () {
   'use strict';
-
   function Controller() {
     var vm = this;
-
     vm.selectedMenu = 'home';
   }
-
   function sidebarSearchDirective() {
     return {
       templateUrl: 'app/common/directives/sidebar/sidebar-search/sidebar-search.html',
@@ -15,9 +12,7 @@
       scope: {},
       controller: Controller,
       controllerAs: 'sidebarSearchVm'
-    }
+    };
   }
-
-  angular.module('dataDashboard.common.directive.sidebarSearchDirective', [])
-    .directive('sidebarSearch', sidebarSearchDirective);
-})();
+  angular.module('dataDashboard.common.directive.sidebarSearchDirective', []).directive('sidebarSearch', sidebarSearchDirective);
+}());

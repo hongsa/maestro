@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-
   var countryCodeToNames = {
     'AF': 'Afghanistan',
     'AX': 'Åland Islands',
@@ -252,11 +251,10 @@
     'ZM': 'Zambia',
     'ZW': 'Zimbabwe'
   };
-
   function countryCodeFilter() {
-    return function(input) {
+    return function (input) {
       if (input === null) {
-        return 'None'
+        return 'None';
       }
       if (input === 'all') {
         return 'All';
@@ -267,7 +265,5 @@
       }
     };
   }
-
-  angular.module('dataDashboard.common.filter.country', [])
-    .filter('country', countryCodeFilter);
-})();
+  angular.module('dataDashboard.common.filter.country', []).filter('country', countryCodeFilter);
+}());

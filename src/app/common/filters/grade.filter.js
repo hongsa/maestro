@@ -1,74 +1,70 @@
 (function () {
   'use strict';
-
   var gradeId = {
-    "resource": [
+    'resource': [
       {
-        "id": 1,
-        "name": "초1"
+        'id': 1,
+        'name': '초1'
       },
       {
-        "id": 2,
-        "name": "초2"
+        'id': 2,
+        'name': '초2'
       },
       {
-        "id": 3,
-        "name": "초3"
+        'id': 3,
+        'name': '초3'
       },
       {
-        "id": 4,
-        "name": "초4"
+        'id': 4,
+        'name': '초4'
       },
       {
-        "id": 5,
-        "name": "초5"
+        'id': 5,
+        'name': '초5'
       },
       {
-        "id": 6,
-        "name": "초6"
+        'id': 6,
+        'name': '초6'
       },
       {
-        "id": 7,
-        "name": "중1"
+        'id': 7,
+        'name': '중1'
       },
       {
-        "id": 8,
-        "name": "중2"
+        'id': 8,
+        'name': '중2'
       },
       {
-        "id": 9,
-        "name": "중3"
+        'id': 9,
+        'name': '중3'
       },
       {
-        "id": 10,
-        "name": "고1"
+        'id': 10,
+        'name': '고1'
       },
       {
-        "id": 11,
-        "name": "고2"
+        'id': 11,
+        'name': '고2'
       },
       {
-        "id": 12,
-        "name": "고3"
+        'id': 12,
+        'name': '고3'
       }
     ]
   };
-
   function gradeFilter() {
     return function (input) {
       var result;
       if (input === null) {
-        return 'extra'
+        return 'extra';
       }
       gradeId.resource.forEach(function (item) {
         if (item.id === input) {
-          result = item.name
+          result = item.name;
         }
       });
-      return result
-    }
+      return result;
+    };
   }
-
-  angular.module('dataDashboard.common.filter.grade', [])
-      .filter('grade', gradeFilter);
-})();
+  angular.module('dataDashboard.common.filter.grade', []).filter('grade', gradeFilter);
+}());

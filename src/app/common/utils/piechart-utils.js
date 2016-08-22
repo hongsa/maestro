@@ -1,17 +1,11 @@
-(function() {
+(function () {
   'use strict';
-
   function PiechartUtils(APP_CONFIG) {
-    return {
-      PieChartConfig: PieChartConfig
-    };
-
+    return { PieChartConfig: PieChartConfig };
     // constructor function for bar chart config
     function PieChartConfig(dataContainer) {
       this.options = {
-        chart: {
-          type: 'pie'
-        },
+        chart: { type: 'pie' },
         plotOptions: {
           pie: {
             allowPointSelect: true,
@@ -26,20 +20,15 @@
         tooltip: {
           headerFormat: '',
           pointFormat: '<b>{point.name}: {point.y} ({point.percentage:.1f}%)</b>'
-        },
+        }
       };
-      this.title = {
-        text: null
-      };
+      this.title = { text: null };
       this.series = [{
-        name: 'proportion',
-        data: dataContainer
-      }];
+          name: 'proportion',
+          data: dataContainer
+        }];
     }
   }
-
   PiechartUtils.$inject = ['APP_CONFIG'];
-
-  angular.module('dataDashboard.common.utils.PiechartUtils', [])
-    .factory('PiechartUtils', PiechartUtils);
-})();
+  angular.module('dataDashboard.common.utils.PiechartUtils', []).factory('PiechartUtils', PiechartUtils);
+}());

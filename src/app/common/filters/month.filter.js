@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-
   var monthNames = {
     '0': '01: January',
     '1': '02: February',
@@ -15,13 +14,10 @@
     '10': '11: November',
     '11': '12: December'
   };
-
   function monthFilter() {
-    return function(input) {
+    return function (input) {
       return monthNames[input];
     };
   }
-
-  angular.module('dataDashboard.common.filter.month', [])
-    .filter('month', monthFilter);
-})();
+  angular.module('dataDashboard.common.filter.month', []).filter('month', monthFilter);
+}());

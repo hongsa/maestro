@@ -11,7 +11,6 @@
     function getSubscribeData(dataContainer, selectedRange, roleFilter, deviceFilter, startDate, endDate) {
       var deferred = $q.defer();
       var query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate);
-      var addDate;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -72,7 +71,7 @@
       if (selectedRange === 'daily') {
         calculateKey = key;
       } else if (selectedRange === 'weekly') {
-        calculateKey = key + 6 * dayInMS;
+        calculateKey = key + (6 * dayInMS);
       } else if (selectedRange === 'monthly') {
         calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 2, 0, 23, 59, 59);
       } else {

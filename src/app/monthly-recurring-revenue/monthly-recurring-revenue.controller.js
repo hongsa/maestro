@@ -111,24 +111,17 @@
       var fields;
       fields = [
         'date',
-        'totalUsers',
+        'mrr',
         'changeNet/%'
       ];
-      var prevData = dataContainer[0][3];
       dataContainer.forEach(function (item, i) {
-        var changeNet = prevData - item[3];
-        var percentage = (prevData - item[3]) / prevData * 100;
         var tmp = [];
         tmp[0] = item[0];
-        tmp[1] = item[3];
+        tmp[1] = item[1];
+        tmp[2] = item[2];
         copyContainer.push(tmp);
-        if (i === 0) {
-        } else {
-          copyContainer[i - 1][2] = changeNet.toString() + '/' + percentage.toFixed(2).toString() + '%';
-        }
-        prevData = item[3];
       });
-      CSVparserUtils.downloadCSV2(copyContainer, false, 'cumulative_userdata_' + vm.selectedRange + '_' + vm.selectedLineChartFilter + '.csv', fields);
+      CSVparserUtils.downloadCSV2(copyContainer, false, 'mrr_' + vm.selectedRange + '.csv', fields);
     }
     function getDateColor(date) {
       date = getDateInNumbers(date);

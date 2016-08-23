@@ -185,7 +185,7 @@
           flag = true;
         }
       }
-      if (flag === true && vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0) {
+      if (flag === true && (vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0)) {
         vm.reversedData.push([
           vm.dateRange.endDate.setHours(12, 0, 0, 0),
           0,
@@ -331,9 +331,9 @@
           'basic to unsubscribe',
           'standard to unsubscribe',
           'premium to unsubscribe',
-          'standard to basic',
-          'premium to basic',
-          'premium to standard'
+          'basic to refund',
+          'standard to refund',
+          'premium to refund'
         ];
         dataContainer.forEach(function (item, i) {
           var tmp = [];
@@ -346,7 +346,7 @@
           tmp[6] = item[6];
           copyContainer.push(tmp);
         });
-        CSVparserUtils.downloadCSV2(copyContainer, false, 'new_cancel_userdata_' + vm.selectedRange + '.csv', fields);  // PieChart
+        CSVparserUtils.downloadCSV2(copyContainer, false, 'cancel_userdata_' + vm.selectedRange + '.csv', fields);  // PieChart
       } else {
         fields = [
           vm.selectedPieChartFilter,

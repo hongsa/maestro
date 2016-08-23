@@ -185,7 +185,7 @@
           flag = true;
         }
       }
-      if (flag === true && vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0) {
+      if (flag === true && (vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0)) {
         vm.reversedData.push([
           vm.dateRange.endDate.setHours(12, 0, 0, 0),
           0,
@@ -331,9 +331,9 @@
           'trial to basic',
           'trial to standard',
           'trial to premium',
-          'basic to standard',
-          'basic to premium',
-          'standard to premium'
+          'basic subscribers',
+          'standard subscribers',
+          'premium subscribers'
         ];
         dataContainer.forEach(function (item, i) {
           var tmp = [];
@@ -346,7 +346,7 @@
           tmp[6] = item[6];
           copyContainer.push(tmp);
         });
-        CSVparserUtils.downloadCSV2(copyContainer, false, 'new_paid_userdata_' + vm.selectedRange + '.csv', fields);  // PieChart
+        CSVparserUtils.downloadCSV2(copyContainer, false, 'subscribers__' + vm.selectedRange + '.csv', fields);  // PieChart
       } else {
         fields = [
           vm.selectedPieChartFilter,

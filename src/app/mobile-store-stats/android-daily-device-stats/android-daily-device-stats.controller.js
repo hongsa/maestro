@@ -1,15 +1,20 @@
 (function () {
   'use strict';
   function AndroidDailyDeviceStatsController(MobileStoreStats, LinechartUtils, CSVparserUtils, APP_CONFIG, $scope) {
-    var vm = this, series, target, dummyTime = new Date().getTime(), columns = [
-        3,
-        4,
-        5
-      ], aliases = {
-        'Daily Device Installs': '#daily-device-installs',
-        'Daily Device Uninstalls': '#daily-device-uninstalls',
-        'Daily Device Upgrades': '#daily-device-upgrades'
-      };
+    var vm = this;
+    var series;
+    var target;
+    var dummyTime = new Date().getTime();
+    var columns = [
+      3,
+      4,
+      5
+    ];
+    var aliases = {
+      'Daily Device Installs': '#daily-device-installs',
+      'Daily Device Uninstalls': '#daily-device-uninstalls',
+      'Daily Device Upgrades': '#daily-device-upgrades'
+    };
     vm.dataSubjects = Object.keys(aliases);
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;

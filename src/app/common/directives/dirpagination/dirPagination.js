@@ -112,7 +112,8 @@
          * @returns {*}
          */
     function getRepeatExpression(expression, paginationId) {
-      var repeatExpression, idDefinedInFilter = !!expression.match(/(\|\s*itemsPerPage\s*:[^|]*:[^|]*)/);
+      var repeatExpression;
+      var idDefinedInFilter = !!expression.match(/(\|\s*itemsPerPage\s*:[^|]*:[^|]*)/);
       if (paginationId !== DEFAULT_ID && !idDefinedInFilter) {
         repeatExpression = expression.replace(/(\|\s*itemsPerPage\s*:\s*[^|\s]*)/, '$1 : \'' + paginationId + '\'');
       } else {
@@ -324,7 +325,7 @@
       }
       function generatePagination() {
         if (paginationService.isRegistered(paginationId)) {
-          var page = parseInt(paginationService.getCurrentPage(paginationId)) || 1;
+          var page = parseInt(paginationService.getCurrentPage(paginationId), 10) || 1;
           scope.pages = generatePagesArray(page, paginationService.getCollectionLength(paginationId), paginationService.getItemsPerPage(paginationId), paginationRange);
           scope.pagination.current = page;
           scope.pagination.last = scope.pages[scope.pages.length - 1];
@@ -341,7 +342,9 @@
              */
       function updateRangeValues() {
         if (paginationService.isRegistered(paginationId)) {
-          var currentPage = paginationService.getCurrentPage(paginationId), itemsPerPage = paginationService.getItemsPerPage(paginationId), totalItems = paginationService.getCollectionLength(paginationId);
+          var currentPage = paginationService.getCurrentPage(paginationId);
+          var itemsPerPage = paginationService.getItemsPerPage(paginationId);
+          var totalItems = paginationService.getCollectionLength(paginationId);
           scope.range.lower = (currentPage - 1) * itemsPerPage + 1;
           scope.range.upper = Math.min(currentPage * itemsPerPage, totalItems);
           scope.range.total = totalItems;
@@ -432,7 +435,7 @@
       var end;
       var start;
       if (angular.isObject(collection)) {
-        itemsPerPage = parseInt(itemsPerPage) || 9999999999;
+        itemsPerPage = parseInt(itemsPerPage, 10) || 9999999999;
         if (paginationService.isAsyncMode(paginationId)) {
           start = 0;
         } else {

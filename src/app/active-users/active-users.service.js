@@ -8,13 +8,15 @@
       getCsvFileName: getCsvFileName
     };
     function getDailyActiveUsersData(dataContainer, startDate, endDate, deviceFilter, roleFilter, activityCount, reversedContainerCb) {
-      var deferred = $q.defer(), query = createQueryString('1d', startDate, endDate, deviceFilter, roleFilter);
+      var deferred = $q.defer();
+      var query = createQueryString('1d', startDate, endDate, deviceFilter, roleFilter);
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
-        var lastDay, dayInMS = 86400000;
+        var lastDay;
+        var dayInMS = 86400000;
         if (!result.data.timed_out && result.data.aggregations) {
           dataContainer.data.splice(0);
           result.data.aggregations.timestamp.buckets.forEach(function (dateRow) {
@@ -51,12 +53,15 @@
       var promises = [];
       dataContainer.data.splice(0);
       dateArray.forEach(function (baseDate) {
-        var deferred = $q.defer(), beginDate = new Date(baseDate.getTime()), usernames = {};
+        var deferred = $q.defer();
+        var beginDate = new Date(baseDate.getTime());
+        var usernames = {};
         beginDate.setDate(beginDate.getDate() - 6);
-        var query = createQueryString('1d', beginDate, baseDate, deviceFilter, roleFilter), datePoint = [
-            baseDate.getTime(),
-            0
-          ];
+        var query = createQueryString('1d', beginDate, baseDate, deviceFilter, roleFilter);
+        var datePoint = [
+          baseDate.getTime(),
+          0
+        ];
         $http({
           url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
           method: 'GET',
@@ -91,15 +96,18 @@
       var promises = [];
       dataContainer.data.splice(0);
       dateArray.forEach(function (baseDate) {
-        var deferred = $q.defer(), beginDate = new Date(baseDate.getTime()), usernames = {};
+        var deferred = $q.defer();
+        var beginDate = new Date(baseDate.getTime());
+        var usernames = {};
         beginDate.setDate(beginDate.getDate() - 29);
         if (beginDate < 1464706800000) {
           beginDate = new Date(2016, 5, 1);
         }
-        var query = createQueryString('1d', beginDate, baseDate, deviceFilter, roleFilter), datePoint = [
-            baseDate.getTime(),
-            0
-          ];
+        var query = createQueryString('1d', beginDate, baseDate, deviceFilter, roleFilter);
+        var datePoint = [
+          baseDate.getTime(),
+          0
+        ];
         $http({
           url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
           method: 'GET',
@@ -141,9 +149,16 @@
       return query;
     }
     function createFromRangeString(startDate, endDate) {
-      var startDateCopy = new Date(startDate.getTime()), endDateNums = getDateInNumbers(endDate), firstIndex = formatDateName(getDateInNumbers(startDate)), from = ' FROM ' + firstIndex;
+      var startDateCopy = new Date(startDate.getTime());
+      var endDateNums = getDateInNumbers(endDate);
+      var firstIndex = formatDateName(getDateInNumbers(startDate));
+      var from = ' FROM ' + firstIndex;
       startDateCopy.setDate(startDateCopy.getDate() + 1);
-      var currentDate = startDateCopy.getDate(), startDateNums = getDateInNumbers(startDateCopy), prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7), prevIndex = firstIndex, currentIndex;
+      var currentDate = startDateCopy.getDate();
+      var startDateNums = getDateInNumbers(startDateCopy);
+      var prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
+      var prevIndex = firstIndex;
+      var currentIndex;
       while (startDateNums < endDateNums) {
         currentIndex = formatDateName(startDateNums);
         if (prevIndex !== currentIndex) {
@@ -178,7 +193,8 @@
     function getDateFilterString(startDate, endDate) {
       var endDateCopy = new Date(endDate.getTime());
       endDateCopy.setDate(endDateCopy.getDate() + 1);
-      var startDateStr = formatDateName(getDateInNumbers(startDate), '-'), endDateStr = formatDateName(getDateInNumbers(endDateCopy), '-');
+      var startDateStr = formatDateName(getDateInNumbers(startDate), '-');
+      var endDateStr = formatDateName(getDateInNumbers(endDateCopy), '-');
       return ' @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createWhereFilterString(startDate, endDate, deviceFilter, roleFilter) {

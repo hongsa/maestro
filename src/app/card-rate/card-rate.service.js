@@ -3,7 +3,8 @@
   function CardRate($http, $q, $rootScope, $filter, APP_CONFIG) {
     return { getCardRate: getCardRate };
     function getCardRate(dataContainer, minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter) {
-      var deferred = $q.defer(), query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter);
+      var deferred = $q.defer();
+      var query = createQueryString(minAvgFilter, maxAvgFilter, minRateCountFilter, maxRateCountFilter, typeFilter, publisherFilter, seriesFilter);
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',

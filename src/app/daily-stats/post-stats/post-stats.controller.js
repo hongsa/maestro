@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   function PostStatsController(DailyStats, LinechartUtils, CSVparserUtils, APP_CONFIG) {
-    var vm = this, aliases = { 'new posts': '#new-posts' };
+    var vm = this;
+    var aliases = { 'new posts': '#new-posts' };
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;
     vm.getMaximum = LinechartUtils.getMaximum;

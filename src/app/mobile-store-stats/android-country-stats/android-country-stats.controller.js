@@ -1,15 +1,20 @@
 (function () {
   'use strict';
   function AndroidCountryStatsController(MobileStoreStats, LinechartUtils, CSVparserUtils, CommonUtils, APP_CONFIG, $scope) {
-    var vm = this, series, target, columns = [
-        4,
-        5,
-        6
-      ], dummyTime = new Date().getTime(), aliases = {
-        'Daily Device Installs': '#daily-device-installs',
-        'Daily Device Uninstalls': '#daily-device-uninstalls',
-        'Daily Device Upgrades': '#daily-device-upgrades'
-      };
+    var vm = this;
+    var series;
+    var target;
+    var columns = [
+      4,
+      5,
+      6
+    ];
+    var dummyTime = new Date().getTime();
+    var aliases = {
+      'Daily Device Installs': '#daily-device-installs',
+      'Daily Device Uninstalls': '#daily-device-uninstalls',
+      'Daily Device Upgrades': '#daily-device-upgrades'
+    };
     vm.dataSubjects = Object.keys(aliases);
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;

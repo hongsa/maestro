@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   function VisitsStatsController(DailyStats, ActiveUsers, LinechartUtils, CSVparserUtils, APP_CONFIG) {
-    var vm = this, aliases = { 'visits': '#visits' };
+    var vm = this;
+    var aliases = { 'visits': '#visits' };
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;
     vm.getMaximum = LinechartUtils.getMaximum;

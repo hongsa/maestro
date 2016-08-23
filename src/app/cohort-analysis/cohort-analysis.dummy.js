@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   var dummies = function () {
-    var today = new Date(), lastMonth = new Date(today.getTime());
+    var today = new Date();
+    var lastMonth = new Date(today.getTime());
     lastMonth.setDate(lastMonth.getDate() - 30);
     var activeUsersFor1day = [
       {

@@ -4,7 +4,11 @@
   function CumulativeUserData($http, $q, $filter, APP_CONFIG) {
     return { getCumulativeUserData: getCumulativeUserData };
     function getCumulativeUserData(dataContainer, selectedRange, paidFilter, startDate, endDate) {
-      var deferred = $q.defer(), query = createQueryString(paidFilter), prevValue = 0, criteria = -1, compareNum;
+      var deferred = $q.defer();
+      var query = createQueryString(paidFilter);
+      var prevValue = 0;
+      var criteria = -1;
+      var compareNum;
       $http({
         url: APP_CONFIG.BACKEND_ADDRESS + query,
         method: 'GET',
@@ -17,12 +21,12 @@
         if (!result.data.timed_out && result.data.length > 0) {
           result.data.forEach(function (item) {
             if (getTimeStampFromStr(startDate) >= getTimeStampFromStr(item.created_at)) {
-              prevValue += parseInt(item.num);
+              prevValue += parseInt(item.num, 10);
             } else if (getTimeStampFromStr(startDate) < getTimeStampFromStr(item.created_at) && getTimeStampFromStr(endDate) >= getTimeStampFromStr(item.created_at)) {
               if (selectedRange === 'daily') {
                 dataContainer.data.push([
                   getTimeStampFromStr(item.created_at),
-                  prevValue + (parseInt(item.num) || 0)
+                  prevValue + (parseInt(item.num, 10) || 0)
                 ]);
                 prevValue = dataContainer.data[dataContainer.data.length - 1][1];
               } else {
@@ -34,11 +38,11 @@
                   compareNum = 365;
                 }
                 if (criteria + dayInMS * compareNum > getTimeStampFromStr(item.created_at)) {
-                  prevValue += parseInt(item.num);
+                  prevValue += parseInt(item.num, 10);
                 } else {
                   dataContainer.data.push([
                     getTimeStampFromStr(item.created_at),
-                    prevValue + (parseInt(item.num) || 0)
+                    prevValue + (parseInt(item.num, 10) || 0)
                   ]);
                   prevValue = dataContainer.data[dataContainer.data.length - 1][1];
                   criteria = getTimeStampFromStr(item.created_at);

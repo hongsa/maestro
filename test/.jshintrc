@@ -31,6 +31,9 @@
     "it": false,
     "jasmine": false,
     "spyOn": false
-  }
+  },
+  "es3": true,
+  "multivar": true,
+  "debug": true
 }
 

@@ -1,6 +1,7 @@
 (function () {
   'use strict';
-  var today = new Date(), defaultStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
+  var today = new Date();
+  var defaultStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
   function CohortAnalysisController(CohortAnalysis, DUMMY4) {
     var vm = this;
     vm.dateRange = {
@@ -197,7 +198,8 @@
       return prev;
     }
     function makeDateArray(length) {
-      var today = new Date(), week = [today];
+      var today = new Date();
+      var week = [today];
       for (var i = 0; i < length; i++) {
         week.unshift(getPrevDay(week[0]));
       }

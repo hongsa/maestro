@@ -1,10 +1,11 @@
 (function () {
   'use strict';
   function UserStatsController(DailyStats, LinechartUtils, CSVparserUtils, APP_CONFIG) {
-    var vm = this, aliases = {
-        'new users': '#new-users',
-        'deleted users': '#deleted-users'
-      };
+    var vm = this;
+    var aliases = {
+      'new users': '#new-users',
+      'deleted users': '#deleted-users'
+    };
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;
     vm.getMaximum = LinechartUtils.getMaximum;

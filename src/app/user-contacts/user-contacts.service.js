@@ -3,7 +3,8 @@
   function UserContacts($http, $q, APP_CONFIG, CSVparserUtils) {
     return { fetchAndDownloadActiveTeachersContacts: fetchAndDownloadActiveTeachersContacts };
     function fetchAndDownloadActiveTeachersContacts(subject, yearFilter, monthFilter, countryFilter) {
-      var deferred = $q.defer(), filename = getFilename(subject, yearFilter, monthFilter, countryFilter);
+      var deferred = $q.defer();
+      var filename = getFilename(subject, yearFilter, monthFilter, countryFilter);
       $http({
         url: APP_CONFIG.S3_DATA_BUCKET + getDirectoryName(subject) + filename,
         method: 'GET',
@@ -24,10 +25,12 @@
     function getFilename(subject, yearFilter, monthFilter, countryFilter) {
       if (subject === 'user-contacts') {
         var dateCopy = new Date([
-            yearFilter,
-            parseInt(monthFilter) + 1,
-            '01'
-          ].join('-')), startDate = getDateInString(dateCopy), endDate;
+          yearFilter,
+          parseInt(monthFilter, 10) + 1,
+          '01'
+        ].join('-'));
+        var startDate = getDateInString(dateCopy);
+        var endDate;
         dateCopy.setMonth(dateCopy.getMonth() + 1);
         dateCopy.setDate(0);
         endDate = getDateInString(dateCopy);

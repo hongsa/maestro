@@ -11,7 +11,8 @@
       }
     };
     function getCustomQueryData(dataContainer, query, startDate, endDate, chart, alertCb, chartTypeCb, axisTypeCb) {
-      var deferred = $q.defer(), actualQuery = getActualQueryString(query, startDate, endDate);
+      var deferred = $q.defer();
+      var actualQuery = getActualQueryString(query, startDate, endDate);
       if (actualQuery === 'incorrect_from') {
         alertCb('There was an error while parsing your query. Please use "eslog_*" format for FROM clause.');
       } else if (actualQuery === 'forbidden_action') {
@@ -23,7 +24,9 @@
           headers: { 'Content-Type': undefined }
         }).then(function (result) {
           dataContainer.data.splice(0);
-          var lastDay, groupByFilter, dayInMS = 86400000;
+          var lastDay;
+          var groupByFilter;
+          var dayInMS = 86400000;
           if (result.data.timed_out || !result.data.aggregations) {
             createEmptyData(dataContainer, startDate, endDate);
           } else {
@@ -85,7 +88,8 @@
       }
     }
     function getActualQueryString(query, startDate, endDate) {
-      var actualFrom, abstractFrom;
+      var actualFrom;
+      var abstractFrom;
       if (!query.toLowerCase().startsWith('select')) {
         return 'forbidden_action';
       } else if (query.toLowerCase().indexOf('eslog_all') !== -1) {
@@ -107,9 +111,14 @@
       return ' FROM eslog_all';
     }
     function createFromRangeString(startDate, endDate) {
-      var startDateCopy = new Date(startDate.getTime()), endDateNums = getDateInNumbers(endDate), devicePrefix = 'all_prd-', from = formatDateName(devicePrefix, getDateInNumbers(startDate));
+      var startDateCopy = new Date(startDate.getTime());
+      var endDateNums = getDateInNumbers(endDate);
+      var devicePrefix = 'all_prd-';
+      var from = formatDateName(devicePrefix, getDateInNumbers(startDate));
       startDateCopy.setDate(startDateCopy.getDate() + 1);
-      var currentDate = startDateCopy.getDate(), startDateNums = getDateInNumbers(startDateCopy), prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
+      var currentDate = startDateCopy.getDate();
+      var startDateNums = getDateInNumbers(startDateCopy);
+      var prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
       while (startDateNums < endDateNums) {
         if (!prevDatePosition || prevDatePosition !== startDateNums.toString().substring(6, 7)) {
           from += ',' + formatDateName(devicePrefix, startDateNums);
@@ -168,7 +177,8 @@
     function getDateFilterString(startDate, endDate) {
       var endDateCopy = new Date(endDate.getTime());
       endDateCopy.setDate(endDateCopy.getDate() + 1);
-      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-'), endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
+      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-');
+      var endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createWhereFilterString(apiFilter, roleFilter, countryFilter, methodFilter, deviceFilter, startDate, endDate) {

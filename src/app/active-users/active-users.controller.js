@@ -1,11 +1,16 @@
 (function () {
   'use strict';
-  var today = new Date(), paginationSize = 20, dailyActiveUserCompareIndex = 7, defaultCompareIndex = 1;
+  var today = new Date();
+  var paginationSize = 20;
+  var dailyActiveUserCompareIndex = 7;
+  var defaultCompareIndex = 1;
   today.setHours(9);
   today.setMinutes(0);
   today.setSeconds(0);
   today.setMilliseconds(0);
-  var lastMonth = new Date(today.getTime()), defaultStartDate = new Date('2015-11-07'), defaultEndDate = new Date('2015-11-30');
+  var lastMonth = new Date(today.getTime());
+  var defaultStartDate = new Date('2015-11-07');
+  var defaultEndDate = new Date('2015-11-30');
   lastMonth.setDate(lastMonth.getDate() - 29);
   function ActiveUsersController(ActiveUsers, LinechartUtils, CSVparserUtils, APP_CONFIG, $filter) {
     var vm = this;
@@ -103,9 +108,11 @@
     }
     function downloadCSV(selectedSubject) {
       var fields = [
-          'date',
-          'count'
-        ], filename = ActiveUsers.getCsvFileName(selectedSubject, vm.dateRange.startDate, vm.dateRange.endDate), copyContainer;
+        'date',
+        'count'
+      ];
+      var filename = ActiveUsers.getCsvFileName(selectedSubject, vm.dateRange.startDate, vm.dateRange.endDate);
+      var copyContainer;
       fields.push('Role: ' + $filter('titleCase')(vm.selectedRoleFilter));
       fields.push('Device: ' + $filter('device')(vm.selectedDeviceFilter));
       fields.push('ActivenessCnt: ' + vm.selectedActivenessCnt);

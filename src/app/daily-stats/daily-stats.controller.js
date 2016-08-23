@@ -1,15 +1,26 @@
 (function () {
   'use strict';
-  var today = new Date(), constraintDay = new Date(today.getTime());
+  var today = new Date();
+  var constraintDay = new Date(today.getTime());
   constraintDay.setDate(constraintDay.getDate() - 1);
   var lastWeek = new Date(constraintDay.getTime());
   lastWeek.setDate(lastWeek.getDate() - 6);
   function DailyStatsController(DailyStats, $timeout) {
-    var vm = this, series, target, classStatsUpdateBtn, mobileStatsUpdateBtn, userStatsUpdateBtn, visitsStatsUpdateBtn, alertMsg, dateOverConstraint = 'You can\'t select date after ' + constraintDay.getFullYear() + '. ' + (constraintDay.getMonth() + 1) + '. ' + constraintDay.getDate(), dateOverRange = 'Please select date within a month range', aliases = {
-        'new users': '#new-users',
-        'new posts': '#new posts',
-        'visits': '#visits'
-      };
+    var vm = this;
+    var series;
+    var target;
+    var classStatsUpdateBtn;
+    var mobileStatsUpdateBtn;
+    var userStatsUpdateBtn;
+    var visitsStatsUpdateBtn;
+    var alertMsg;
+    var dateOverConstraint = 'You can\'t select date after ' + constraintDay.getFullYear() + '. ' + (constraintDay.getMonth() + 1) + '. ' + constraintDay.getDate();
+    var dateOverRange = 'Please select date within a month range';
+    var aliases = {
+      'new users': '#new-users',
+      'new posts': '#new posts',
+      'visits': '#visits'
+    };
     vm.dateRange = {
       startDate: lastWeek,
       endDate: constraintDay

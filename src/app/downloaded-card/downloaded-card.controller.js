@@ -1,6 +1,8 @@
 (function () {
   'use strict';
-  var today = new Date(), defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1)), defaultPieChartStartDate = new Date('2015-11-01');
+  var today = new Date();
+  var defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
+  var defaultPieChartStartDate = new Date('2015-11-01');
   function DownloadedCardController(DownloadedCard, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
     var vm = this;
     vm.currentPage = 1;
@@ -102,11 +104,13 @@
       lineChartFilter();
     }
     function exportPDF() {
-      var doc = new jsPDF('p', 'pt'), columns = [
-          'Date',
-          'Downloaded Cards',
-          'Change Net / %'
-        ], tmp = [];
+      var doc = new jsPDF('p', 'pt');
+      var columns = [
+        'Date',
+        'Downloaded Cards',
+        'Change Net / %'
+      ];
+      var tmp = [];
       for (var i = 0; i < vm.reversedData.length; i++) {
         if (i === vm.reversedData.length - 1) {
           tmp.push([
@@ -134,7 +138,8 @@
       return (yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0])).toString();
     }
     function fetchAndDownloadCSV(dataContainer) {
-      var copyContainer = [], fields;
+      var copyContainer = [];
+      var fields;
       fields = [
         'Date',
         'downloaded Cards',

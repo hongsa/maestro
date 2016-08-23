@@ -1,6 +1,7 @@
 (function () {
   'use strict';
-  var minimumDate = new Date('2015-11-01'), defaultDate = new Date();
+  var minimumDate = new Date('2015-11-01');
+  var defaultDate = new Date();
   defaultDate.setDate(1);
   defaultDate.setMonth(defaultDate.getMonth() - 1);
   function UserContactsController(UserContacts) {
@@ -31,20 +32,20 @@
     }
     function selectYearFilter() {
       vm.availableMonths.splice(0);
-      if (parseInt(vm.selectedYearFilter) === minimumDate.getFullYear()) {
+      if (parseInt(vm.selectedYearFilter, 10) === minimumDate.getFullYear()) {
         vm.availableMonths.push(10);
         vm.availableMonths.push(11);
-        if (parseInt(vm.selectedMonthFilter) < 10) {
+        if (parseInt(vm.selectedMonthFilter, 10) < 10) {
           vm.selectedMonthFilter = '11';
         }
-      } else if (parseInt(vm.selectedYearFilter) === defaultDate.getFullYear()) {
+      } else if (parseInt(vm.selectedYearFilter, 10) === defaultDate.getFullYear()) {
         var dateCopy = new Date(vm.selectedYearFilter + '-01-01');
         while (dateCopy.getMonth() < defaultDate.getMonth()) {
           vm.availableMonths.push(dateCopy.getMonth());
           dateCopy.setMonth(dateCopy.getMonth() + 1);
         }
         vm.availableMonths.push(defaultDate.getMonth());
-        if (vm.availableMonths.indexOf(parseInt(vm.selectedMonthFilter)) === -1) {
+        if (vm.availableMonths.indexOf(parseInt(vm.selectedMonthFilter, 10)) === -1) {
           vm.selectedMonthFilter = defaultDate.getMonth().toString();
         }
       } else {

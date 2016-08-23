@@ -39,7 +39,8 @@
       }
     }
     function fetchAndDownloadCSV(dataContainer) {
-      var copyContainer = [], fields;
+      var copyContainer = [];
+      var fields;
       fields = [
         vm.selectedPieChartFilter,
         'count',
@@ -64,7 +65,9 @@
       pageChanged(vm.currentPage);
     }
     function pageChanged(currentPage) {
-      var sortable = vm.cardRates, orderFirst = 0, orderSecond = 0;
+      var sortable = vm.cardRates;
+      var orderFirst = 0;
+      var orderSecond = 0;
       if (vm.selectedOrderBy === 'ASC') {
         orderFirst = -1;
         orderSecond = 1;

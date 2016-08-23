@@ -58,7 +58,9 @@
       });
     }
     function downloadCSV(csvData, isParsed, filename) {
-      var csv, link, data;
+      var csv;
+      var link;
+      var data;
       if (!isParsed) {
         //timestamp to dateString
         csvData.data.forEach(function (date) {
@@ -79,7 +81,9 @@
       link.click();
     }
     function downloadCSV2(csvData, isParsed, filename, fields, isNotDate) {
-      var csv, link, data;
+      var csv;
+      var link;
+      var data;
       if (!isParsed) {
         if (!isNotDate) {
           //timestamp to dateString
@@ -110,7 +114,7 @@
           for (var j = 0; j < columns.length; j++) {
             dataContainer[j].data.push([
               new Date(parsedCSV[i][0]).getTime(),
-              parseInt(parsedCSV[i][columns[j]])
+              parseInt(parsedCSV[i][columns[j]], 10)
             ]);
           }
         }
@@ -123,11 +127,11 @@
             dataContainer[row[2]] = {};
             dataContainer[row[2]].name = row[2];
             columns.forEach(function (col) {
-              dataContainer[row[2]][parsedCSV[0][col]] = parseInt(row[col]);
+              dataContainer[row[2]][parsedCSV[0][col]] = parseInt(row[col], 10);
             });
           } else if (dataContainer[row[2]] && row[2].length !== 0) {
             columns.forEach(function (col) {
-              dataContainer[row[2]][parsedCSV[0][col]] += parseInt(row[col]);
+              dataContainer[row[2]][parsedCSV[0][col]] += parseInt(row[col], 10);
             });
           }
         }
@@ -142,7 +146,7 @@
           for (var j = 0; j < columns.length; j++) {
             dataContainer[j].data.push([
               new Date(parsedCSV[i][0]).getTime(),
-              parseInt(parsedCSV[i][columns[j]])
+              parseInt(parsedCSV[i][columns[j]], 10)
             ]);
           }
         }

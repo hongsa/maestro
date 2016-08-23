@@ -1,6 +1,9 @@
 (function () {
   'use strict';
-  var today = new Date(), defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1)), dayInMS = 86400000, defaultPieChartStartDate = new Date('2015-11-01');
+  var today = new Date();
+  var defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
+  var dayInMS = 86400000;
+  var defaultPieChartStartDate = new Date('2015-11-01');
   function MonthlyRecurringRevenueController(MonthlyRecurringRevenue, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
     var vm = this;
     vm.currentPage = 1;
@@ -64,9 +67,13 @@
     function lineChartFilter() {
       MonthlyRecurringRevenue.getMRR(vm.totalDataForLineChart, 'increase', vm.selectedRange, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
         MonthlyRecurringRevenue.getMRR(vm.totalDataForLineChart, 'decrease', vm.selectedRange, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
-          vm.reversedTotalData = vm.totalDataForLineChart.data.slice().reverse();
-          vm.totalItem = vm.reversedTotalData.length - 1;
-          pageChanged(1);
+          MonthlyRecurringRevenue.getMRR2(vm.totalDataForLineChart, 'iamport', vm.selectedRange, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
+            MonthlyRecurringRevenue.getMRR2(vm.totalDataForLineChart, 'app_store', vm.selectedRange, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
+              vm.reversedTotalData = vm.totalDataForLineChart.data.slice().reverse();
+              vm.totalItem = vm.reversedTotalData.length - 1;
+              pageChanged(1);
+            });
+          });
         });
       });
     }
@@ -100,7 +107,8 @@
       lineChartFilter();
     }
     function fetchAndDownloadCSV(dataContainer) {
-      var copyContainer = [], fields;
+      var copyContainer = [];
+      var fields;
       fields = [
         'date',
         'totalUsers',

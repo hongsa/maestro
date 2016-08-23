@@ -1,10 +1,16 @@
 (function () {
   'use strict';
-  var dayInMS = 86400000, dayInMSHalf = 43200000, today = new Date();
+  var dayInMS = 86400000;
+  var dayInMSHalf = 43200000;
+  var today = new Date();
   function MonthlyRecurringRevenue($http, $q, $filter, APP_CONFIG) {
-    return { getMRR: getMRR };
+    return {
+      getMRR: getMRR,
+      getMRR2: getMRR2
+    };
     function getMRR(dataContainer, queryType, selectedRange, deviceFilter, startDate, endDate) {
-      var deferred = $q.defer(), query = createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate), addDate;
+      var deferred = $q.defer();
+      var query = createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate);
       if (queryType === 'increase') {
         dataContainer.data.splice(0);
       }
@@ -15,7 +21,8 @@
       }).then(function (result) {
         if (!result.data.timed_out) {
           result.data.aggregations.timestamp.buckets.forEach(function (row) {
-            var datePrice = 0, key;
+            var datePrice = 0;
+            var key;
             key = getKey(row.key, selectedRange);
             row.price.buckets.forEach(function (p) {
               if (p.key === 32 || p.key === 54) {
@@ -34,6 +41,39 @@
                 if (row.key + dayInMSHalf === dataContainer.data[i][0]) {
                   dataContainer.data[i][1] -= datePrice;
                 }
+              }
+            }
+          });
+        }
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
+    function getMRR2(dataContainer, queryType, selectedRange, deviceFilter, startDate, endDate) {
+      var deferred = $q.defer();
+      var query = createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate);
+      $http({
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
+        method: 'GET',
+        headers: { 'Content-Type': undefined }
+      }).then(function (result) {
+        if (!result.data.timed_out) {
+          result.data.aggregations.timestamp.buckets.forEach(function (row) {
+            var datePrice = 0;
+            row.now_payment_plan.buckets.forEach(function (nowPlan) {
+              nowPlan.now_payment_children_limit.buckets.forEach(function (nowChildren) {
+                nowChildren.change_payment_plan.buckets.forEach(function (changePlan) {
+                  changePlan.change_payment_children_limit.buckets.forEach(function (changeChildren) {
+                    var nowPrice = $filter('price')(queryType, nowPlan.key.toString() + nowChildren.key.toString());
+                    var changePrice = $filter('price')(queryType, changePlan.key.toString() + changeChildren.key.toString());
+                    datePrice += (changePrice - nowPrice) * changeChildren.doc_count;
+                  });
+                });
+              });
+            });
+            for (var i = 0; i < dataContainer.data.length; i++) {
+              if (row.key + dayInMSHalf === dataContainer.data[i][0]) {
+                dataContainer.data[i][1] += datePrice;
               }
             }
           });
@@ -64,7 +104,7 @@
     function createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate) {
       var query = 'SELECT count(*) FROM stg-2016';
       query += createWhereFilterString(queryType, deviceFilter, startDate, endDate);
-      query += createGroupByString(selectedRange);
+      query += createGroupByString(queryType, selectedRange);
       query += createOrderByString();
       return encodeURIComponent(query);
     }
@@ -79,9 +119,10 @@
       var payment;
       if (queryType === 'increase') {
         payment = ' WHERE (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
-      } else {
-        //payment = ' WHERE event<>"_null" and event<>"continue" and event<>"resume" and event<>"stop"';
+      } else if (queryType === 'decrease') {
         payment = ' WHERE event="stop"';
+      } else {
+        payment = ' WHERE event="_null" and now_payment_plan<>"_null" and payment_method=' + '"' + queryType + '"';
       }
       return payment;
     }
@@ -97,18 +138,32 @@
       return device;
     }
     function getDateFilterString(startDate, endDate) {
-      var dayInMS = 86400000, startDateStr = getTimeStampFromStr(startDate) - dayInMS, endDateStr = getTimeStampFromStr(endDate);
+      var dayInMS = 86400000;
+      var startDateStr = getTimeStampFromStr(startDate) - dayInMS;
+      var endDateStr = getTimeStampFromStr(endDate);
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
-    function createGroupByString(selectedRange) {
-      if (selectedRange === 'daily') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
-      } else if (selectedRange === 'weekly') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
-      } else if (selectedRange === 'monthly') {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+    function createGroupByString(queryType, selectedRange) {
+      if (queryType === 'increase' || queryType === 'decrease') {
+        if (selectedRange === 'daily') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+        } else if (selectedRange === 'weekly') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+        } else if (selectedRange === 'monthly') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+        } else {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+        }
       } else {
-        return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+        if (selectedRange === 'daily') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
+        } else if (selectedRange === 'weekly') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
+        } else if (selectedRange === 'monthly') {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
+        } else {
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1y", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
+        }
       }
     }
     function createOrderByString() {

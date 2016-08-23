@@ -1,11 +1,16 @@
 (function () {
   'use strict';
-  var today = new Date(), constraintDay = new Date(today.getTime());
+  var today = new Date();
+  var constraintDay = new Date(today.getTime());
   constraintDay.setDate(constraintDay.getDate() - 1);
   var twoDaysPast = new Date(constraintDay.getTime());
   twoDaysPast.setDate(twoDaysPast.getDate() - 2);
   function UserPageFlowController(UserPageFlow) {
-    var vm = this, defaultData, alertMsg, dateOverConstraint = 'You can\'t select date after ' + constraintDay.getFullYear() + '. ' + (constraintDay.getMonth() + 1) + '. ' + constraintDay.getDate(), dateOverRange = 'Please select date within a month range';
+    var vm = this;
+    var defaultData;
+    var alertMsg;
+    var dateOverConstraint = 'You can\'t select date after ' + constraintDay.getFullYear() + '. ' + (constraintDay.getMonth() + 1) + '. ' + constraintDay.getDate();
+    var dateOverRange = 'Please select date within a month range';
     defaultData = {
       time: '-',
       cur_page: '-',

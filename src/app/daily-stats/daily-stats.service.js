@@ -10,14 +10,16 @@
       }
     };
     function getDailyStatsData(dataContainer, dataSubject, startDate, endDate, deviceFilter, roleFilter, countryFilter, chart) {
-      var deferred = $q.defer(), query = createQueryString(dataSubject, startDate, endDate, deviceFilter, roleFilter, countryFilter, 'linechart');
+      var deferred = $q.defer();
+      var query = createQueryString(dataSubject, startDate, endDate, deviceFilter, roleFilter, countryFilter, 'linechart');
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
         dataContainer.data.splice(0);
-        var lastDay, dayInMS = 86400000;
+        var lastDay;
+        var dayInMS = 86400000;
         if (result.data.timed_out || !result.data.aggregations) {
           createEmptyData(dataContainer, startDate, endDate);
         } else {
@@ -44,7 +46,9 @@
       return deferred.promise;
     }
     function getRoleProportionData(dataContainer, dataSubject, startDate, endDate, chart, alertCb) {
-      var deferred = $q.defer(), query = createQueryString(dataSubject, startDate, endDate, 'All', 'All', 'All', 'role'), colors = APP_CONFIG.COLORS;
+      var deferred = $q.defer();
+      var query = createQueryString(dataSubject, startDate, endDate, 'All', 'All', 'All', 'role');
+      var colors = APP_CONFIG.COLORS;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -79,9 +83,14 @@
       return query;
     }
     function createFromRangeString(startDate, endDate) {
-      var startDateCopy = new Date(startDate.getTime()), endDateNums = getDateInNumbers(endDate), devicePrefix = 'all_prd-', from = ' FROM ' + formatDateName(devicePrefix, getDateInNumbers(startDate));
+      var startDateCopy = new Date(startDate.getTime());
+      var endDateNums = getDateInNumbers(endDate);
+      var devicePrefix = 'all_prd-';
+      var from = ' FROM ' + formatDateName(devicePrefix, getDateInNumbers(startDate));
       startDateCopy.setDate(startDateCopy.getDate() + 1);
-      var currentDate = startDateCopy.getDate(), startDateNums = getDateInNumbers(startDateCopy), prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
+      var currentDate = startDateCopy.getDate();
+      var startDateNums = getDateInNumbers(startDateCopy);
+      var prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
       while (startDateNums < endDateNums) {
         if (!prevDatePosition || prevDatePosition !== startDateNums.toString().substring(6, 7)) {
           from += ',' + formatDateName(devicePrefix, startDateNums);
@@ -139,11 +148,13 @@
     function getDateFilterString(startDate, endDate) {
       var endDateCopy = new Date(endDate.getTime());
       endDateCopy.setDate(endDateCopy.getDate() + 1);
-      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-'), endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
+      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-');
+      var endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createWhereFilterString(dataSubject, roleFilter, countryFilter, deviceFilter, startDate, endDate) {
-      var where = ' WHERE', method;
+      var where = ' WHERE';
+      var method;
       if (dataSubject.startsWith('deleted')) {
         method = 'DELETE';
       } else {

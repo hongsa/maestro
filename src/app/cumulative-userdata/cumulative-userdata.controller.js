@@ -1,6 +1,8 @@
 (function () {
   'use strict';
-  var today = new Date(), defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1)), defaultPieChartStartDate = new Date('2015-11-01');
+  var today = new Date();
+  var defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
+  var defaultPieChartStartDate = new Date('2015-11-01');
   function CumulativeUserDataController(CumulativeUserData, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
     var vm = this;
     vm.currentPage = 1;
@@ -109,7 +111,8 @@
       lineChartFilter();
     }
     function fetchAndDownloadCSV(dataContainer) {
-      var copyContainer = [], fields;
+      var copyContainer = [];
+      var fields;
       fields = [
         'date',
         'totalUsers',

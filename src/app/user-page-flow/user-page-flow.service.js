@@ -9,7 +9,8 @@
       }
     };
     function getUserPageFlow(dataContainer, userId, startDate, endDate, alertCb) {
-      var deferred = $q.defer(), query = createQueryString(userId, startDate, endDate);
+      var deferred = $q.defer();
+      var query = createQueryString(userId, startDate, endDate);
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -41,7 +42,8 @@
         }
         deferred.resolve();
       }, function (error) {
-        var errMsg = error.data.error, errSrc;
+        var errMsg = error.data.error;
+        var errSrc;
         if (errMsg.startsWith('IndexMissingException')) {
           errSrc = errMsg.substring(errMsg.indexOf('20'), errMsg.indexOf(']'));
           alertCb('Could not find data on ' + errSrc);
@@ -59,9 +61,14 @@
       return query;
     }
     function createFromRangeString(startDate, endDate) {
-      var startDateCopy = new Date(startDate.getTime()), endDateNums = getDateInNumbers(endDate), devicePrefix = 'all_prd-', from = ' FROM ' + formatDateName(devicePrefix, getDateInNumbers(startDate));
+      var startDateCopy = new Date(startDate.getTime());
+      var endDateNums = getDateInNumbers(endDate);
+      var devicePrefix = 'all_prd-';
+      var from = ' FROM ' + formatDateName(devicePrefix, getDateInNumbers(startDate));
       startDateCopy.setDate(startDateCopy.getDate() + 1);
-      var currentDate = startDateCopy.getDate(), startDateNums = getDateInNumbers(startDateCopy), prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
+      var currentDate = startDateCopy.getDate();
+      var startDateNums = getDateInNumbers(startDateCopy);
+      var prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
       while (startDateNums < endDateNums) {
         if (!prevDatePosition || prevDatePosition !== startDateNums.toString().substring(6, 7)) {
           from += ',' + formatDateName(devicePrefix, startDateNums);
@@ -99,7 +106,8 @@
     function getDateFilterString(startDate, endDate) {
       var endDateCopy = new Date(endDate.getTime());
       endDateCopy.setDate(endDateCopy.getDate() + 1);
-      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-'), endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
+      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-');
+      var endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createEmptyData(dataContainer, userId) {

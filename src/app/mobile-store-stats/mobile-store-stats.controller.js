@@ -1,7 +1,15 @@
 (function () {
   'use strict';
   function MobileStoreStatsController(MobileStoreStats, LinechartUtils, CSVparserUtils, $timeout) {
-    var vm = this, refDate = new Date(), minimumYear = 2015, defaultYear = refDate.getMonth() === 0 ? refDate.getFullYear() - 1 : refDate.getFullYear(), androidDailyDeviceStatsUpdateBtn, androidDailyUserStatsUpdateBtn, androidCumulativeStatsUpdateBtn, androidLanguageStatsUpdateBtn, androidCountryStatsUpdateBtn;
+    var vm = this;
+    var refDate = new Date();
+    var minimumYear = 2015;
+    var defaultYear = refDate.getMonth() === 0 ? refDate.getFullYear() - 1 : refDate.getFullYear();
+    var androidDailyDeviceStatsUpdateBtn;
+    var androidDailyUserStatsUpdateBtn;
+    var androidCumulativeStatsUpdateBtn;
+    var androidLanguageStatsUpdateBtn;
+    var androidCountryStatsUpdateBtn;
     vm.availableMonths = [
       '01',
       '02',

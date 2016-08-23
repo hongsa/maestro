@@ -1,10 +1,11 @@
 (function () {
   'use strict';
   function ClassesSchoolsStatsController(DailyStats, LinechartUtils, CSVparserUtils, APP_CONFIG) {
-    var vm = this, aliases = {
-        'new classes': '#new-classes',
-        'deleted classes': '#deleted-classes'
-      };
+    var vm = this;
+    var aliases = {
+      'new classes': '#new-classes',
+      'deleted classes': '#deleted-classes'
+    };
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;
     vm.getMaximum = LinechartUtils.getMaximum;

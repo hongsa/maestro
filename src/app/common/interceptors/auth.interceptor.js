@@ -1,7 +1,11 @@
 (function () {
   'use strict';
   function AuthInterceptor($q, $injector) {
-    var AuthService, $http, $cookies, $rootScope, $state;
+    var AuthService;
+    var $http;
+    var $cookies;
+    var $rootScope;
+    var $state;
     return {
       /*
       request : function (config) {

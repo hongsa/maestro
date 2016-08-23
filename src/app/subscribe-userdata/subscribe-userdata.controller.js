@@ -1,6 +1,7 @@
 (function () {
   'use strict';
-  var today = new Date(), defaultStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
+  var today = new Date();
+  var defaultStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
   function SubscribeUserDataController(SubscribeUserData, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils, $q) {
     var vm = this;
     vm.currentPage = 1;
@@ -150,7 +151,9 @@
       });
     }
     function createEmptyData(selectedRange) {
-      var range, startDateCopy = new Date(vm.trialToBasicDataForLineChart.data[0][0]), flag = false;
+      var range;
+      var startDateCopy = new Date(vm.trialToBasicDataForLineChart.data[0][0]);
+      var flag = false;
       vm.reversedData = [];
       if (selectedRange === 'daily') {
         range = 1;
@@ -320,7 +323,8 @@
       return data / getPieChartTotal();
     }
     function fetchAndDownloadCSV(dataContainer, type) {
-      var copyContainer = [], fields;
+      var copyContainer = [];
+      var fields;
       if (type === 'LineChart') {
         fields = [
           'date',

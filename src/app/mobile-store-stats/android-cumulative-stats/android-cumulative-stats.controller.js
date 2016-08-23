@@ -1,15 +1,20 @@
 (function () {
   'use strict';
   function AndroidCumulativeStatsController(MobileStoreStats, LinechartUtils, CSVparserUtils, APP_CONFIG, $scope) {
-    var vm = this, series, target, dummyTime = new Date().getTime(), columns = [
-        2,
-        6,
-        7
-      ], aliases = {
-        'Current Device Installs': '#current-device-installs',
-        'Current User Installs': '#current-user-installs',
-        'Total User Installs': '#total-user-installs'
-      };
+    var vm = this;
+    var series;
+    var target;
+    var dummyTime = new Date().getTime();
+    var columns = [
+      2,
+      6,
+      7
+    ];
+    var aliases = {
+      'Current Device Installs': '#current-device-installs',
+      'Current User Installs': '#current-user-installs',
+      'Total User Installs': '#total-user-installs'
+    };
     vm.dataSubjects = Object.keys(aliases);
     vm.getAverage = LinechartUtils.getAverage;
     vm.getMinimum = LinechartUtils.getMinimum;

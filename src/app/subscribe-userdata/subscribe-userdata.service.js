@@ -1,13 +1,17 @@
 (function () {
   'use strict';
-  var dayInMS = 86400000, dayInMSHalf = 43200000, today = new Date();
+  var dayInMS = 86400000;
+  var dayInMSHalf = 43200000;
+  var today = new Date();
   function SubscribeUserData($http, $q, $filter, APP_CONFIG) {
     return {
       getSubscribeData: getSubscribeData,
       getSubscribeProportionData: getSubscribeProportionData
     };
     function getSubscribeData(dataContainer, selectedRange, roleFilter, deviceFilter, startDate, endDate) {
-      var deferred = $q.defer(), query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate), addDate;
+      var deferred = $q.defer();
+      var query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate);
+      var addDate;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -27,7 +31,8 @@
       return deferred.promise;
     }
     function getSubscribeProportionData(dataContainer, dataSubject, baseCumulativeData, startDate, endDate, currentTotal, type, chart) {
-      var deferred = $q.defer(), query = 'SELECT count(*) FROM accum-stats-201*' + createPieChartQueryWhereFilter(type) + ' AND' + getDateFilterString(startDate, endDate) + 'GROUP BY ' + dataSubject;
+      var deferred = $q.defer();
+      var query = 'SELECT count(*) FROM accum-stats-201*' + createPieChartQueryWhereFilter(type) + ' AND' + getDateFilterString(startDate, endDate) + 'GROUP BY ' + dataSubject;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -144,7 +149,9 @@
       return device;
     }
     function getDateFilterString(startDate, endDate) {
-      var dayInMS = 86400000, startDateStr = getTimeStampFromStr(startDate) - dayInMS, endDateStr = getTimeStampFromStr(endDate);
+      var dayInMS = 86400000;
+      var startDateStr = getTimeStampFromStr(startDate) - dayInMS;
+      var endDateStr = getTimeStampFromStr(endDate);
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createGroupByString(selectedRange) {

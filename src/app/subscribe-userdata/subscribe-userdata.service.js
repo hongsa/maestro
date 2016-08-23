@@ -148,9 +148,8 @@
       return device;
     }
     function getDateFilterString(startDate, endDate) {
-      var dayInMS = 86400000;
-      var startDateStr = getTimeStampFromStr(startDate) - dayInMS;
-      var endDateStr = getTimeStampFromStr(endDate);
+      var startDateStr = getTimeStampFromStr(startDate);
+      var endDateStr = getTimeStampFromStr(endDate) + dayInMS;
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createGroupByString(selectedRange) {

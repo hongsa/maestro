@@ -2,7 +2,7 @@
   'use strict';
   var today = new Date();
   var defaultStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
-  function SubscribeUserDataController(SubscribeUserData, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils, $q) {
+  function UpgradeDowngradeController(UpgradeDowngrade, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils, $q) {
     var vm = this;
     vm.currentPage = 1;
     vm.pageSize = 20;
@@ -36,102 +36,94 @@
     vm.selectedRoleFilter = 'all';
     vm.selectedDeviceFilter = 'all';
     vm.selectedPaidFilter = 'all';
-    // New Paid Line Chart
-    vm.trialToBasicDataForLineChart = {
-      name: 'Trial to Basic',
+    // Upgrade Paid Line Chart
+    vm.basicToStandardDataForLineChart = {
+      name: 'Basic to Standard',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'trial-basic',
+      id: 'basic-standard',
       color: APP_CONFIG.COLORS[0]
     };
-    vm.trialToStandardDataForLineChart = {
-      name: 'Trial to Standard',
+    vm.basicToPremiumDataForLineChart = {
+      name: 'Basic to Premium',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'trial-standard',
+      id: 'basic-premium',
       color: APP_CONFIG.COLORS[1]
     };
-    vm.trialToPremiumDataForLineChart = {
-      name: 'Trial to Premium',
+    vm.standardToPremiumDataForLineChart = {
+      name: 'Standard to Premium',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'trial-premium',
+      id: 'standard-premium',
       color: APP_CONFIG.COLORS[2]
     };
-    // Upgrade Paid Line Chart
-    vm.basicSubscribersDataForLineChart = {
-      name: 'Basic Subscribers',
+    // Downgrade Paid Line Chart
+    vm.standardToBasicDataForLineChart = {
+      name: 'Standard to basic',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'basic-subscribers',
+      id: 'standard-basic',
       color: APP_CONFIG.COLORS[0]
     };
-    vm.standardSubscribersDataForLineChart = {
-      name: 'Standard Subscribers',
+    vm.premiumdToStandardDataForLineChart = {
+      name: 'Premium to Standard',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'standard-subscribers',
+      id: 'premium-standard',
       color: APP_CONFIG.COLORS[2]
     };
-    vm.premiumSubscribersDataForLineChart = {
-      name: 'Premium Subscribers',
+    vm.premiumdToBasicDataForLineChart = {
+      name: 'Premium To Basic',
       data: [[
           new Date().getTime(),
           0
         ]],
-      id: 'premium-subscribers',
+      id: 'premium-basic',
       color: APP_CONFIG.COLORS[1]
     };
     vm.lineChartDataLoop = [
-      vm.trialToBasicDataForLineChart,
-      vm.trialToStandardDataForLineChart,
-      vm.trialToPremiumDataForLineChart,
-      vm.basicSubscribersDataForLineChart,
-      vm.standardSubscribersDataForLineChart,
-      vm.premiumSubscribersDataForLineChart
+        vm.basicToStandardDataForLineChart,
+        vm.basicToPremiumDataForLineChart,
+        vm.standardToPremiumDataForLineChart,
+        vm.standardToBasicDataForLineChart,
+        vm.premiumdToStandardDataForLineChart,
+        vm.premiumdToBasicDataForLineChart
     ];
     vm.reversedData = [];
     vm.reversedDataContainer = [];
-    vm.lineChartPaidData = [
-      vm.trialToBasicDataForLineChart,
-      vm.trialToStandardDataForLineChart,
-      vm.trialToPremiumDataForLineChart
-    ];
     vm.lineChartUpgradeData = [
-      vm.basicSubscribersDataForLineChart,
-      vm.standardSubscribersDataForLineChart,
-      vm.premiumSubscribersDataForLineChart
+      vm.basicToStandardDataForLineChart,
+      vm.basicToPremiumDataForLineChart,
+      vm.standardToPremiumDataForLineChart,
     ];
-    vm.lineChartPaidDataConfig = new LinechartUtils.LineChartConfig(vm.lineChartPaidData, null, true);
+    vm.lineChartDowngradeData = [
+      vm.standardToBasicDataForLineChart,
+      vm.premiumdToStandardDataForLineChart,
+      vm.premiumdToBasicDataForLineChart
+    ];
     vm.lineChartUpgradeDataConfig = new LinechartUtils.LineChartConfig(vm.lineChartUpgradeData, null, true);
+    vm.lineChartDowngradeDataConfig = new LinechartUtils.LineChartConfig(vm.lineChartDowngradeData, null, true);
     vm.lineChartFilter = lineChartFilter;
-    vm.getPieChart = getPieChart;
     vm.selectDropdownRange = selectDropdownRange;
     vm.getDateColor = getDateColor;
     vm.getTableIndex = getTableIndex;
     vm.pageChanged = pageChanged;
-    // Pie Chart
-    vm.pieChartData = [{
-        name: 'User Signups',
-        y: 1
-      }];
-    vm.pieChartConfig = new PiechartUtils.PieChartConfig(vm.pieChartData);
-    vm.pieChartFilter = pieChartFilter;
-    vm.getPieChartProportion = getPieChartProportion;
     vm.fetchAndDownloadCSV = fetchAndDownloadCSV;
     init();
     function init() {
       lineChartFilter();
+      createEmptyData();
     }
     function getTableIndex(index) {
       return (vm.currentPage - 1) * vm.pageSize + index;
@@ -139,7 +131,7 @@
     function lineChartFilter() {
       var count = 0;
       vm.lineChartDataLoop.forEach(function (dataContainer) {
-        SubscribeUserData.getSubscribeData(dataContainer, vm.selectedRange, vm.selectedRoleFilter, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
+        UpgradeDowngrade.getUpgradeDowngradeData(dataContainer, vm.selectedRange, vm.selectedRoleFilter, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
           if (result.name === 'success') {
             count += 1;
             if (count === 6) {
@@ -151,7 +143,7 @@
     }
     function createEmptyData(selectedRange) {
       var range;
-      var startDateCopy = new Date(vm.trialToBasicDataForLineChart.data[0][0]);
+      var startDateCopy = new Date(vm.basicToStandardDataForLineChart.data[0][0]);
       var flag = false;
       vm.reversedData = [];
       if (selectedRange === 'daily') {
@@ -164,7 +156,7 @@
         range = 365;
         startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), 11, 31);
       }
-      while (startDateCopy <= vm.dateRange.endDate) {
+      while (startDateCopy < vm.dateRange.endDate) {
         vm.reversedData.push([
           startDateCopy.setHours(12, 0, 0, 0),
           0,
@@ -199,44 +191,44 @@
     }
     function concatContainer() {
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.trialToBasicDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.trialToBasicDataForLineChart.data[j][0]) {
-            vm.reversedData[i][1] = vm.trialToBasicDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.basicToStandardDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.basicToStandardDataForLineChart.data[j][0]) {
+            vm.reversedData[i][1] = vm.basicToStandardDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.trialToStandardDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.trialToStandardDataForLineChart.data[j][0]) {
-            vm.reversedData[i][2] = vm.trialToStandardDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.basicToPremiumDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.basicToPremiumDataForLineChart.data[j][0]) {
+            vm.reversedData[i][2] = vm.basicToPremiumDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.trialToPremiumDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.trialToPremiumDataForLineChart.data[j][0]) {
-            vm.reversedData[i][3] = vm.trialToPremiumDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.standardToPremiumDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardToPremiumDataForLineChart.data[j][0]) {
+            vm.reversedData[i][3] = vm.standardToPremiumDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.basicSubscribersDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.basicSubscribersDataForLineChart.data[j][0]) {
-            vm.reversedData[i][4] = vm.basicSubscribersDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.standardToBasicDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardToBasicDataForLineChart.data[j][0]) {
+            vm.reversedData[i][4] = vm.standardToBasicDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.premiumSubscribersDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.premiumSubscribersDataForLineChart.data[j][0]) {
-            vm.reversedData[i][5] = vm.premiumSubscribersDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.premiumdToStandardDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumdToStandardDataForLineChart.data[j][0]) {
+            vm.reversedData[i][5] = vm.premiumdToStandardDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.standardSubscribersDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.standardSubscribersDataForLineChart.data[j][0]) {
-            vm.reversedData[i][6] = vm.standardSubscribersDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.premiumdToBasicDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumdToBasicDataForLineChart.data[j][0]) {
+            vm.reversedData[i][6] = vm.premiumdToBasicDataForLineChart.data[j][1];
           }
         }
       }
@@ -304,23 +296,6 @@
       vm.selectedRange = range;
       lineChartFilter();
     }
-    function getPieChart() {
-      SubscribeUserData.getSubscribeProportionData(vm.pieChartData, vm.selectedPieChartFilter, vm.dateRangePieChart.startDate, vm.dateRangePieChart.endDate, vm.currentPieChartUsers, vm.availableTypes[0]);
-    }
-    function pieChartFilter(selectedFilter) {
-      vm.selectedPieChartFilter = selectedFilter;
-      getPieChart();
-    }
-    function getPieChartTotal() {
-      var total = 0;
-      vm.pieChartSumData.forEach(function (data) {
-        total += data.y;
-      });
-      return total;
-    }
-    function getPieChartProportion(data) {
-      return data / getPieChartTotal();
-    }
     function fetchAndDownloadCSV(dataContainer, type) {
       var copyContainer = [];
       var fields;
@@ -345,7 +320,7 @@
           tmp[6] = item[6];
           copyContainer.push(tmp);
         });
-        CSVparserUtils.downloadCSV2(copyContainer, false, 'subscribers__' + vm.selectedRange + '.csv', fields);  // PieChart
+        CSVparserUtils.downloadCSV2(copyContainer, false, 'upgrade_downgrade_' + vm.selectedRange + '.csv', fields);  // PieChart
       } else {
         fields = [
           vm.selectedPieChartFilter,
@@ -377,8 +352,8 @@
       return result.getDay();
     }
   }
-  SubscribeUserDataController.$inject = [
-    'SubscribeUserData',
+  UpgradeDowngradeController.$inject = [
+    'UpgradeDowngrade',
     'LinechartUtils',
     'PiechartUtils',
     'APP_CONFIG',
@@ -386,5 +361,5 @@
     'CSVparserUtils',
     '$q'
   ];
-  angular.module('dataDashboard.subscribeUserData.controller.SubscribeUserDataController', []).controller('SubscribeUserDataController', SubscribeUserDataController);
+  angular.module('dataDashboard.upgradeDowngrade.controller.UpgradeDowngradeController', []).controller('UpgradeDowngradeController', UpgradeDowngradeController);
 }());

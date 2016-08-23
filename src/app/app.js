@@ -35,6 +35,8 @@
     // Card Rate
     'dataDashboard.cardRate',
     // Downloaded Cards
-    'dataDashboard.downloadedCard'
+    'dataDashboard.downloadedCard',
+    // Upgrade & Downgrade payment
+    'dataDashboard.upgradeDowngrade'
   ]);
 }());

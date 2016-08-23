@@ -3,12 +3,11 @@
   var dayInMS = 86400000;
   var dayInMSHalf = 43200000;
   var today = new Date();
-  function CancelUserData($http, $q, $filter, APP_CONFIG) {
+  function UpgradeDowngrade($http, $q, $filter, APP_CONFIG) {
     return {
-      getCancelData: getCancelData,
-      getCancelProportionData: getCancelProportionData
+      getUpgradeDowngradeData: getUpgradeDowngradeData,
     };
-    function getCancelData(dataContainer, selectedRange, roleFilter, deviceFilter, startDate, endDate) {
+    function getUpgradeDowngradeData(dataContainer, selectedRange, roleFilter, deviceFilter, startDate, endDate) {
       var deferred = $q.defer();
       var query = createQueryString(dataContainer.id, roleFilter, deviceFilter, selectedRange, startDate, endDate);
       $http({
@@ -25,40 +24,6 @@
             row.doc_count
           ]);
         });
-        deferred.resolve({ name: 'success' });
-      }, deferred.reject);
-      return deferred.promise;
-    }
-    function getCancelProportionData(dataContainer, dataSubject, baseCumulativeData, startDate, endDate, currentTotal, type, chart) {
-      var deferred = $q.defer();
-      var query = 'SELECT count(*) FROM accum-stats-201*' + createPieChartQueryWhereFilter(type) + ' AND' + getDateFilterString(startDate, endDate) + 'GROUP BY ' + dataSubject;
-      $http({
-        url: APP_CONFIG.NEW_ELASTIC_SEARCH_SQL + '?sql=' + query,
-        method: 'GET',
-        headers: { 'Content-Type': undefined }
-      }).then(function (result) {
-        dataContainer.splice(0);
-        currentTotal.value = 0;
-        result.data.aggregations[dataSubject].buckets.forEach(function (row, i) {
-          if (getTimeStampFromStr(startDate) <= 1446336000000) {
-            dataContainer.push({
-              name: dataSubject === 'country' ? $filter('country')(row.key) : row.key,
-              y: (baseCumulativeData[row.key] || 0) + row.doc_count,
-              color: APP_CONFIG.COLORS[i % 11]
-            });
-            currentTotal.value += (baseCumulativeData[row.key] || 0) + row.doc_count;
-          } else {
-            dataContainer.push({
-              name: dataSubject === 'country' ? $filter('country')(row.key) : row.key,
-              y: row.doc_count,
-              color: APP_CONFIG.COLORS[i % 11]
-            });
-            currentTotal.value += row.doc_count;
-          }
-        });
-        if (chart) {
-          chart.hideLoading();
-        }
         deferred.resolve({ name: 'success' });
       }, deferred.reject);
       return deferred.promise;
@@ -99,18 +64,18 @@
     }
     function getPaymentFilterClause(paymentFilter) {
       var payment;
-      if (paymentFilter === 'basic-unsubscribe') {
-        payment = ' WHERE now_payment_plan="basic" AND event="stop"';
-      } else if (paymentFilter === 'standard-unsubscribe') {
-        payment = ' WHERE now_payment_plan="standard" AND event="stop"';
-      } else if (paymentFilter === 'premium-unsubscribe') {
-        payment = ' WHERE now_payment_plan="premium" AND event="stop"';
-      } else if (paymentFilter === 'basic-refund') {
-        payment = ' WHERE now_payment_plan="basic" AND event="refund"';
-      } else if (paymentFilter === 'standard-refund') {
-        payment = ' WHERE now_payment_plan="standard" AND event="refund"';
-      } else if (paymentFilter === 'premium-refund') {
-        payment = ' WHERE now_payment_plan="premium" AND event="refund"';
+      if (paymentFilter === 'basic-standard') {
+        payment = ' WHERE event="_null" AND now_payment_plan="basic" AND change_payment_plan="standard"';
+      } else if (paymentFilter === 'basic-premium') {
+        payment = ' WHERE event="_null" AND now_payment_plan="basic" AND change_payment_plan="premium"';
+      } else if (paymentFilter === 'standard-premium') {
+        payment = ' WHERE event="_null" AND now_payment_plan="standard" AND change_payment_plan="premium"';
+      } else if (paymentFilter === 'standard-basic') {
+        payment = ' WHERE event="_null" AND now_payment_plan="standard" AND change_payment_plan="basic"';
+      } else if (paymentFilter === 'premium-standard') {
+        payment = ' WHERE event="_null" AND now_payment_plan="premium" AND change_payment_plan="standard"';
+      } else if (paymentFilter === 'premium-basic') {
+        payment = ' WHERE event="_null" AND now_payment_plan="premium" AND change_payment_plan="basic"';
       }
       return payment;
     }
@@ -148,8 +113,9 @@
       return device;
     }
     function getDateFilterString(startDate, endDate) {
-      var startDateStr = getTimeStampFromStr(startDate);
-      var endDateStr = getTimeStampFromStr(endDate) + dayInMS;
+      var dayInMS = 86400000;
+      var startDateStr = getTimeStampFromStr(startDate) - dayInMS;
+      var endDateStr = getTimeStampFromStr(endDate);
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createGroupByString(selectedRange) {
@@ -169,11 +135,11 @@
       return ' ORDER BY @timestamp ASC';
     }
   }
-  CancelUserData.$inject = [
+  UpgradeDowngrade.$inject = [
     '$http',
     '$q',
     '$filter',
     'APP_CONFIG'
   ];
-  angular.module('dataDashboard.cancelUserData.service.CancelUserData', []).factory('CancelUserData', CancelUserData);
+  angular.module('dataDashboard.upgradeDowngrade.service.UpgradeDowngrade', []).factory('UpgradeDowngrade', UpgradeDowngrade);
 }());

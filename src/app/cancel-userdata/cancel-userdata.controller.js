@@ -165,7 +165,7 @@
         range = 365;
         startDateCopy = new Date(vm.dateRange.startDate.getFullYear(), 11, 31);
       }
-      while (startDateCopy < vm.dateRange.endDate) {
+      while (startDateCopy <= vm.dateRange.endDate) {
         vm.reversedData.push([
           startDateCopy.setHours(12, 0, 0, 0),
           0,

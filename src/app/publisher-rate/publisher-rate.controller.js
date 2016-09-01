@@ -4,7 +4,8 @@
     var vm = this;
     vm.currentPage = 1;
     vm.pageSize = 20;
-    vm.totalItem = 0;
+    vm.publisherTotalItem = 0;
+    vm.seriesTotalItem = 0;
     vm.selectedTypeFilter = 'all';
     vm.selectedPublisherId = 0;
     vm.selectedSeriesId = 0;
@@ -52,6 +53,7 @@
             vm.publisherRates[rate][1]
           ]);
         }
+        vm.publisherTotalItem = vm.sortablePublishers.length;
         vm.sortablePublishers.sort(function (a, b) {
           return b[1] - a[1];
         });
@@ -64,9 +66,11 @@
             vm.seriesRates[rate][1]
           ]);
         }
+        vm.seriesTotalItem = vm.sortableSeries.length;
         vm.sortableSeries.sort(function (a, b) {
           return b[1] - a[1];
         });
+
       }
     }
     function fetchAndDownloadCSV(dataContainer) {

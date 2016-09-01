@@ -2,7 +2,6 @@
   'use strict';
   var today = new Date();
   var defaultLineChartStartDate = new Date(new Date(today).setMonth(today.getMonth() - 1));
-  var dayInMS = 86400000;
   var defaultPieChartStartDate = new Date('2015-11-01');
   function MonthlyRecurringRevenueController(MonthlyRecurringRevenue, LinechartUtils, PiechartUtils, APP_CONFIG, $filter, CSVparserUtils) {
     var vm = this;
@@ -114,7 +113,7 @@
         'mrr',
         'changeNet/%'
       ];
-      dataContainer.forEach(function (item, i) {
+      dataContainer.forEach(function (item) {
         var tmp = [];
         tmp[0] = item[0];
         tmp[1] = item[1];

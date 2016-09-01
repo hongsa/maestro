@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Publisher / Series Avg Rate</h1>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-footer">
+    <form name="cardRateForm" novalidate>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label>Publisher</label>
+          <select class="form-control" ng-model="publisherRateVm.selectedPublisherFilter" name="publisherSelectBtn"
+                  id="publisher-select-btn" ng-change="publisherRateVm.getSeriesRate()">
+            <option ng-repeat="publisher in publisherRateVm.availablePublishers" value="{{publisher}}">{{publisher |
+              publisher}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<h4 class="col-sm-4" ng-if="publisherRateVm.selectedPublisherFilter != -1">
+  {{publisherRateVm.selectedPublisherFilter | publisher}} : {{publisherRateVm.publisherRates[publisherRateVm.selectedPublisherFilter][0] / publisherRateVm.publisherRates[publisherRateVm.selectedPublisherFilter][1] | number:2}} / {{publisherRateVm.publisherRates[publisherRateVm.selectedPublisherFilter][1]}}
+</h4>
+<h4 class="col-sm-4" ng-if="publisherRateVm.selectedPublisherFilter == -1">
+  Total Publisher Avg Rate
+</h4>
+<div class="row" ng-if="publisherRateVm.selectedPublisherFilter == -1">
+  <div class="col-sm-12">
+    <div>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-4 clickable-thead">
+            Rank
+          </th>
+          <th class="col-sm-4 clickable-thead text-right">
+            Publisher
+          </th>
+          <th class="col-sm-4 clickable-thead text-right">
+            Average Rate / Rate Count
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in publisherRateVm.sortablePublishers">
+          <td class="col-sm-4">{{$index + 1}}</td>
+          <td class="col-sm-4 text-right">{{item[0] | publisher}}({{item[0]}})</td>
+          <td class="col-sm-4 text-right">{{item[1] | number:2}} / {{item[2]}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="publisherRateVm.totalItem"
+                      ng-model="publisherRateVm.currentPage"
+                      ng-change="publisherRateVm.pageChanged(publisherRateVm.currentPage)" items-per-page="20"
+                      max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                      last-text="&raquo;"></uib-pagination>
+    </div>
+  </div>
+</div>
+
+<div class="row" ng-if="publisherRateVm.selectedPublisherFilter != -1">
+  <div class="col-sm-12">
+    <div>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-4 clickable-thead">
+            Rank
+          </th>
+          <th class="col-sm-4 clickable-thead text-right">
+            Series
+          </th>
+          <th class="col-sm-4 clickable-thead text-right">
+            Average Rate / Rate Count
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in publisherRateVm.sortableSeries">
+          <td class="col-sm-4">{{$index + 1}}</td>
+          <td class="col-sm-4 text-right">{{item[0] | series}}({{item[0]}})</td>
+          <td class="col-sm-4 text-right">{{item[1] | number:2}} / {{item[2]}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="publisherRateVm.totalItem"
+                      ng-model="publisherRateVm.currentPage"
+                      ng-change="publisherRateVm.pageChanged(publisherRateVm.currentPage)" items-per-page="20"
+                      max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                      last-text="&raquo;"></uib-pagination>
+    </div>
+  </div>
+</div>

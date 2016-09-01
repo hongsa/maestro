@@ -37,6 +37,8 @@
     // Downloaded Cards
     'dataDashboard.downloadedCard',
     // Upgrade & Downgrade payment
-    'dataDashboard.upgradeDowngrade'
+    'dataDashboard.upgradeDowngrade',
+    // Publisher Rate
+    'dataDashboard.publisherRate'
   ]);
 }());

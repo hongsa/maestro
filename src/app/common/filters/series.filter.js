@@ -900,7 +900,7 @@
     return function (input) {
       var result;
       seriesId.resource.forEach(function (item) {
-        if (item.id === input) {
+        if (item.id === parseInt(input)) {
           result = item.name;
         }
       });

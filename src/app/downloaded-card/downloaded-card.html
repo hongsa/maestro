@@ -24,7 +24,7 @@
           <div class="form-group">
             <label for="publisherSelectBtn">Publisher: </label>
             <select class="form-control" ng-model="downloadedCardVm.selectedPublisherFilter" name="publisherSelectBtn" id="publisher-select-btn" ng-change="downloadedCardVm.lineChartFilter()">
-              <option ng-repeat="publisher in downloadedCardVm.availablePubishers" value="{{publisher}}">{{publisher | publisher}}</option>
+              <option ng-repeat="publisher in downloadedCardVm.availablePublishers" value="{{publisher}}">{{publisher | publisher}}</option>
             </select>
           </div>
 

@@ -25,10 +25,10 @@
       'free',
       'paid'
     ];
-    vm.availablePubishers = [];
+    vm.availablePublishers = [];
     vm.selectedRange = 'daily';
     vm.selectedPaidFilter = 'all';
-    vm.selectedPublisherFilter = '-1';
+    vm.selectedPublisherFilter = -1;
     // Line Chart
     vm.downloadedCardForLineChart = {
       name: 'Downloaded Cards',
@@ -66,7 +66,7 @@
       });
     }
     function getPublisher() {
-      DownloadedCard.getPublisherKeys(vm.availablePubishers, vm.dateRange.startDate, vm.dateRange.endDate);
+      DownloadedCard.getPublisherKeys(vm.availablePublishers, vm.dateRange.startDate, vm.dateRange.endDate);
     }
     function setReversedContainer() {
       vm.reversedData = [];

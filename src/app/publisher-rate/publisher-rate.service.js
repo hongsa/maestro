@@ -8,7 +8,7 @@
     };
     function getPublisherRate(dataContainer) {
       var deferred = $q.defer();
-      var query = 'SELECT avg_rate, rate_cnt, publisher_id FROM lcrate';
+      var query = 'SELECT avg_rate, rate_cnt, publisher_id FROM lcrate LIMIT 10000';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',

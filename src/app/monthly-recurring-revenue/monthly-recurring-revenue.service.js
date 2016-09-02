@@ -25,8 +25,8 @@
             var key;
             key = getKey(row.key, selectedRange);
             row.price.buckets.forEach(function (p) {
-              if (p.key === 32 || p.key === 54) {
-                datePrice += (p.key + 1) * p.doc_count * 1120;
+              if (p.key < 1000) {
+                datePrice += (p.key) * p.doc_count * 1100;
               } else {
                 datePrice += p.key * p.doc_count;
               }
@@ -102,7 +102,7 @@
       return calculateKey + dayInMSHalf;
     }
     function createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate) {
-      var query = 'SELECT count(*) FROM stg-2016';
+      var query = 'SELECT count(*) FROM log-*';
       query += createWhereFilterString(queryType, deviceFilter, startDate, endDate);
       query += createGroupByString(queryType, selectedRange);
       query += createOrderByString();
@@ -118,11 +118,11 @@
     function getPaymentFilterClause(queryType) {
       var payment;
       if (queryType === 'increase') {
-        payment = ' WHERE (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
+        payment = ' WHERE user_id <> "30" AND (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
       } else if (queryType === 'decrease') {
-        payment = ' WHERE event="stop"';
+        payment = ' WHERE user_id <> "30" AND event="stop"';
       } else {
-        payment = ' WHERE event="_null" and now_payment_plan<>"_null" and payment_method=' + '"' + queryType + '"';
+        payment = ' WHERE user_id <> "30" AND event="_null" and now_payment_plan<>"_null" and payment_method=' + '"' + queryType + '"';
       }
       return payment;
     }

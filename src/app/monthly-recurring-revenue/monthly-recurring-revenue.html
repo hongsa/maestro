@@ -88,14 +88,14 @@
         <tbody>
           <tr ng-repeat="item in monthlyRecurringRevenueVm.reversedDataContainer">
             <td class="col-sm-4" ng-style="monthlyRecurringRevenueVm.getDateColor({{item[0]}})">{{item[0] | date:'yyyy. MM. dd (EEE)'}}</td>
-            <td class="col-sm-4 text-right">{{item[1] | number}}</td>
+            <td class="col-sm-4 text-right">{{item[1] | number :0}}</td>
             <td class="col-sm-4 text-right increased" ng-if="item[2] > 0">
-              {{(item[2]) | number}}
+              {{(item[2]) | number:0}}
               <i class="fa fa-sort-asc fa-fw"></i>
               {{(item[3]) | percentage:2}}
             </td>
             <td class="col-sm-4 text-right decreased" ng-if="item[2] < 0">
-              {{(item[2]) | number}}
+              {{(item[2]) | number:0}}
               <i class="fa fa-sort-desc fa-fw"></i>
               {{(item[3]) | percentage:2}}
             </td>

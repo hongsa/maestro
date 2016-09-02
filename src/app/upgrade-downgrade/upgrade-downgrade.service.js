@@ -48,7 +48,7 @@
       return calculateKey + dayInMSHalf;
     }
     function createQueryString(paymentFilter, roleFilter, deviceFilter, selectedRange, startDate, endDate) {
-      var query = 'SELECT count(*) FROM stg-2016';
+      var query = 'SELECT count(*) FROM log-*';
       query += createWhereFilterString(paymentFilter, roleFilter, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
@@ -65,17 +65,17 @@
     function getPaymentFilterClause(paymentFilter) {
       var payment;
       if (paymentFilter === 'basic-standard') {
-        payment = ' WHERE event="_null" AND now_payment_plan="basic" AND change_payment_plan="standard"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="basic" AND change_payment_plan="standard"';
       } else if (paymentFilter === 'basic-premium') {
-        payment = ' WHERE event="_null" AND now_payment_plan="basic" AND change_payment_plan="premium"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="basic" AND change_payment_plan="premium"';
       } else if (paymentFilter === 'standard-premium') {
-        payment = ' WHERE event="_null" AND now_payment_plan="standard" AND change_payment_plan="premium"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="standard" AND change_payment_plan="premium"';
       } else if (paymentFilter === 'standard-basic') {
-        payment = ' WHERE event="_null" AND now_payment_plan="standard" AND change_payment_plan="basic"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="standard" AND change_payment_plan="basic"';
       } else if (paymentFilter === 'premium-standard') {
-        payment = ' WHERE event="_null" AND now_payment_plan="premium" AND change_payment_plan="standard"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="premium" AND change_payment_plan="standard"';
       } else if (paymentFilter === 'premium-basic') {
-        payment = ' WHERE event="_null" AND now_payment_plan="premium" AND change_payment_plan="basic"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND now_payment_plan="premium" AND change_payment_plan="basic"';
       }
       return payment;
     }

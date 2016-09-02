@@ -96,7 +96,7 @@
             vm.reversedTotalData[i][0],
             vm.reversedTotalData[i][1],
             vm.reversedTotalData[i][1] - vm.reversedTotalData[i + 1][1],
-            (vm.reversedTotalData[i][1] - vm.reversedTotalData[i + 1][1]) / (vm.reversedTotalData[i][1] || 1)
+            (vm.reversedTotalData[i][1] - vm.reversedTotalData[i + 1][1]) / (vm.reversedTotalData[i + 1][1] || 1)
           ]);
         }
       }

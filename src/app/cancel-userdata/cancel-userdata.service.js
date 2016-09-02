@@ -83,7 +83,7 @@
       return calculateKey + dayInMSHalf;
     }
     function createQueryString(paymentFilter, roleFilter, deviceFilter, selectedRange, startDate, endDate) {
-      var query = 'SELECT count(*) FROM stg-2016';
+      var query = 'SELECT count(*) FROM log-*';
       query += createWhereFilterString(paymentFilter, roleFilter, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
@@ -100,17 +100,17 @@
     function getPaymentFilterClause(paymentFilter) {
       var payment;
       if (paymentFilter === 'basic-unsubscribe') {
-        payment = ' WHERE now_payment_plan="basic" AND event="stop"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="basic" AND event="stop"';
       } else if (paymentFilter === 'standard-unsubscribe') {
-        payment = ' WHERE now_payment_plan="standard" AND event="stop"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="standard" AND event="stop"';
       } else if (paymentFilter === 'premium-unsubscribe') {
-        payment = ' WHERE now_payment_plan="premium" AND event="stop"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="premium" AND event="stop"';
       } else if (paymentFilter === 'basic-refund') {
-        payment = ' WHERE now_payment_plan="basic" AND event="refund"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="basic" AND event="refund"';
       } else if (paymentFilter === 'standard-refund') {
-        payment = ' WHERE now_payment_plan="standard" AND event="refund"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="standard" AND event="refund"';
       } else if (paymentFilter === 'premium-refund') {
-        payment = ' WHERE now_payment_plan="premium" AND event="refund"';
+        payment = ' WHERE user_id <> "30" AND now_payment_plan="premium" AND event="refund"';
       }
       return payment;
     }

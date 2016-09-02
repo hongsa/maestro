@@ -83,7 +83,7 @@
       return calculateKey + dayInMSHalf;
     }
     function createQueryString(paymentFilter, roleFilter, deviceFilter, selectedRange, startDate, endDate) {
-      var query = 'SELECT count(*) FROM stg-2016';
+      var query = 'SELECT count(*) FROM log-*';
       query += createWhereFilterString(paymentFilter, roleFilter, deviceFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
       query += createOrderByString();
@@ -100,17 +100,17 @@
     function getPaymentFilterClause(paymentFilter) {
       var payment;
       if (paymentFilter === 'trial-basic') {
-        payment = ' WHERE event="_null" AND change_payment_plan="basic"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND change_payment_plan="basic"';
       } else if (paymentFilter === 'trial-standard') {
-        payment = ' WHERE event="_null" AND change_payment_plan="standard"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND change_payment_plan="standard"';
       } else if (paymentFilter === 'trial-premium') {
-        payment = ' WHERE event="_null" AND change_payment_plan="premium"';
+        payment = ' WHERE user_id <> "30" AND event="_null" AND change_payment_plan="premium"';
       } else if (paymentFilter === 'basic-subscribers') {
-        payment = ' WHERE event="continue" AND change_payment_plan="basic"';
+        payment = ' WHERE user_id <> "30" AND event="continue" AND change_payment_plan="basic"';
       } else if (paymentFilter === 'standard-subscribers') {
-        payment = ' WHERE event="continue" AND change_payment_plan="standard"';
+        payment = ' WHERE user_id <> "30" AND event="continue" AND change_payment_plan="standard"';
       } else if (paymentFilter === 'premium-subscribers') {
-        payment = ' WHERE event="continue" AND change_payment_plan="premium"';
+        payment = ' WHERE user_id <> "30" AND event="continue" AND change_payment_plan="premium"';
       }
       return payment;
     }

@@ -28,7 +28,7 @@
     vm.availablePublishers = [];
     vm.selectedRange = 'daily';
     vm.selectedPaidFilter = 'all';
-    vm.selectedPublisherFilter = -1;
+    vm.selectedPublisherFilter = '-1';
     // Line Chart
     vm.downloadedCardForLineChart = {
       name: 'Downloaded Cards',

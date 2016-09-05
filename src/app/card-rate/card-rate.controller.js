@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  function CardRateController(CardRate, PiechartUtils, APP_CONFIG, CSVparserUtils, $filter) {
+  function CardRateController(CardRate, RateModal, PiechartUtils, APP_CONFIG, CSVparserUtils, $filter) {
     var vm = this;
     vm.currentPage = 1;
     vm.pageSize = 20;
@@ -24,6 +24,7 @@
     vm.pageChanged = pageChanged;
     vm.fetchAndDownloadCSV = fetchAndDownloadCSV;
     vm.sortType = sortType;
+    vm.rateModal = rateModal;
     vm.pieChartConfig = new PiechartUtils.PieChartConfig(vm.pieChartData);
     init();
     function init() {
@@ -37,6 +38,9 @@
           }
         });
       }
+    }
+    function rateModal(baseData) {
+      RateModal.open(baseData);
     }
     function fetchAndDownloadCSV(dataContainer) {
       var copyContainer = [];
@@ -66,46 +70,75 @@
     }
     function pageChanged(currentPage) {
       var sortable = vm.cardRates;
-      var orderFirst = 0;
-      var orderSecond = 0;
+      var orderBy = 0;
       if (vm.selectedOrderBy === 'ASC') {
-        orderFirst = -1;
-        orderSecond = 1;
+        orderBy = -1;
       } else {
-        orderFirst = 1;
-        orderSecond = -1;
+        orderBy = 1;
       }
       if (vm.selectedSortType === 'avg_rate') {
         sortable.sort(function (a, b) {
-          return a.avg_rate < b.avg_rate ? orderFirst : a.avg_rate > b.avg_rate ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.avg_rate - a.avg_rate;
+          } else {
+            return a.avg_rate - b.avg_rate;
+          }
         });
       } else if (vm.selectedSortType === 'rate_cnt') {
         sortable.sort(function (a, b) {
-          return a.rate_cnt > b.rate_cnt ? orderFirst : a.rate_cnt < b.rate_cnt ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.rate_cnt - a.rate_cnt;
+          } else {
+            return a.rate_cnt - b.rate_cnt;
+          }
         });
       } else if (vm.selectedSortType === 'series_id') {
         sortable.sort(function (a, b) {
-          return a.series_id < b.series_id ? orderFirst : a.series_id > b.series_id ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.series_id - a.series_id;
+          } else {
+            return a.series_id - b.series_id;
+          }
         });
       } else if (vm.selectedSortType === 'publisher_id') {
         sortable.sort(function (a, b) {
-          return a.publisher_id < b.publisher_id ? orderFirst : a.publisher_id > b.publisher_id ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.publisher_id - a.publisher_id;
+          } else {
+            return a.publisher_id - b.publisher_id;
+          }
         });
       } else if (vm.selectedSortType === 'card_id') {
         sortable.sort(function (a, b) {
-          return a.id < b.id ? orderFirst : a.id > b.id ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.id - a.id;
+          } else {
+            return a.id - b.id;
+          }
         });
       } else if (vm.selectedSortType === 'grade_id') {
         sortable.sort(function (a, b) {
-          return a.grade_id < b.grade_id ? orderFirst : a.grade_id > b.grade_id ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.grade_id - a.grade_id;
+          } else {
+            return a.grade_id - b.grade_id;
+          }
         });
       } else if (vm.selectedSortType === 'title') {
         sortable.sort(function (a, b) {
-          return a.title < b.title ? orderFirst : a.title > b.title ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.title - a.title;
+          } else {
+            return a.title - b.title;
+          }
         });
       } else if (vm.selectedSortType === 'recc_end') {
         sortable.sort(function (a, b) {
-          return a.recc_end < b.recc_end ? orderFirst : a.recc_end > b.recc_end ? orderSecond : 0;
+          if (orderBy === 1) {
+            return b.recc_end - a.recc_end;
+          } else {
+            return a.recc_end - b.recc_end;
+          }
         });
       }
       vm.currentPage = currentPage;
@@ -138,6 +171,7 @@
   }
   CardRateController.$inject = [
     'CardRate',
+    'RateModal',
     'PiechartUtils',
     'APP_CONFIG',
     'CSVparserUtils',

@@ -118,11 +118,11 @@
     function getPaymentFilterClause(queryType) {
       var payment;
       if (queryType === 'increase') {
-        payment = ' WHERE user_id <> "30" AND (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
+        payment = ' WHERE (user_id <> "30" AND user_id <> "1475" AND user_id <> "1520") AND (event="_null" and now_payment_plan="_null") or (event="continue" and now_payment_plan<>"_null") and event<>"resume"';
       } else if (queryType === 'decrease') {
-        payment = ' WHERE user_id <> "30" AND event="stop"';
+        payment = ' WHERE (user_id <> "30" AND user_id <> "1475" AND user_id <> "1520") AND event="stop"';
       } else {
-        payment = ' WHERE user_id <> "30" AND event="_null" and now_payment_plan<>"_null" and payment_method=' + '"' + queryType + '"';
+        payment = ' WHERE (user_id <> "30" AND user_id <> "1475" AND user_id <> "1520") AND event="_null" and now_payment_plan<>"_null" and payment_method=' + '"' + queryType + '"';
       }
       return payment;
     }

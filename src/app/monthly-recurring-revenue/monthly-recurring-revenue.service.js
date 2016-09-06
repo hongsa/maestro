@@ -92,14 +92,14 @@
       } else if (selectedRange === 'weekly') {
         calculateKey = key + 6 * dayInMS;
       } else if (selectedRange === 'monthly') {
-        calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 2, 0, 23, 59, 59);
+        calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 1, 0, 0, 0, 0);
       } else {
         calculateKey = key * (364 * dayInMS);
       }
-      if (calculateKey > today) {
+      if (new Date(calculateKey).getTime() > new Date(today).getTime()) {
         calculateKey = today.setHours(0, 0, 0, 0);
       }
-      return calculateKey + dayInMSHalf;
+      return new Date(calculateKey).getTime() + dayInMSHalf;
     }
     function createQueryString(queryType, deviceFilter, selectedRange, startDate, endDate) {
       var query = 'SELECT count(*) FROM log-*';
@@ -147,7 +147,7 @@
         if (selectedRange === 'daily') {
           return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
         } else if (selectedRange === 'weekly') {
-          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1W", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
         } else if (selectedRange === 'monthly') {
           return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), price';
         } else {
@@ -157,7 +157,7 @@
         if (selectedRange === 'daily') {
           return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1d", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
         } else if (selectedRange === 'weekly') {
-          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1w", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
+          return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1W", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
         } else if (selectedRange === 'monthly') {
           return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp", "interval"="1M", "format"="yyyy-MM-dd", "time_zone"="+09:00"), now_payment_plan, now_payment_children_limit, change_payment_plan, change_payment_children_limit';
         } else {

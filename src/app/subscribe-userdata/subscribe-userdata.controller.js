@@ -184,7 +184,7 @@
           flag = true;
         }
       }
-      if (flag === true && (vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0)) {
+      if (flag === true && (vm.reversedData[vm.reversedData.length - 1][0] !== vm.dateRange.endDate.setHours(12, 0, 0, 0) || vm.reversedData.length === 0) || selectedRange === 'yearly') {
         vm.reversedData.push([
           vm.dateRange.endDate.setHours(12, 0, 0, 0),
           0,

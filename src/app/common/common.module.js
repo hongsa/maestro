@@ -30,6 +30,7 @@
     'dataDashboard.common.filter.series',
     'dataDashboard.common.filter.grade',
     'dataDashboard.common.filter.price',
+    'dataDashboard.common.filter.subject',
     // Utils
     'dataDashboard.common.utils.LinechartUtils',
     'dataDashboard.common.utils.BarchartUtils',

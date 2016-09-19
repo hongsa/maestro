@@ -52,11 +52,12 @@
       }
     ]
   };
+
   function gradeFilter() {
     return function (input) {
       var result;
       if (input === null) {
-        return 'extra';
+        return 'Extra';
       }
       gradeId.resource.forEach(function (item) {
         if (item.id === input) {
@@ -66,5 +67,6 @@
       return result;
     };
   }
+
   angular.module('dataDashboard.common.filter.grade', []).filter('grade', gradeFilter);
 }());

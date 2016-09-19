@@ -39,6 +39,9 @@
     // Upgrade & Downgrade payment
     'dataDashboard.upgradeDowngrade',
     // Publisher Rate
-    'dataDashboard.publisherRate'
+    'dataDashboard.publisherRate',
+    // Preferred Subjects
+    'dataDashboard.preferredSubjects'
+
   ]);
 }());

@@ -86,7 +86,6 @@
         method: 'GET',
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
-        console.log(result);
         if (result.data.hits.hits.length !== 0) {
           dataContainer.paid = result.data.hits.hits[0]._source['@timestamp'];
         } else {
@@ -104,7 +103,6 @@
         method: 'GET',
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
-        console.log(result);
         dataContainer.downloadedCount = result.data.aggregations.count.value;
         deferred.resolve({ name: 'success' });
       }, deferred.reject);

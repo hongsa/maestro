@@ -3,6 +3,9 @@
   function UserPageFlow($http, $q, APP_CONFIG) {
     return {
       getUserPageFlow: getUserPageFlow,
+      getUserInfo: getUserInfo,
+      getPaidDate: getPaidDate,
+      getDownloadedCount: getDownloadedCount,
       dateRange: {
         startDate: null,
         endDate: null
@@ -28,14 +31,18 @@
                   time: new Date(row.sort[0]),
                   cur_page: null,
                   prev_page: null,
-                  user_ip: null
+                  user_ip: null,
+                  now_payment_plan: null,
+                  app_version: null
                 });
               }
               dataContainer.push({
                 time: new Date(row.sort[0]),
                 cur_page: row._source.cur_page,
                 prev_page: row._source.prev_page,
-                user_ip: row._source.ip
+                user_ip: row._source.ip,
+                now_payment_plan: row._source.now_payment_plan,
+                app_version: row._source.app_version
               });
             }
           });
@@ -52,52 +59,79 @@
       });
       return deferred.promise;
     }
+    function getUserInfo(dataContainer, userId) {
+      var deferred = $q.defer();
+      var query = '/lc_db_prd/_table/users/' + userId;
+      $http({
+        url: APP_CONFIG.BACKEND_ADDRESS + query,
+        method: 'GET',
+        headers: {
+          'X-DreamFactory-Application-Name': APP_CONFIG.DSP_API_NAME,
+          'X-DreamFactory-Api-Key': APP_CONFIG.DSP_API_KEY
+        }
+      }).then(function (result) {
+        dataContainer.name = result.data.name;
+        dataContainer.created_at = result.data.created_at;
+        dataContainer.current_sign_in_at = result.data.current_sign_in_at;
+        dataContainer.role = result.data.role;
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
+    function getPaidDate(dataContainer, userId) {
+      var deferred = $q.defer();
+      var query = 'SELECT * FROM log-* WHERE _type="payment" and user_id=' + userId + ' ORDER BY @timestamp DESC LIMIT 1';
+      $http({
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
+        method: 'GET',
+        headers: { 'Content-Type': undefined }
+      }).then(function (result) {
+        console.log(result);
+        if (result.data.hits.hits.length !== 0) {
+          dataContainer.paid = result.data.hits.hits[0]._source['@timestamp'];
+        } else {
+          dataContainer.paid = 'None';
+        }
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
+    function getDownloadedCount(dataContainer, userId) {
+      var deferred = $q.defer();
+      var query = 'SELECT count(*) as count FROM log-* WHERE _type="download" and user_id=' + userId;
+      $http({
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
+        method: 'GET',
+        headers: { 'Content-Type': undefined }
+      }).then(function (result) {
+        console.log(result);
+        dataContainer.downloadedCount = result.data.aggregations.count.value;
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
     function createQueryString(userId, startDate, endDate) {
-      var query = 'SELECT ip,api,cur_page,prev_page,@timestamp';
-      query += createFromRangeString(startDate, endDate);
+      var query = 'SELECT * FROM log-*';
       query += createWhereFilterString(userId, startDate, endDate);
       query += ' ORDER BY @timestamp ASC';
       query += createLimitString(startDate, endDate);
       return query;
     }
-    function createFromRangeString(startDate, endDate) {
-      var startDateCopy = new Date(startDate.getTime());
-      var endDateNums = getDateInNumbers(endDate);
-      var devicePrefix = 'all_prd-';
-      var from = ' FROM ' + formatDateName(devicePrefix, getDateInNumbers(startDate));
-      startDateCopy.setDate(startDateCopy.getDate() + 1);
-      var currentDate = startDateCopy.getDate();
-      var startDateNums = getDateInNumbers(startDateCopy);
-      var prevDatePosition = getDateInNumbers(startDate).toString().substring(6, 7);
-      while (startDateNums < endDateNums) {
-        if (!prevDatePosition || prevDatePosition !== startDateNums.toString().substring(6, 7)) {
-          from += ',' + formatDateName(devicePrefix, startDateNums);
-          prevDatePosition = startDateNums.toString().substring(6, 7);
-        }
-        startDateCopy.setDate(currentDate + 1);
-        currentDate = startDateCopy.getDate();
-        startDateNums = getDateInNumbers(startDateCopy);
-      }
-      if (!prevDatePosition || prevDatePosition !== endDateNums.toString().substring(6, 7)) {
-        from += ',' + formatDateName(devicePrefix, endDateNums);
-      }
-      return from;
-    }
     function createWhereFilterString(userId, startDate, endDate) {
       var where = ' WHERE';
-      where += ' id="' + userId + '"';
+      where += ' user_id="' + userId + '"';
       where += getDateFilterString(startDate, endDate);
       return where;
     }
     function createLimitString(startDate, endDate) {
       return ' LIMIT 10000';
     }
-    function formatDateName(devicePrefix, dateNums, delimeter) {
+    function formatDateName(dateNums, delimeter) {
       var dateString = dateNums.toString();
       if (delimeter) {
-        return devicePrefix + dateString.substring(0, 4) + delimeter + dateString.substring(4, 6) + delimeter + dateString.substring(6, 8);
+        return dateString.substring(0, 4) + delimeter + dateString.substring(4, 6) + delimeter + dateString.substring(6, 8);
       } else {
-        return devicePrefix + dateString.substring(0, 4) + '.' + dateString.substring(4, 6) + '.' + dateString.substring(6, 7) + '*';
+        return 'log-' + dateString.substring(0, 4) + '.' + dateString.substring(4, 6);  //return 'stg-' + dateString.substring(0,4)
       }
     }
     function getDateInNumbers(date) {
@@ -106,8 +140,8 @@
     function getDateFilterString(startDate, endDate) {
       var endDateCopy = new Date(endDate.getTime());
       endDateCopy.setDate(endDateCopy.getDate() + 1);
-      var startDateStr = formatDateName('', getDateInNumbers(startDate), '-');
-      var endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
+      var startDateStr = formatDateName(getDateInNumbers(startDate), '-');
+      var endDateStr = formatDateName(getDateInNumbers(endDateCopy), '-');
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
     function createEmptyData(dataContainer, userId) {

@@ -11,12 +11,12 @@
         <form class="form-inline">
           <div class="form-group">
             <label for="startDate">Range: </label>
-            <input type="date" id="start-date" class="form-control" name="startDate" ng-model="userPageFlowVm.dateRange.startDate" 
+            <input type="date" id="start-date" class="form-control" name="startDate" ng-model="userPageFlowVm.dateRange.startDate"
               placeholder="yyyy-MM-dd"/>
           </div>
           <div class="form-group">
             <label for="endDate">-</label>
-            <input type="date" id="end-date" class="form-control" name="endDate" ng-model="userPageFlowVm.dateRange.endDate" 
+            <input type="date" id="end-date" class="form-control" name="endDate" ng-model="userPageFlowVm.dateRange.endDate"
               placeholder="yyyy-MM-dd"/>
           </div>
         </form>
@@ -24,13 +24,37 @@
         <form class="form-inline">
           <div class="form-group">
             <label for="userId">User ID: </label>
-            <input type="text" id="user-id-input" class="form-control" name="userId" ng-model="userPageFlowVm.userId" 
+            <input type="text" id="user-id-input" class="form-control" name="userId" ng-model="userPageFlowVm.userId"
               placeholder="User ID to search"/>
           </div>
           <div class="form-group">
             <button type="button" class="btn btn-primary" name="date-update" ng-click="userPageFlowVm.triggerUpdateWithDate()" id="date-update">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
           </div>
         </form>
+        <div class="panel panel-default">
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>이름</th>
+              <th>가입날짜</th>
+              <th>최근 접속날짜</th>
+              <th>결제날짜</th>
+              <th>다운로드 카드 수</th>
+              <th>역할</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr tooltip-placement="left">
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.name}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.created_at | date:'yyyy. MM. dd (EEE)'}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.current_sign_in_at | date:'yyyy. MM. dd (EEE)'}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.paid | date:'yyyy. MM. dd (EEE)'}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.downloadedCount}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.role}}</th>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -44,16 +68,18 @@
             <th>Time</th>
             <th>Previous Page</th>
             <th>Current Page</th>
-            <th>IP</th>
+            <th>Payment Plan</th>
+            <th>App Version</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="item in userPageFlowVm.userPageFlowData" tooltip-placement="left">
-            <th ng-if="item.cur_page === null && item.prev_page === null" colspan="4" class="success">{{item.time | date:'fullDate'}}</th>
+            <th ng-if="item.cur_page === null && item.prev_page === null" colspan="6" class="success">{{item.time | date:'fullDate'}}</th>
             <td ng-if="item.cur_page !== null && item.prev_page !== null" class="col-sm-2">{{item.time | date:'mediumTime'}}</td>
-            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-4">{{item.prev_page}}</td>
-            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-4">{{item.cur_page}}</td>
-            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.user_ip}}</td>
+            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.prev_page}}</td>
+            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.cur_page}}</td>
+            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.now_payment_plan}}</td>
+            <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.app_version}}</td>
           </tr>
         </tbody>
       </table>

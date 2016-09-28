@@ -98,7 +98,7 @@
     }
     function getDownloadedCount(dataContainer, userId) {
       var deferred = $q.defer();
-      var query = 'SELECT count(*) as count FROM log-* WHERE _type="download" and user_id=' + userId;
+      var query = 'SELECT count(distinct card_id) as count FROM log-* WHERE _type="download" and user_id=' + userId;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -111,7 +111,7 @@
     }
     function getCompleteCount(dataContainer, userId) {
       var deferred = $q.defer();
-      var query = 'SELECT count(*) as count FROM log-* WHERE _type="result" and user_id=' + userId;
+      var query = 'SELECT count(distinct card_id) as count FROM log-* WHERE _type="result" and user_id=' + userId;
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',

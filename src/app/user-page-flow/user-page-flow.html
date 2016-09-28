@@ -40,17 +40,19 @@
               <th>최근 접속날짜</th>
               <th>결제날짜</th>
               <th>다운로드 카드 수</th>
+              <th>완료 카드 수</th>
               <th>역할</th>
             </tr>
             </thead>
             <tbody>
             <tr tooltip-placement="left">
-              <th class="col-sm-2">{{userPageFlowVm.userInfo.name}}</th>
+              <th class="col-sm-1">{{userPageFlowVm.userInfo.name}}</th>
               <th class="col-sm-2">{{userPageFlowVm.userInfo.created_at | date:'yyyy. MM. dd (EEE)'}}</th>
-              <th class="col-sm-2">{{userPageFlowVm.userInfo.current_sign_in_at | date:'yyyy. MM. dd (EEE)'}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.last_sign_at | date:'yyyy. MM. dd (EEE)'}}</th>
               <th class="col-sm-2">{{userPageFlowVm.userInfo.paid | date:'yyyy. MM. dd (EEE)'}}</th>
               <th class="col-sm-2">{{userPageFlowVm.userInfo.downloadedCount}}</th>
-              <th class="col-sm-2">{{userPageFlowVm.userInfo.role}}</th>
+              <th class="col-sm-2">{{userPageFlowVm.userInfo.completeCount}}</th>
+              <th class="col-sm-1">{{userPageFlowVm.userInfo.role}}</th>
             </tr>
             </tbody>
           </table>

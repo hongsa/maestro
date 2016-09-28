@@ -47,7 +47,11 @@
     function getUserInfo() {
       UserPageFlow.getUserInfo(vm.userInfo, vm.userId).then(function (result) {
         UserPageFlow.getPaidDate(vm.userInfo, vm.userId).then(function (result) {
-          UserPageFlow.getDownloadedCount(vm.userInfo, vm.userId);
+          UserPageFlow.getDownloadedCount(vm.userInfo, vm.userId).then(function (result) {
+            UserPageFlow.getCompleteCount(vm.userInfo, vm.userId).then(function (result) {
+              UserPageFlow.getLastSignAt(vm.userInfo, vm.userId);
+            });
+          });
         });
       });
     }

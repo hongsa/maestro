@@ -6,6 +6,8 @@
       getUserInfo: getUserInfo,
       getPaidDate: getPaidDate,
       getDownloadedCount: getDownloadedCount,
+      getCompleteCount: getCompleteCount,
+      getLastSignAt: getLastSignAt,
       dateRange: {
         startDate: null,
         endDate: null
@@ -71,8 +73,7 @@
         }
       }).then(function (result) {
         dataContainer.name = result.data.name;
-        dataContainer.created_at = result.data.created_at;
-        dataContainer.current_sign_in_at = result.data.current_sign_in_at;
+        dataContainer.created_at = new Date(result.data.created_at);
         dataContainer.role = result.data.role;
         deferred.resolve({ name: 'success' });
       }, deferred.reject);
@@ -80,7 +81,7 @@
     }
     function getPaidDate(dataContainer, userId) {
       var deferred = $q.defer();
-      var query = 'SELECT * FROM log-* WHERE _type="payment" and user_id=' + userId + ' ORDER BY @timestamp DESC LIMIT 1';
+      var query = 'SELECT * FROM log-* WHERE _type="payment" and event="_null" and user_id=' + userId + ' ORDER BY @timestamp DESC LIMIT 1';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -104,6 +105,36 @@
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
         dataContainer.downloadedCount = result.data.aggregations.count.value;
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
+    function getCompleteCount(dataContainer, userId) {
+      var deferred = $q.defer();
+      var query = 'SELECT count(*) as count FROM log-* WHERE _type="result" and user_id=' + userId;
+      $http({
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
+        method: 'GET',
+        headers: { 'Content-Type': undefined }
+      }).then(function (result) {
+        dataContainer.completeCount = result.data.aggregations.count.value;
+        deferred.resolve({ name: 'success' });
+      }, deferred.reject);
+      return deferred.promise;
+    }
+    function getLastSignAt(dataContainer, userId) {
+      var deferred = $q.defer();
+      var query = 'SELECT * FROM log-* WHERE user_id=' + userId + ' ORDER BY @timestamp DESC LIMIT 1';
+      $http({
+        url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
+        method: 'GET',
+        headers: { 'Content-Type': undefined }
+      }).then(function (result) {
+        if (result.data.hits.hits.length !== 0) {
+          dataContainer.last_sign_at = result.data.hits.hits[0].sort[0];
+        } else {
+          dataContainer.paid = 'None';
+        }
         deferred.resolve({ name: 'success' });
       }, deferred.reject);
       return deferred.promise;

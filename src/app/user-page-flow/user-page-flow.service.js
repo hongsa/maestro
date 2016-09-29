@@ -147,7 +147,7 @@
       return query;
     }
     function createWhereFilterString(userId, startDate, endDate) {
-      var where = ' WHERE';
+      var where = ' WHERE _type="page" AND';
       where += ' user_id="' + userId + '"';
       where += getDateFilterString(startDate, endDate);
       return where;

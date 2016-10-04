@@ -74,7 +74,7 @@
       }
     }
     function createOrderByString() {
-      return ' ORDER BY avg_rate DESC LIMIT 1000';
+      return ' ORDER BY avg_rate DESC LIMIT 10000';
     }
   }
   CardRate.$inject = [

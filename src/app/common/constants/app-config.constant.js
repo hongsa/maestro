@@ -7,7 +7,7 @@
     'DSP_API_NAME': 'lc-dashboard',
     'DSP_API_KEY': '0124db4baff2a6855e0404a48d6cc1546f523ea71395d04030122035b0f80262',
     'S3_DATA_BUCKET': 'https://s3-ap-northeast-1.amazonaws.com/classting-dashboard',
-    //'ELASTIC_SEARCH_SQL': 'http://52.69.16.112:9200/_sql',
+    //'ELASTIC_SEARCH_SQL': 'http://52.196.69.31:9200/_sql',
     'ELASTIC_SEARCH_SQL': '/_sql',
     'COLORS': [
       '#F44336',

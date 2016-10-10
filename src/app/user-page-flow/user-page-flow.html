@@ -68,6 +68,7 @@
         <thead>
           <tr>
             <th>Time</th>
+            <th>Type</th>
             <th>Previous Page</th>
             <th>Current Page</th>
             <th>Payment Plan</th>
@@ -78,6 +79,7 @@
           <tr ng-repeat="item in userPageFlowVm.userPageFlowData" tooltip-placement="left">
             <th ng-if="item.cur_page === null && item.prev_page === null" colspan="6" class="success">{{item.time | date:'fullDate'}}</th>
             <td ng-if="item.cur_page !== null && item.prev_page !== null" class="col-sm-2">{{item.time | date:'mediumTime'}}</td>
+            <td class="col-sm-2">{{item._type}}</td>
             <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.prev_page | pageName}}</td>
             <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.cur_page | pageName}}</td>
             <td ng-if="item.cur_page !== null && item.prev_page !== null" class="table-cell col-sm-2">{{item.now_payment_plan}}</td>

@@ -4,10 +4,10 @@
   var today = new Date().setHours(12, 0, 0, 0);
   function DownloadedCard($http, $q, $filter, APP_CONFIG) {
     return {
-      getCumulativeUserData: getCumulativeUserData,
+      getDownloadedData: getDownloadedData,
       getPublisherKeys: getPublisherKeys
     };
-    function getCumulativeUserData(dataContainer, selectedRange, publisherFilter, paidFilter, startDate, endDate) {
+    function getDownloadedData(dataContainer, selectedRange, publisherFilter, paidFilter, startDate, endDate) {
       var deferred = $q.defer();
       var query = createQueryString(selectedRange, publisherFilter, paidFilter, startDate, endDate);
       var compareNum;
@@ -34,9 +34,13 @@
             if (key > today) {
               key = today;
             }
+            var itemCount = 0;
+            item.user_id.buckets.forEach(function (row) {
+              itemCount += row.card_id.buckets.length;
+            });
             dataContainer.data.push([
               key,
-              parseInt(item.doc_count, 10) || 0
+              parseInt(itemCount, 10) || 0
             ]);
           });
         }
@@ -70,7 +74,7 @@
       return new Date(timestamp).getTime();
     }
     function createQueryString(selectedRange, publisherFilter, paidFilter, startDate, endDate) {
-      var query = 'SELECT count(DISTINCT user_id)';
+      var query = 'SELECT count(*)';
       query += createFromRangeString(startDate, endDate);
       query += createWhereFilterString(publisherFilter, startDate, endDate);
       query += createGroupByString(selectedRange);
@@ -131,7 +135,7 @@
       } else {
         interval = '1M';
       }
-      return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp","interval"="' + interval + '")';
+      return ' GROUP BY date_histogram("alias"="timestamp", field="@timestamp","interval"="' + interval + '"), user_id, card_id';
     }
     function formatDateName(dateNums, delimeter) {
       var dateString = dateNums.toString();

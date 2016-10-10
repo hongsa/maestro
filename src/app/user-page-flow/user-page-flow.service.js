@@ -35,7 +35,8 @@
                   prev_page: null,
                   user_ip: null,
                   now_payment_plan: null,
-                  app_version: null
+                  app_version: null,
+                  _type: null
                 });
               }
               dataContainer.push({
@@ -44,7 +45,8 @@
                 prev_page: row._source.prev_page,
                 user_ip: row._source.ip,
                 now_payment_plan: row._source.now_payment_plan,
-                app_version: row._source.app_version
+                app_version: row._source.app_version,
+                _type: row._type
               });
             }
           });
@@ -147,7 +149,7 @@
       return query;
     }
     function createWhereFilterString(userId, startDate, endDate) {
-      var where = ' WHERE _type="page" AND';
+      var where = ' WHERE';
       where += ' user_id="' + userId + '"';
       where += getDateFilterString(startDate, endDate);
       return where;

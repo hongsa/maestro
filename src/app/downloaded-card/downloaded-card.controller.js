@@ -59,7 +59,7 @@
       return (vm.currentPage - 1) * vm.pageSize + index;
     }
     function lineChartFilter() {
-      DownloadedCard.getCumulativeUserData(vm.downloadedCardForLineChart, vm.selectedRange, vm.selectedPublisherFilter, vm.selectedPaidFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
+      DownloadedCard.getDownloadedData(vm.downloadedCardForLineChart, vm.selectedRange, vm.selectedPublisherFilter, vm.selectedPaidFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
         if (result.name === 'success') {
           setReversedContainer();
         }

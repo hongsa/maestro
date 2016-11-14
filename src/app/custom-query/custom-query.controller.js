@@ -26,7 +26,7 @@
     vm.selectedMethodFilter = 'POST';
     vm.selectedRoleFilter = 'All';
     vm.selectedDeviceFilter = 'All';
-    vm.selectedCountryFilter = 'All';
+    vm.selectedTypeFilter = 'All';
     vm.selectedGroupByFilter = 'date';
     vm.selectedChartType = 'line';
     vm.availableAPIs = [
@@ -47,30 +47,28 @@
     ];
     vm.availableRoles = [
       'All',
-      'teacher',
-      'student',
+      'child',
       'parent'
     ];
     vm.availableDevices = [
       'All',
       'Android',
-      'iOS',
-      'Web'
+      'iOS'
     ];
-    vm.availableCountries = [
+    vm.availableTypes = [
       'All',
-      'Korea',
-      'Japan',
-      'Taiwan',
-      'USA',
-      'Canada'
+      'api',
+      'result',
+      'quiz',
+      'page',
+      'event',
+      'payment',
+      'download'
     ];
     vm.availableGroupBys = [
       'date',
       'role',
-      'device',
-      'country',
-      'method'
+      'device'
     ];
     vm.availableChartTypes = [
       'line',
@@ -105,7 +103,7 @@
     vm.selectDropdownMethod = selectDropdownMethod;
     vm.selectDropdownRole = selectDropdownRole;
     vm.selectDropdownDevice = selectDropdownDevice;
-    vm.selectDropdownCountry = selectDropdownCountry;
+    vm.selectDropdownType = selectDropdownType;
     vm.selectDropdownAPI = selectDropdownAPI;
     vm.selectDropdownGroupBy = selectDropdownGroupBy;
     vm.selectDropdownChartType = selectDropdownChartType;
@@ -141,8 +139,9 @@
       vm.selectedDeviceFilter = device;
       updateCustomQueryString();
     }
-    function selectDropdownCountry(country) {
-      vm.selectedCountryFilter = country;
+    function selectDropdownType(type) {
+      vm.selectedTypeFilter = type;
+      console.log(vm.selectedTypeFilter)
       updateCustomQueryString();
     }
     function selectDateRange() {
@@ -159,7 +158,7 @@
       }
     }
     function updateCustomQueryString() {
-      vm.customQueryString = CustomQuery.createQueryString(vm.selectedAPIFilter, vm.selectedDeviceFilter, vm.selectedRoleFilter, vm.selectedCountryFilter, vm.selectedMethodFilter, vm.selectedGroupByFilter, vm.dateRange.startDate, vm.dateRange.endDate);
+      vm.customQueryString = CustomQuery.createQueryString(vm.selectedAPIFilter, vm.selectedDeviceFilter, vm.selectedRoleFilter, vm.selectedTypeFilter, vm.selectedMethodFilter, vm.selectedGroupByFilter, vm.dateRange.startDate, vm.dateRange.endDate);
     }
     function triggerUpdateWithQueryString() {
       if (!alertMsg) {
@@ -177,6 +176,7 @@
         vm.linechart = vm.lineChartConfig.getHighcharts();
         vm.linechart.showLoading();
       }
+      console.log(vm.customQueryString)
       CustomQuery.getCustomQueryData(vm.dataContainer, vm.customQueryString, vm.dateRange.startDate, vm.dateRange.endDate, vm.linechart, displayAlertMsg, selectDropdownChartType, switchAxisType);
     }
     function displayAlertMsg(msg) {

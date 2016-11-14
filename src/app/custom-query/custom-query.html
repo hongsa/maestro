@@ -40,6 +40,20 @@
         <form class="form-inline">
           <div class="form-group">
             <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="typeSelectBtn" id="type-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <b>Type:</b> {{customQueryVm.selectedTypeFilter}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="type-select-btn">
+                <li ng-repeat="type in customQueryVm.availableTypes">
+                  <a href="" ng-click="customQueryVm.selectDropdownType(type)">{{type}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="dropdown">
               <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="roleSelectBtn" id="role-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <b>Role:</b> {{customQueryVm.selectedRoleFilter | titleCase}}
                 <span class="caret"></span>
@@ -51,6 +65,7 @@
               </ul>
             </div>
           </div>
+
           <div class="form-group">
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="deviceSelectBtn" id="device-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -64,45 +79,34 @@
               </ul>
             </div>
           </div>
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="countrySelectBtn" id="country-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Country:</b> {{customQueryVm.selectedCountryFilter}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="country-select-btn">
-                <li ng-repeat="country in customQueryVm.availableCountries">
-                  <a href="" ng-click="customQueryVm.selectDropdownCountry(country)"><span class="flag-icon {{customQueryVm.iconAliases[country]}}"></span> {{country}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="methodSelectBtn" id="method-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Method:</b> {{customQueryVm.selectedMethodFilter}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="method-select-btn">
-                <li ng-repeat="method in customQueryVm.availableMethods">
-                  <a href="" ng-click="customQueryVm.selectDropdownMethod(method)">{{method}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="apiSelectBtn" id="api-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>API:</b> {{customQueryVm.selectedAPIFilter | titleCase}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="api-select-btn">
-                <li ng-repeat="api in customQueryVm.availableAPIs">
-                  <a href="" ng-click="customQueryVm.selectDropdownAPI(api)">{{api | titleCase}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+
+          <!--<div class="form-group">-->
+            <!--<div class="dropdown">-->
+              <!--<button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="methodSelectBtn" id="method-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                <!--<b>Method:</b> {{customQueryVm.selectedMethodFilter}}-->
+                <!--<span class="caret"></span>-->
+              <!--</button>-->
+              <!--<ul class="dropdown-menu" aria-labelledby="method-select-btn">-->
+                <!--<li ng-repeat="method in customQueryVm.availableMethods">-->
+                  <!--<a href="" ng-click="customQueryVm.selectDropdownMethod(method)">{{method}}</a>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</div>-->
+          <!--</div>-->
+
+          <!--<div class="form-group">-->
+            <!--<div class="dropdown">-->
+              <!--<button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="apiSelectBtn" id="api-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                <!--<b>API:</b> {{customQueryVm.selectedAPIFilter | titleCase}}-->
+                <!--<span class="caret"></span>-->
+              <!--</button>-->
+              <!--<ul class="dropdown-menu" aria-labelledby="api-select-btn">-->
+                <!--<li ng-repeat="api in customQueryVm.availableAPIs">-->
+                  <!--<a href="" ng-click="customQueryVm.selectDropdownAPI(api)">{{api | titleCase}}</a>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</div>-->
+          <!--</div>-->
           <div class="form-group">
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="groupBySelectBtn" id="group-by-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

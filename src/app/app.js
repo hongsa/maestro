@@ -41,7 +41,9 @@
     // Publisher Rate
     'dataDashboard.publisherRate',
     // Preferred Subjects
-    'dataDashboard.preferredSubjects'
+    'dataDashboard.preferredSubjects',
+    // Custom Query
+    'dataDashboard.customQuery'
 
   ]);
 }());

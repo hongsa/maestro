@@ -92,28 +92,28 @@
       var abstractFrom;
       if (!query.toLowerCase().startsWith('select')) {
         return 'forbidden_action';
-      } else if (query.toLowerCase().indexOf('eslog_all') !== -1) {
-        abstractFrom = 'eslog_all';
+      } else if (query.toLowerCase().indexOf('lclog_all') !== -1) {
+        abstractFrom = 'lclog_all';
         actualFrom = createFromRangeString(startDate, endDate);
       } else {
         return query.toLowerCase();
       }
       return query.toLowerCase().replace(abstractFrom, actualFrom);
     }
-    function createQueryString(apiFilter, deviceFilter, roleFilter, countryFilter, methodFilter, groupByFilter, startDate, endDate) {
+    function createQueryString(apiFilter, deviceFilter, roleFilter, typeFilter, methodFilter, groupByFilter, startDate, endDate) {
       var query = 'SELECT count(*)';
       query += createAbstractFromRangeString(deviceFilter);
-      query += createWhereFilterString(apiFilter, roleFilter, countryFilter, methodFilter, deviceFilter, startDate, endDate);
+      query += createWhereFilterString(apiFilter, roleFilter, typeFilter, methodFilter, deviceFilter, startDate, endDate);
       query += createGroupByString(groupByFilter);
       return query;
     }
     function createAbstractFromRangeString() {
-      return ' FROM eslog_all';
+      return ' FROM lclog_all';
     }
     function createFromRangeString(startDate, endDate) {
       var startDateCopy = new Date(startDate.getTime());
       var endDateNums = getDateInNumbers(endDate);
-      var devicePrefix = 'all_prd-';
+      var devicePrefix = 'log-';
       var from = formatDateName(devicePrefix, getDateInNumbers(startDate));
       startDateCopy.setDate(startDateCopy.getDate() + 1);
       var currentDate = startDateCopy.getDate();
@@ -141,8 +141,6 @@
         groupBy += ' role';
       } else if (groupByFilter === 'device') {
         groupBy += ' device';
-      } else if (groupByFilter === 'country') {
-        groupBy += ' country';
       } else if (groupByFilter === 'method') {
         groupBy += ' method';
       } else {
@@ -152,10 +150,11 @@
     }
     function formatDateName(devicePrefix, dateNums, delimeter) {
       var dateString = dateNums.toString();
+      console.log(dateString)
       if (delimeter) {
         return devicePrefix + dateString.substring(0, 4) + delimeter + dateString.substring(4, 6) + delimeter + dateString.substring(6, 8);
       } else {
-        return devicePrefix + dateString.substring(0, 4) + '.' + dateString.substring(4, 6) + '.' + dateString.substring(6, 7) + '*';
+        return devicePrefix + dateString.substring(0, 4) + '.' + dateString.substring(4, 6);
       }
     }
     function getDateInNumbers(date) {
@@ -165,11 +164,9 @@
       if (deviceFilter === 'All') {
         return '';
       } else if (deviceFilter === 'Android') {
-        return ' AND device="android.event"';
+        return ' AND app_version="a"';
       } else if (deviceFilter === 'iOS') {
-        return ' AND device="ios.event"';
-      } else if (deviceFilter === 'Web') {
-        return ' AND device="web.event"';
+        return ' AND app_version="i"';
       } else {
         return '';
       }
@@ -181,65 +178,58 @@
       var endDateStr = formatDateName('', getDateInNumbers(endDateCopy), '-');
       return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
     }
-    function createWhereFilterString(apiFilter, roleFilter, countryFilter, methodFilter, deviceFilter, startDate, endDate) {
+    function createWhereFilterString(apiFilter, roleFilter, typeFilter, methodFilter, deviceFilter, startDate, endDate) {
       var where = ' WHERE';
-      where += ' code=200';
-      where += getAPIFilterClause(apiFilter);
+      //where += ' code=200';
+      //where += getAPIFilterClause(apiFilter);
       where += getRoleFilterClause(roleFilter);
-      where += getCountryFilterClause(countryFilter);
-      where += getMethodFilterClause(methodFilter);
+      where += getTypeFilterClause(typeFilter);
+      //where += getMethodFilterClause(methodFilter);
       where += getDeviceFilterString(deviceFilter);
       where += getDateFilterString(startDate, endDate);
       return where;
     }
     function getAPIFilterClause(apiFilter) {
       if (apiFilter === 'users') {
-        return ' AND api="https://www.classting.com/api/users"';
+        return ' AND api="/v1/users"';
       } else if (apiFilter === 'classes') {
-        return ' AND api="https://www.classting.com/api/classes"';
+        return ' AND api="/v1/classes"';
       } else if (apiFilter === 'posts') {
-        return ' AND api="https://www.classting.com/api/posts"';
-      } else if (apiFilter === 'sessions') {
-        return ' AND api="https://www.classting.com/api/sessions"';
-      } else if (apiFilter === 'notices') {
-        return ' AND api="https://www.classting.com/api/notices"';
-      } else if (apiFilter === 'photos') {
-        return ' AND api="https://www.classting.com/api/photos"';
-      } else if (apiFilter === 'albums') {
-        return ' AND api="https://www.classting.com/api/albums"';
-      } else if (apiFilter === 'search') {
-        return ' AND api="https://www.classting.com/api/search"';
+        return ' AND api="/v1/posts"';
       } else {
         return '';
       }
     }
     function getRoleFilterClause(roleFilter) {
       if (roleFilter === 'All') {
-        return ' AND (role="teacher" OR role="student" OR role="parent")';
-      } else if (roleFilter === 'teacher') {
-        return ' AND role="teacher"';
-      } else if (roleFilter === 'student') {
-        return ' AND role="student"';
+        return ' (role="parent" OR role="child")';
+      } else if (roleFilter === 'child') {
+        return ' role="child"';
       } else if (roleFilter === 'parent') {
-        return ' AND role="parent"';
+        return ' role="parent"';
       } else {
-        return ' AND (role="teacher" OR role="student" OR role="parent")';
+        return ' (role="parent" OR role="child")';
       }
     }
-    function getCountryFilterClause(countryFilter) {
-      if (countryFilter === 'All') {
+    function getTypeFilterClause(typeFilter) {
+      if (typeFilter === 'All') {
         return '';
-      } else if (countryFilter === 'Korea') {
-        return ' AND country="KR"';
-      } else if (countryFilter === 'Japan') {
-        return ' AND country="JP"';
-      } else if (countryFilter === 'Taiwan') {
-        return ' AND country="TW"';
-      } else if (countryFilter === 'USA') {
-        return ' AND country="US"';
-      } else if (countryFilter === 'Canada') {
-        return ' AND country="CA"';
+      } else if (typeFilter === 'api') {
+        return ' AND _type="serverapi"';
+      } else if (typeFilter === 'page') {
+        return ' AND _type="page"';
+      } else if (typeFilter === 'event') {
+        return ' AND _type="event"';
+      } else if (typeFilter === 'result') {
+        return ' AND _type="result"';
+      } else if (typeFilter === 'quiz') {
+        return ' AND _type="quizevent"';
+      } else if (typeFilter === 'payment') {
+        return ' AND _type="payment"';
+      } else if (typeFilter === 'download') {
+        return ' AND _type="download"';
       }
+
     }
     function getMethodFilterClause(methodFilter) {
       if (methodFilter === 'POST') {

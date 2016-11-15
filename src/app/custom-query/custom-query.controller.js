@@ -68,7 +68,7 @@
     vm.availableGroupBys = [
       'date',
       'role',
-      'device'
+      //'device'
     ];
     vm.availableChartTypes = [
       'line',

@@ -8,6 +8,7 @@
     'angular-loading-bar',
     'highcharts-ng',
     'ngAnimate',
+    'ngLodash',
     // Common
     'dataDashboard.common',
     // Cumulative-UserData
@@ -43,7 +44,9 @@
     // Preferred Subjects
     'dataDashboard.preferredSubjects',
     // Custom Query
-    'dataDashboard.customQuery'
+    'dataDashboard.customQuery',
+    // AARRR Analytics
+    'dataDashboard.aarrr'
 
   ]);
 }());

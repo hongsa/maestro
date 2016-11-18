@@ -10,7 +10,7 @@
     };
     function getSignUpUser(dataSignUpContainer, startDate, endDate) {
       var deferred = $q.defer();
-      var query = '/lc_db_prd/_table/users?fields=id%2C%20name%2C%20created_at&filter=(created_at>=' + getDateToStr(startDate) + ') AND (created_at<=' + getDateToStr(endDate) + ')&include_count=true&continue=true';
+      var query = '/lc_db_prd/_table/users?fields=id%2C%20name%2C%20created_at&filter=(created_at>=' + getDateToStr(startDate) + ') AND (created_at<=' + getDateToStr(endDate, 'dsp') + ')&include_count=true&continue=true';
       $http({
         url: APP_CONFIG.BACKEND_ADDRESS + query,
         method: 'GET',
@@ -29,7 +29,7 @@
     }
     function getDownloadUser(dataDownloadContainer, dataSignUpContainer, signUpToDownload, startDate, endDate) {
       var deferred = $q.defer();
-      var query = 'SELECT distinct user_id' + createFromRangeString(startDate, endDate) + ' WHERE _type="download" and @timestamp Between ' + '"' + getDateToStr(startDate) + '"' + ' AND ' + '"' + getDateToStr(endDate) + '" limit 10000';
+      var query = 'SELECT distinct user_id' + createFromRangeString(startDate, endDate) + ' WHERE _type="download" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" limit 10000';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -48,7 +48,7 @@
     }
     function getResultUser(dataResultContainer, signUpToDownload, downloadToResult, startDate, endDate) {
       var deferred = $q.defer();
-      var query = 'SELECT distinct user_id' + createFromRangeString(startDate, endDate) + ' WHERE _type="result" and @timestamp Between ' + '"' + getDateToStr(startDate) + '"' + ' AND ' + '"' + getDateToStr(endDate) + '" limit 10000';
+      var query = 'SELECT distinct user_id' + createFromRangeString(startDate, endDate) + ' WHERE _type="result" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" limit 10000';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -67,7 +67,7 @@
     }
     function getActiveUser(dataActiveContainer, downloadToResult, resultToActive, startDate, endDate) {
       var deferred = $q.defer();
-      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="page" and cur_page="today" and @timestamp Between ' + '"' + getDateToStr(startDate) + '"' + ' AND ' + '"' + getDateToStr(endDate) + '" group by user_id limit 10000';
+      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="page" and cur_page="today" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" group by user_id limit 10000';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -86,7 +86,7 @@
     }
     function getPaymentUser(dataPaymentContainer, resultToActive, activeToPayment, startDate, endDate) {
       var deferred = $q.defer();
-      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="payment" and event="_null" and @timestamp Between ' + '"' + getDateToStr(startDate) + '"' + ' AND ' + '"' + getDateToStr(endDate) + '" group by user_id limit 10000';
+      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="payment" and event="_null" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" group by user_id limit 10000';
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
@@ -142,8 +142,25 @@
     function getDateInNumbers(date) {
       return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
     }
-    function getDateToStr(date) {
-      var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+    function getDateToStr(date, type) {
+      var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '',
+          year = d.getFullYear(),
+          time = '';
+
+      if (type === 'dsp') {
+        day = '' + (d.getDate() + 1);
+      } else {
+        day = '' + d.getDate();
+      }
+
+      if (type === 'esStart') {
+        time = 'T00:00:00';
+      } else if (type === 'esEnd') {
+        time = 'T23:59:59';
+      }
+
       if (month.length < 2) {
         month = '0' + month;
       }
@@ -154,7 +171,7 @@
         year,
         month,
         day
-      ].join('-');
+      ].join('-') + time;
     }
     function compareData(firstArray, secondArray, resultArray) {
       resultArray.splice(0);

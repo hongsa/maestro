@@ -15,7 +15,7 @@
     vm.endDate = new Date();
     vm.endDateLog = new Date();
     vm.selectedRangeFilter = '0';
-    vm.availableRanges = ['+7일', '+14일'];
+    vm.availableRanges = ['+7일', '+14일', '+1달', '전체'];
     vm.getData = getData;
     vm.changeLastRange = changeLastRange;
 
@@ -51,6 +51,10 @@
         vm.endDateLog = new Date(new Date().setDate(new Date(vm.endDate).getDate() + 7));
       } else if (vm.selectedRangeFilter === '+14일') {
         vm.endDateLog = new Date(new Date().setDate(new Date(vm.endDate).getDate() + 14));
+      } else if (vm.selectedRangeFilter === '+1달') {
+        vm.endDateLog = new Date(new Date().setMonth(new Date(vm.endDate).getMonth() + 1));
+      } else if (vm.selectedRangeFilter === '전체') {
+        vm.endDateLog = new Date();
       }
     }
   }

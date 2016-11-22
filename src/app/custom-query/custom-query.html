@@ -11,12 +11,19 @@
         <form>
           <div class="form-group">
             <label for="custom-query-string"><h4>Query Editor</h4></label>
-            <textarea class="form-control" rows="5" name="custom-query-string" ng-model="customQueryVm.customQueryString"></textarea>
+            <textarea class="form-control" rows="5" name="custom-query-string"
+                      ng-model="customQueryVm.customQueryString"></textarea>
           </div>
         </form>
         <form>
           <div class="form-group">
-            <button type="button" class="btn btn-primary" name="query-update" ng-click="customQueryVm.triggerUpdateWithQueryString()" id="query-update">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
+            <button type="button" class="btn btn-primary" name="query-update"
+                    ng-click="customQueryVm.triggerUpdateWithQueryString()" id="query-update">Go! <i
+                class="fa fa-arrow-right fa-fw"></i></button>
+            <button type="button" class="btn btn-success" name="download" ng-click="customQueryVm.downloadCSV()"
+                    id="custom-query-download-btn" ng-disabled="customQueryVm.dataFetched.value === false"><i
+                class="fa fa-share-square-o fa-fw"></i> export CSV
+            </button>
           </div>
         </form>
         <hr>
@@ -28,142 +35,341 @@
         <form class="form-inline top-form">
           <div class="form-group">
             <label for="startDate">Range: </label>
-            <input type="date" id="start-date" class="form-control" name="startDate" ng-model="customQueryVm.dateRange.startDate" 
-              placeholder="yyyy-MM-dd" ng-change="customQueryVm.selectDateRange()"/>
+            <input type="date" id="start-date" class="form-control" name="startDate"
+                   ng-model="customQueryVm.dateRange.startDate"
+                   placeholder="yyyy-MM-dd" ng-change="customQueryVm.selectDateRange()"/>
           </div>
           <div class="form-group">
             <label for="endDate">-</label>
-            <input type="date" id="end-date" class="form-control" name="endDate" ng-model="customQueryVm.dateRange.endDate" 
-              placeholder="yyyy-MM-dd" ng-change="customQueryVm.selectDateRange()"/>
+            <input type="date" id="end-date" class="form-control" name="endDate"
+                   ng-model="customQueryVm.dateRange.endDate"
+                   placeholder="yyyy-MM-dd" ng-change="customQueryVm.selectDateRange()"/>
           </div>
         </form>
-        <form class="form-inline">
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="typeSelectBtn" id="type-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Type:</b> {{customQueryVm.selectedTypeFilter}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="type-select-btn">
-                <li ng-repeat="type in customQueryVm.availableTypes">
-                  <a href="" ng-click="customQueryVm.selectDropdownType(type)">{{type}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
 
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="roleSelectBtn" id="role-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Role:</b> {{customQueryVm.selectedRoleFilter | titleCase}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="role-select-btn">
-                <li ng-repeat="role in customQueryVm.availableRoles">
-                  <a href="" ng-click="customQueryVm.selectDropdownRole(role)">{{role | titleCase}}</a>
-                </li>
-              </ul>
+        <form>
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="">Log Type</label>
+              <select class="form-control" ng-model="customQueryVm.selectedLogTypeFilter" name="logTypeSelectBtn"
+                      id="log-type-select-btn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="logType in customQueryVm.availableLogTypes" value="{{logType}}">{{logType |
+                  uppercase}}
+                </option>
+              </select>
             </div>
-          </div>
 
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="deviceSelectBtn" id="device-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Device:</b> {{customQueryVm.selectedDeviceFilter}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="device-select-btn">
-                <li ng-repeat="device in customQueryVm.availableDevices">
-                  <a href="" ng-click="customQueryVm.selectDropdownDevice(device)"><i class="fa {{customQueryVm.iconAliases[device]}} fa-fw"></i> {{device}}</a>
-                </li>
-              </ul>
+            <div class="col-sm-3 form-group">
+              <label for="countRowsSelectBtn">Count Rows</label>
+              <select class="form-control" ng-model="customQueryVm.selectedCountRowsFilter" name="countRowsSelectBtn"
+                      id="count-rows-select-btn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="count in customQueryVm.availableCountRows" value="{{count}}">{{count | titleCase}}
+                </option>
+              </select>
             </div>
-          </div>
 
-          <!--<div class="form-group">-->
-            <!--<div class="dropdown">-->
-              <!--<button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="methodSelectBtn" id="method-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                <!--<b>Method:</b> {{customQueryVm.selectedMethodFilter}}-->
-                <!--<span class="caret"></span>-->
-              <!--</button>-->
-              <!--<ul class="dropdown-menu" aria-labelledby="method-select-btn">-->
-                <!--<li ng-repeat="method in customQueryVm.availableMethods">-->
-                  <!--<a href="" ng-click="customQueryVm.selectDropdownMethod(method)">{{method}}</a>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</div>-->
-          <!--</div>-->
-
-          <!--<div class="form-group">-->
-            <!--<div class="dropdown">-->
-              <!--<button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="apiSelectBtn" id="api-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                <!--<b>API:</b> {{customQueryVm.selectedAPIFilter | titleCase}}-->
-                <!--<span class="caret"></span>-->
-              <!--</button>-->
-              <!--<ul class="dropdown-menu" aria-labelledby="api-select-btn">-->
-                <!--<li ng-repeat="api in customQueryVm.availableAPIs">-->
-                  <!--<a href="" ng-click="customQueryVm.selectDropdownAPI(api)">{{api | titleCase}}</a>-->
-                <!--</li>-->
-              <!--</ul>-->
-            <!--</div>-->
-          <!--</div>-->
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="groupBySelectBtn" id="group-by-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Group By:</b> {{customQueryVm.selectedGroupByFilter | titleCase}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="group-by-select-btn">
-                <li ng-repeat="groupBy in customQueryVm.availableGroupBys">
-                  <a href="" ng-click="customQueryVm.selectDropdownGroupBy(groupBy)">{{groupBy | titleCase}}</a>
-                </li>
-              </ul>
+            <div class="col-sm-3 form-group">
+              <label for="groupBySelectBtn">Group By</label>
+              <select class="form-control" ng-model="customQueryVm.selectedGroupByFilter" name="groupBySelectBtn"
+                      id="group-by-select-btn" ng-change="customQueryVm.updateCustomQueryString()"
+                      ng-disabled="customQueryVm.selectedCountRowsFilter === 'no'">
+                <option ng-repeat="groupBy in customQueryVm.availableGroupBys[customQueryVm.selectedLogTypeFilter]"
+                        value="{{groupBy}}">{{groupBy | titleCase}}
+                </option>
+              </select>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle dropdown-btn" type="button" name="chartSelectBtn" id="chart-select-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <b>Chart Type:</b> {{customQueryVm.selectedChartType | titleCase}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="chart-select-btn">
-                <li ng-repeat="type in customQueryVm.availableChartTypes">
-                  <a href="" ng-click="customQueryVm.selectDropdownChartType(type)">{{type | titleCase}}</a>
-                </li>
-              </ul>
+
+            <div class="col-sm-3 form-group">
+              <label for="chartSelectBtn">Chart Type</label>
+              <select class="form-control" ng-model="customQueryVm.selectedChartType" name="chartSelectBtn"
+                      id="chart-select-btn" ng-change="customQueryVm.updateChartType()"
+                      ng-disabled="customQueryVm.selectedCountRowsFilter === 'no'">
+                <option ng-repeat="type in customQueryVm.availableChartTypes" value="{{type}}">{{type | titleCase}}
+                </option>
+              </select>
             </div>
           </div>
         </form>
+        <hr class="narrow-hr">
+
+        <form id="api-log-form" ng-if="customQueryVm.selectedLogTypeFilter === 'serverapi'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.serverapi.role" name="roleSelectBtn"
+                      id="api-role-select-btn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.serverapi.device"
+                      name="deviceSelectBtn" id="api-device-select-btn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="methodSelectBtn">Method</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.serverapi.method"
+                      name="methodSelectBtn" id="api-method-select-btn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="method in customQueryVm.availableMethods" value="{{method}}">{{method}}</option>
+              </select>
+            </div>
+
+            <!--<div class="col-sm-3 form-group">-->
+              <!--<label for="apiSelectBtn">API</label>-->
+              <!--<select class="form-control" ng-model="customQueryVm.selectedQueryParams.serverapi.api" name="apiSelectBtn"-->
+                      <!--id="api-api-select-btn" ng-change="customQueryVm.updateCustomQueryString()">-->
+                <!--<option ng-repeat="api in customQueryVm.availableAPIs" value="{{api}}">{{api | titleCase}}</option>-->
+              <!--</select>-->
+            <!--</div>-->
+          </div>
+        </form>
+
+
+        <form id="page-log-form" ng-if="customQueryVm.selectedLogTypeFilter === 'page'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.page.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.page.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="gradeSelectBtn">Current Page</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.page.cur_page"
+                      name="curPageSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="page in customQueryVm.availablePages" value="{{page}}">{{page}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="gradeSelectBtn">Prev Page</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.page.prev_page"
+                      name="curPageSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="page in customQueryVm.availablePages" value="{{page}}">{{page}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <form ng-if="customQueryVm.selectedLogTypeFilter === 'result'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.result.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.result.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="gradeSelectBtn">Rate</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.result.rate"
+                      name="rateSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="page in customQueryVm.availableRates" value="{{page}}">{{page}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <form ng-if="customQueryVm.selectedLogTypeFilter === 'quizevent'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.quizevent.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.quizevent.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <form ng-if="customQueryVm.selectedLogTypeFilter === 'event'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.event.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.event.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <form ng-if="customQueryVm.selectedLogTypeFilter === 'payment'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.payment.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.payment.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+        <form ng-if="customQueryVm.selectedLogTypeFilter === 'download'">
+          <div class="row">
+            <div class="col-sm-3 form-group">
+              <label for="roleSelectBtn">Role</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.download.role" name="roleSelectBtn"
+                      ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="role in customQueryVm.availableRoles" value="{{role}}">{{role | titleCase}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="deviceSelectBtn">Device</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.download.device"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="viewSelectBtn">View Type</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.download.view_type"
+                      name="deviceSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="view in customQueryVm.availableViewTypes" value="{{view}}">{{view}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+
       </div>
-      <div class="panel-body">
+      <div class="panel-body" ng-show="customQueryVm.getChartAreaType() === 'chart'">
         <highchart id="custom-query-graph" config="customQueryVm.lineChartConfig"></highchart>
       </div>
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row" ng-show="customQueryVm.getChartAreaType() === 'table'">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>{{customQueryVm.lastGroupByAggregation.value.indexOf('date_histogram') === -1 ?
+            customQueryVm.lastGroupByAggregation.value : 'date' | titleCase}}
+          </th>
+          <th class="text-right">Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in customQueryVm.dataContainer.slicedData">
+          <td ng-if="customQueryVm.lastGroupByAggregation.value.indexOf('date_histogram') !== -1">{{item[0] |
+            date:'yyyy-MM-dd'}}
+          </td>
+          <td ng-if="customQueryVm.lastGroupByAggregation.value.indexOf('date_histogram') === -1">{{item[0]}}</td>
+          <td class="text-right">{{item[1] | number}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="customQueryVm.dataContainer.total"
+                      ng-model="customQueryVm.currentTablePage"
+                      ng-change="customQueryVm.tablePageChanged(customQueryVm.currentTablePage)"
+                      items-per-page="customQueryVm.dataContainer.pageSize"
+                      max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                      last-text="&raquo;"></uib-pagination>
+    </div>
+  </div>
+</div>
+
+<div class="row" ng-show="customQueryVm.noCountTableContainer.visible === false">
   <div class="col-sm-12">
     <div class="panel panel-default">
       <table class="table table-striped table-bordered table-hover" id="linechart-table">
         <thead>
-          <tr>
-            <th>Subject</th>
-            <th class="text-right">Min. Count</th>
-            <th class="text-right">Max. Count</th>
-            <th class="text-right">Average</th>
-            <th class="text-right">Total Count</th>
-          </tr>
+        <tr>
+          <th>Subject</th>
+          <th class="text-right">Min. Count</th>
+          <th class="text-right">Max. Count</th>
+          <th class="text-right">Average</th>
+          <th class="text-right">Total Count</th>
+        </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in customQueryVm.lineChartData">
-            <td>{{item.name | titleCase}}</td>
-            <td class="text-right">{{customQueryVm.getMinimum(item.data) | number}}</td>
-            <td class="text-right">{{customQueryVm.getMaximum(item.data) | number}}</td>
-            <td class="text-right">{{customQueryVm.getAverage(item.data) | number:0}}</td>
-            <td class="text-right">{{customQueryVm.getSum(item.data) | number}}</td>
-          </tr>
+        <tr ng-repeat="item in customQueryVm.lineChartData">
+          <td>{{item.name | titleCase}}</td>
+          <td class="text-right">{{customQueryVm.getMinimum(item.data) | number}}</td>
+          <td class="text-right">{{customQueryVm.getMaximum(item.data) | number}}</td>
+          <td class="text-right">{{customQueryVm.getAverage(item.data) | number:0}}</td>
+          <td class="text-right">{{customQueryVm.getSum(item.data) | number}}</td>
+        </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<div class="row" ng-show="customQueryVm.getChartAreaType() === 'noCount'">
+  <div class="col-sm-12">
+    <div class="panel panel-default table-responsive">
+      <table class="table table-striped table-bordered table-hover" id="no-count-table">
+        <thead>
+        <tr>
+          <th ng-repeat="header in customQueryVm.noCountTableContainer.headers">{{header}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in customQueryVm.noCountTableContainer.slicedData">
+          <td ng-repeat="header in customQueryVm.noCountTableContainer.headers">{{item[header]}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <uib-pagination boundary-links="true" total-items="customQueryVm.noCountTableContainer.total"
+                      ng-model="customQueryVm.currentNoCountTablePage"
+                      ng-change="customQueryVm.noCountTablePageChanged(customQueryVm.currentNoCountTablePage)"
+                      items-per-page="customQueryVm.noCountTableContainer.pageSize"
+                      max-size="10" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                      last-text="&raquo;"></uib-pagination>
     </div>
   </div>
 </div>

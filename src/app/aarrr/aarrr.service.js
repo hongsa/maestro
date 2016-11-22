@@ -67,17 +67,27 @@
     }
     function getActiveUser(dataActiveContainer, downloadToResult, resultToActive, startDate, endDate) {
       var deferred = $q.defer();
-      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="page" and cur_page="today" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" group by user_id limit 10000';
+      var query = 'SELECT count(user_id) as count' + createFromRangeString(startDate, endDate) + ' WHERE _type="page" and cur_page="today" and @timestamp Between ' + '"' + getDateToStr(startDate, 'esStart') + '"' + ' AND ' + '"' + getDateToStr(endDate, 'esEnd') + '" group by date_histogram("alias"="timestamp", field="@timestamp","interval"="1d"), user_id limit 10000',
+          tmp = {};
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
         method: 'GET',
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
         dataActiveContainer.splice(0);
-        if (!result.data.timed_out && result.data.aggregations) {
-          result.data.aggregations.user_id.buckets.forEach(function (row) {
-            dataActiveContainer.push(row.key);
-          });
+        result.data.aggregations.timestamp.buckets.forEach(function (dateRow) {
+            dateRow.user_id.buckets.forEach(function (idRow) {
+              if (tmp.hasOwnProperty(idRow.key)) {
+                tmp[idRow.key] += 1;
+              } else {
+                tmp[idRow.key] = 1;
+              }
+            });
+        });
+        for (var id in tmp) {
+          if (tmp[id] >= 3) {
+            dataActiveContainer.push(parseInt(id));
+          }
         }
         compareData(downloadToResult, dataActiveContainer, resultToActive);
         deferred.resolve({ status: result.status });

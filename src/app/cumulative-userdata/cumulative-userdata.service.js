@@ -20,12 +20,12 @@
         dataContainer.data.splice(0);
         if (!result.data.timed_out && result.data.length > 0) {
           result.data.forEach(function (item) {
-            if (getTimeStampFromStr(startDate) >= getTimeStampFromStr(item.created_at)) {
+            if (getTimeStampFromStr(startDate) >= stringToDate(item.created_at)) {
               prevValue += parseInt(item.num, 10);
-            } else if (getTimeStampFromStr(startDate) < getTimeStampFromStr(item.created_at) && getTimeStampFromStr(endDate) >= getTimeStampFromStr(item.created_at)) {
+            } else if (getTimeStampFromStr(startDate) < stringToDate(item.created_at) && getTimeStampFromStr(endDate) >= stringToDate(item.created_at)) {
               if (selectedRange === 'daily') {
                 dataContainer.data.push([
-                  getTimeStampFromStr(item.created_at),
+                  stringToDate(item.created_at),
                   prevValue + (parseInt(item.num, 10) || 0)
                 ]);
                 prevValue = dataContainer.data[dataContainer.data.length - 1][1];
@@ -37,22 +37,22 @@
                 } else {
                   compareNum = 365;
                 }
-                if (criteria + dayInMS * compareNum > getTimeStampFromStr(item.created_at)) {
+                if (criteria + dayInMS * compareNum > stringToDate(item.created_at)) {
                   prevValue += parseInt(item.num, 10);
                 } else {
                   dataContainer.data.push([
-                    getTimeStampFromStr(item.created_at),
+                    stringToDate(item.created_at),
                     prevValue + (parseInt(item.num, 10) || 0)
                   ]);
                   prevValue = dataContainer.data[dataContainer.data.length - 1][1];
-                  criteria = getTimeStampFromStr(item.created_at);
+                  criteria = stringToDate(item.created_at);
                 }
               }
             }
           });
           if (prevValue > dataContainer.data[dataContainer.data.length - 1][1]) {
             dataContainer.data.push([
-              getTimeStampFromStr(result.data[result.data.length - 1].created_at),
+              stringToDate(result.data[result.data.length - 1].created_at),
               prevValue
             ]);
           }
@@ -65,6 +65,15 @@
       var timestamp = new Date(date).setHours(12, 0, 0, 0);
       return new Date(timestamp).getTime();
     }
+    function stringToDate(str) {
+      var y = str.toString().substr(0,4),
+          m = str.toString().substr(5,2) - 1,
+          d = str.toString().substr(8,2),
+          date = new Date(y,m,d).setHours(12, 0, 0, 0);
+
+      return new Date(date).getTime();
+    }
+
     function createQueryString(paidFilter) {
       var query = '';
       if (paidFilter === 'all') {

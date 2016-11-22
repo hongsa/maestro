@@ -32,6 +32,7 @@
     'dataDashboard.common.filter.price',
     'dataDashboard.common.filter.subject',
     'dataDashboard.common.filter.pageName',
+    'dataDashboard.common.filter.pageName2',
     // Utils
     'dataDashboard.common.utils.LinechartUtils',
     'dataDashboard.common.utils.BarchartUtils',

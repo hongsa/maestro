@@ -11,15 +11,22 @@
       <div class="panel-body">
         <form class="form-inline">
           <div class="form-group">
-            <label for="startDate">Range: </label>
+            <label for="startDate">가입기간: </label>
             <input type="date" id="start-date" class="form-control" name="startDate" ng-model="aarrrVm.startDate"
                    placeholder="yyyy-MM-dd"/>
-          </div>
-          <div class="form-group">
             <label for="endDate">-</label>
             <input type="date" id="end-date" class="form-control" name="endDate" ng-model="aarrrVm.endDate"
                    placeholder="yyyy-MM-dd"/>
           </div>
+          &nbsp;&nbsp;&nbsp;
+          <div class="form-group">
+            <label>나머지 데이터 기간: </label>
+            <select class="form-control" ng-model="aarrrVm.selectedRangeFilter">>
+              <option value="0">가입 동일</option>
+              <option ng-repeat="range in aarrrVm.availableRanges" value="{{range}}">{{range}}</option>
+            </select>
+          </div>
+          &nbsp;&nbsp;&nbsp;
           <div class="form-group">
             <button type="button" class="btn btn-primary" name="date-update" ng-click="aarrrVm.getData()">Go! <i class="fa fa-arrow-right fa-fw"></i></button>
           </div>
@@ -35,6 +42,9 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
+          <th class="col-sm-2 clickable-thead">
+
+          </th>
           <th class="col-sm-2 clickable-thead">
             회원가입
           </th>
@@ -54,6 +64,7 @@
         </thead>
         <tbody>
         <tr>
+          <td class="col-sm-2">전체</td>
           <td class="col-sm-2">{{aarrrVm.dataSignUpContainer.length | number}}</td>
           <td class="col-sm-2">{{aarrrVm.dataDownloadContainer.length| number}}</td>
           <td class="col-sm-2">{{aarrrVm.dataResultContainer.length| number}}</td>
@@ -61,11 +72,20 @@
           <td class="col-sm-2">{{aarrrVm.dataPaymentContainer.length| number}}</td>
         </tr>
         <tr>
-          <td class="col-sm-2">{{aarrrVm.dataSignUpContainer.length| number}} / {{aarrrVm.dataSignUpContainer.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
-          <td class="col-sm-2">{{aarrrVm.signUpToDownload.length| number}} / {{aarrrVm.signUpToDownload.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
-          <td class="col-sm-2">{{aarrrVm.downloadToResult.length| number}} / {{aarrrVm.downloadToResult.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
-          <td class="col-sm-2">{{aarrrVm.resultToActive.length| number}} / {{aarrrVm.resultToActive.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
-          <td class="col-sm-2">{{aarrrVm.activeToPayment.length| number}} / {{aarrrVm.activeToPayment.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
+          <td class="col-sm-2">연속</td>
+          <td class="col-sm-1">{{aarrrVm.dataSignUpContainer.length| number}}</td>
+          <td class="col-sm-1">{{aarrrVm.signUpToDownload.length| number}}</td>
+          <td class="col-sm-1">{{aarrrVm.downloadToResult.length| number}}</td>
+          <td class="col-sm-1">{{aarrrVm.resultToActive.length| number}}</td>
+          <td class="col-sm-1">{{aarrrVm.activeToPayment.length| number}}</td>
+        </tr>
+        <tr>
+          <td class="col-sm-2">비율</td>
+          <td class="col-sm-1">{{aarrrVm.dataSignUpContainer.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
+          <td class="col-sm-1">{{aarrrVm.signUpToDownload.length/aarrrVm.dataSignUpContainer.length | percentage}}</td>
+          <td class="col-sm-1">{{aarrrVm.downloadToResult.length/aarrrVm.signUpToDownload.length | percentage}}</td>
+          <td class="col-sm-1">{{aarrrVm.resultToActive.length/aarrrVm.downloadToResult.length | percentage}}</td>
+          <td class="col-sm-1">{{aarrrVm.activeToPayment.length/aarrrVm.resultToActive.length | percentage}}</td>
         </tr>
 
 

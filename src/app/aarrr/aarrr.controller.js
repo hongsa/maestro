@@ -11,23 +11,26 @@
     vm.downloadToResult = [];
     vm.resultToActive = [];
     vm.activeToPayment = [];
-    vm.endDate = new Date();
     vm.startDate = new Date(new Date().setDate(new Date().getDate() - 7));
-    init();
+    vm.endDate = new Date();
+    vm.endDateLog = new Date();
+    vm.selectedRangeFilter = '0';
+    vm.availableRanges = ['+7일', '+14일'];
     vm.getData = getData;
-    function init() {
-    }
+    vm.changeLastRange = changeLastRange;
+
     function getData() {
+      changeLastRange();
       if (vm.endDate.getTime() - vm.startDate.getTime() <= 604800000) {
         AARRR.getSignUpUser(vm.dataSignUpContainer, vm.startDate, vm.endDate).then(function (result) {
           if (result.status === 200) {
-            AARRR.getDownloadUser(vm.dataDownloadContainer, vm.dataSignUpContainer, vm.signUpToDownload, vm.startDate, vm.endDate).then(function (result) {
+            AARRR.getDownloadUser(vm.dataDownloadContainer, vm.dataSignUpContainer, vm.signUpToDownload, vm.startDate, vm.endDateLog).then(function (result) {
               if (result.status === 200) {
-                AARRR.getResultUser(vm.dataResultContainer, vm.signUpToDownload, vm.downloadToResult, vm.startDate, vm.endDate).then(function (result) {
+                AARRR.getResultUser(vm.dataResultContainer, vm.signUpToDownload, vm.downloadToResult, vm.startDate, vm.endDateLog).then(function (result) {
                   if (result.status === 200) {
-                    AARRR.getActiveUser(vm.dataActiveContainer, vm.downloadToResult, vm.resultToActive, vm.startDate, vm.endDate).then(function (result) {
+                    AARRR.getActiveUser(vm.dataActiveContainer, vm.downloadToResult, vm.resultToActive, vm.startDate, vm.endDateLog).then(function (result) {
                       if (result.status === 200) {
-                        AARRR.getPaymentUser(vm.dataPaymentContainer, vm.resultToActive, vm.activeToPayment, vm.startDate, vm.endDate);
+                        AARRR.getPaymentUser(vm.dataPaymentContainer, vm.resultToActive, vm.activeToPayment, vm.startDate, vm.endDateLog);
                       }
                     });
                   }
@@ -38,6 +41,16 @@
         });
       } else {
         alert('1주일 이내로 범위를 지정해주세요.');
+      }
+    }
+
+    function changeLastRange() {
+      if (vm.selectedRangeFilter === '0') {
+        vm.endDateLog = vm.endDate;
+      } else if (vm.selectedRangeFilter === '+7일') {
+        vm.endDateLog = new Date(new Date().setDate(new Date(vm.endDate).getDate() + 7));
+      } else if (vm.selectedRangeFilter === '+14일') {
+        vm.endDateLog = new Date(new Date().setDate(new Date(vm.endDate).getDate() + 14));
       }
     }
   }

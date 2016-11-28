@@ -92,7 +92,8 @@
       } else if (selectedRange === 'weekly') {
         calculateKey = key + 6 * dayInMS;
       } else if (selectedRange === 'monthly') {
-        calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 1, 0, 0, 0, 0);
+        calculateKey = new Date(new Date(key).getFullYear(), new Date(key).getMonth() + 1, 0, 0, 0, 0, 0);
+        calculateKey = new Date(calculateKey).getTime();
       } else {
         calculateKey = key * (364 * dayInMS);
       }

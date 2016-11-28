@@ -230,6 +230,20 @@
                 <option ng-repeat="device in customQueryVm.availableDevices" value="{{device}}">{{device}}</option>
               </select>
             </div>
+            <div class="col-sm-3 form-group">
+              <label for="categorySelectBtn">Category</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.event.category"
+                      name="categorySelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="category in customQueryVm.availableCategories" value="{{category}}">{{category}}</option>
+              </select>
+            </div>
+            <div class="col-sm-3 form-group">
+              <label for="actionSelectBtn">Action</label>
+              <select class="form-control" ng-model="customQueryVm.selectedQueryParams.event.action"
+                      name="actionSelectBtn" ng-change="customQueryVm.updateCustomQueryString()">
+                <option ng-repeat="action in customQueryVm.availableActions" value="{{action}}">{{action}}</option>
+              </select>
+            </div>
           </div>
         </form>
 

@@ -17,9 +17,8 @@
     };
     vm.availableRanges = [
       'daily',
-      'weekly',
-      'monthly',
-      'yearly'
+      //'weekly',
+      'monthly'
     ];
     vm.availableRoles = [
       'student',
@@ -95,11 +94,9 @@
     vm.lineChartDataLoop = [
       vm.trialToBasicDataForLineChart,
       vm.trialToStandardDataForLineChart,
-      vm.trialToPremiumDataForLineChart,
-      vm.basicSubscribersDataForLineChart,
-      vm.standardSubscribersDataForLineChart,
-      vm.premiumSubscribersDataForLineChart
+      vm.trialToPremiumDataForLineChart
     ];
+
     vm.reversedData = [];
     vm.reversedDataContainer = [];
     vm.lineChartPaidData = [
@@ -115,20 +112,11 @@
     vm.lineChartPaidDataConfig = new LinechartUtils.LineChartConfig(vm.lineChartPaidData, null, true);
     vm.lineChartUpgradeDataConfig = new LinechartUtils.LineChartConfig(vm.lineChartUpgradeData, null, true);
     vm.lineChartFilter = lineChartFilter;
-    vm.getPieChart = getPieChart;
     vm.selectDropdownRange = selectDropdownRange;
     vm.getDateColor = getDateColor;
     vm.getTableIndex = getTableIndex;
     vm.pageChanged = pageChanged;
-    // Pie Chart
-    vm.pieChartData = [{
-        name: 'User Signups',
-        y: 1
-      }];
-    vm.pieChartConfig = new PiechartUtils.PieChartConfig(vm.pieChartData);
-    vm.pieChartFilter = pieChartFilter;
-    vm.getPieChartProportion = getPieChartProportion;
-    vm.fetchAndDownloadCSV = fetchAndDownloadCSV;
+
     init();
     function init() {
       lineChartFilter();
@@ -139,16 +127,69 @@
     function lineChartFilter() {
       var count = 0;
       vm.lineChartDataLoop.forEach(function (dataContainer) {
-        SubscribeUserData.getSubscribeData(dataContainer, vm.selectedRange, vm.selectedRoleFilter, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (result) {
-          if (result.name === 'success') {
+        SubscribeUserData.getSubscribeData(dataContainer, vm.selectedRange, vm.selectedRoleFilter, vm.selectedDeviceFilter, vm.dateRange.startDate, vm.dateRange.endDate).then(function (response) {
+          if (response.status === 200) {
             count += 1;
-            if (count === 6) {
-              createEmptyData(vm.selectedRange);
+            if (count === 3) {
+              getContinueUser();
             }
           }
         });
       });
     }
+
+    function getContinueUser() {
+      SubscribeUserData.getNewUserList(vm.dateRange.endDate).then(function (response) {
+        if (response.status === 200) {
+          var newUserList = response.data;
+          SubscribeUserData.getAndroidPayment(newUserList, vm.selectedRange, vm.dateRange.startDate, vm.dateRange.endDate).then(function (response) {
+            if (response.status === 200) {
+              var dateTmp = response.data;
+              if (vm.selectedDeviceFilter === 'ios') {
+                dateTmp = {};
+                dateTmp.basic = {};
+                dateTmp.standard = {};
+                dateTmp.premium = {};
+                SubscribeUserData.getIosPayment(newUserList, dateTmp, vm.basicSubscribersDataForLineChart, vm.standardSubscribersDataForLineChart, vm.premiumSubscribersDataForLineChart, vm.selectedRange, vm.dateRange.startDate, vm.dateRange.endDate).then(function (response) {
+                  if (response.status === 200) {
+                    createEmptyData(vm.selectedRange);
+                  }
+                });
+              } else if (vm.selectedDeviceFilter === 'android') {
+                vm.basicSubscribersDataForLineChart.data = getLineChartData(dateTmp.basic);
+                vm.standardSubscribersDataForLineChart.data = getLineChartData(dateTmp.standard);
+                vm.premiumSubscribersDataForLineChart.data = getLineChartData(dateTmp.premium);
+                createEmptyData(vm.selectedRange);
+              } else {
+                SubscribeUserData.getIosPayment(newUserList, dateTmp, vm.basicSubscribersDataForLineChart, vm.standardSubscribersDataForLineChart, vm.premiumSubscribersDataForLineChart, vm.selectedRange, vm.dateRange.startDate, vm.dateRange.endDate).then(function (response) {
+                  if (response.status === 200) {
+                    createEmptyData(vm.selectedRange);
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+
+    function getLineChartData(obj) {
+      var container = [];
+      for (var o in obj) {
+        container.push([
+          parseInt(o),
+          obj[o]
+        ]);
+      }
+      return sortDesc(container);
+    }
+    function sortDesc(datacontainer) {
+      datacontainer.sort(function (a, b) {
+        return b[0] - a[0];
+      });
+      return datacontainer;
+    }
+
     function createEmptyData(selectedRange) {
       var range;
       var startDateCopy = new Date(vm.trialToBasicDataForLineChart.data[0][0]);
@@ -227,16 +268,16 @@
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.premiumSubscribersDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.premiumSubscribersDataForLineChart.data[j][0]) {
-            vm.reversedData[i][5] = vm.premiumSubscribersDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.standardSubscribersDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.standardSubscribersDataForLineChart.data[j][0]) {
+            vm.reversedData[i][5] = vm.standardSubscribersDataForLineChart.data[j][1];
           }
         }
       }
       for (var i = 0; i < vm.reversedData.length; i++) {
-        for (var j = 0; j < vm.standardSubscribersDataForLineChart.data.length; j++) {
-          if (vm.reversedData[i][0] === vm.standardSubscribersDataForLineChart.data[j][0]) {
-            vm.reversedData[i][6] = vm.standardSubscribersDataForLineChart.data[j][1];
+        for (var j = 0; j < vm.premiumSubscribersDataForLineChart.data.length; j++) {
+          if (vm.reversedData[i][0] === vm.premiumSubscribersDataForLineChart.data[j][0]) {
+            vm.reversedData[i][6] = vm.premiumSubscribersDataForLineChart.data[j][1];
           }
         }
       }
@@ -303,64 +344,6 @@
     function selectDropdownRange(range) {
       vm.selectedRange = range;
       lineChartFilter();
-    }
-    function getPieChart() {
-      SubscribeUserData.getSubscribeProportionData(vm.pieChartData, vm.selectedPieChartFilter, vm.dateRangePieChart.startDate, vm.dateRangePieChart.endDate, vm.currentPieChartUsers, vm.availableTypes[0]);
-    }
-    function pieChartFilter(selectedFilter) {
-      vm.selectedPieChartFilter = selectedFilter;
-      getPieChart();
-    }
-    function getPieChartTotal() {
-      var total = 0;
-      vm.pieChartSumData.forEach(function (data) {
-        total += data.y;
-      });
-      return total;
-    }
-    function getPieChartProportion(data) {
-      return data / getPieChartTotal();
-    }
-    function fetchAndDownloadCSV(dataContainer, type) {
-      var copyContainer = [];
-      var fields;
-      if (type === 'LineChart') {
-        fields = [
-          'date',
-          'trial to basic',
-          'trial to standard',
-          'trial to premium',
-          'basic subscribers',
-          'standard subscribers',
-          'premium subscribers'
-        ];
-        dataContainer.forEach(function (item, i) {
-          var tmp = [];
-          tmp[0] = item[0];
-          tmp[1] = item[1];
-          tmp[2] = item[2];
-          tmp[3] = item[3];
-          tmp[4] = item[4];
-          tmp[5] = item[5];
-          tmp[6] = item[6];
-          copyContainer.push(tmp);
-        });
-        CSVparserUtils.downloadCSV2(copyContainer, false, 'subscribers__' + vm.selectedRange + '.csv', fields);  // PieChart
-      } else {
-        fields = [
-          vm.selectedPieChartFilter,
-          'count',
-          'proportion'
-        ];
-        dataContainer.forEach(function (item) {
-          var tmp = [];
-          tmp[0] = item.name;
-          tmp[1] = item.y;
-          tmp[2] = (getPieChartProportion(item.y) * 100).toFixed(1).toString() + '%';
-          copyContainer.push(tmp);
-        });
-        CSVparserUtils.downloadCSV2(copyContainer, false, 'cumulative_userdata_' + vm.selectedPieChartFilter + '_count_proportion' + '.csv', fields);
-      }
     }
     function getDateColor(date) {
       date = getDateInNumbers(date);

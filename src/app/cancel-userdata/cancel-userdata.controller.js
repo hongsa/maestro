@@ -19,7 +19,6 @@
       'daily',
       'weekly',
       'monthly',
-      'yearly'
     ];
     vm.availableRoles = [
       'student',

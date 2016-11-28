@@ -20,7 +20,6 @@
       'daily',
       'weekly',
       'monthly',
-      'yearly'
     ];
     vm.availableRoles = [
       'student',
@@ -31,7 +30,7 @@
       'android',
       'ios'
     ];
-    vm.selectedRange = 'daily';
+    vm.selectedRange = 'monthly';
     vm.selectedType = 'User Signups';
     vm.selectedRoleFilter = 'all';
     vm.selectedDeviceFilter = 'all';

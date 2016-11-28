@@ -269,6 +269,8 @@
       where += getAPIFilterClause(queryParams.api);
       where += getRoleFilterClause(queryParams.role);
       where += getRateFilterClause(queryParams.rate);
+      where += getCategoryFilterClause(queryParams.category);
+      where += getActionFilterClause(queryParams.action);
       where += getCurPageFilterClause(queryParams.cur_page);
       where += getPrevPageFilterClause(queryParams.prev_page);
       where += getViewTypeFilterClause(queryParams.view_type);
@@ -316,6 +318,21 @@
         return '';
       } else {
         return ' AND rate=' + '"' + rateFilter + '"';
+      }
+    }
+    function getCategoryFilterClause(categoryFilter) {
+      if (!categoryFilter || categoryFilter === 'All') {
+        return '';
+      } else {
+        return ' AND category=' + '"' + categoryFilter + '"';
+      }
+    }
+
+    function getActionFilterClause(actionFilter) {
+      if (!actionFilter || actionFilter === 'All') {
+        return '';
+      } else {
+        return ' AND action=' + '"' + actionFilter + '"';
       }
     }
 

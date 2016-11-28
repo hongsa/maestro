@@ -46,7 +46,8 @@
     // Custom Query
     'dataDashboard.customQuery',
     // AARRR Analytics
-    'dataDashboard.aarrr'
-
+    'dataDashboard.aarrr',
+    // Monthly Payment
+    'dataDashboard.monthlyPayment'
   ]);
 }());

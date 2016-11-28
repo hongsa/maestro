@@ -66,7 +66,9 @@
       },
       event: {
         device: 'All',
-        role: 'All'
+        role: 'All',
+        category: 'All',
+        action: 'All'
       },
       payment: {
         device: 'All',
@@ -85,8 +87,10 @@
     vm.availableRoles = ['All', 'child', 'parent'];
     vm.availableDevices = ['All', 'Android', 'iOS'];
     vm.availableViewTypes = ['All', 'download', 'streaming'];
-    vm.availablePages = ['All', '랜딩 화면','러닝카드 시작하기','Reset PW','Reset PW New PW', '가입', '이용약관', '가입시 역할 선택', '가입시 학년 선택', '가입시 과목 선택', '가입시 부모 등록', '체험 시작 안내', '투데이 추천', '추천 카드 변경', '카드 표지', '카드 시트', '퀴즈', '퀴즈 해설', '카드 평가', '마일스톤', '카드 결과', '카드 메뉴', '카드 정보', '카드 출처', '카드 저작자 정보', '시리즈', '에디터 상세 페이지', '탐색', '인기 카드 목록', '과목별 시리즈 목록', '검색', '성취도', '목표달성', '이전 성취도', '프로필', '프로필 수정', '학교 검색', '학년 선택', '과목 선택', 'profile.subject_detail', '즐겨찾기 카드', '완료한 카드', '설정', '이메일 변경 modal', '이름 변경', '비밀번호 변경', '추천카드 알람', '알람 시간', '다운로드된 카드', '공지사항', '고객지원', '탈퇴', '구독정보', '학부모 대시보드', '자녀 설정', '자녀 성취도', '부모 설정', 'parent_settings.invite_child', '부모 계정 설정', '플랜 선택', '결제 정보', '결제 정보 수정', '구독 해지', '환불 신청', '결제 완료', '구독할 자녀 선택', 'payment.detail', '없음']
+    vm.availablePages = ['All', '랜딩 화면','러닝카드 시작하기','Reset PW','Reset PW New PW', '가입', '이용약관', '가입시 역할 선택', '가입시 학년 선택', '가입시 과목 선택', '가입시 부모 등록', '체험 시작 안내', '투데이 추천', '추천 카드 변경', '카드 표지', '카드 시트', '퀴즈', '퀴즈 해설', '카드 평가', '마일스톤', '카드 결과', '카드 메뉴', '카드 정보', '카드 출처', '카드 저작자 정보', '시리즈', '에디터 상세 페이지', '탐색', '인기 카드 목록', '과목별 시리즈 목록', '검색', '성취도', '목표달성', '이전 성취도', '프로필', '프로필 수정', '학교 검색', '학년 선택', '과목 선택', 'profile.subject_detail', '즐겨찾기 카드', '완료한 카드', '설정', '이메일 변경 modal', '이름 변경', '비밀번호 변경', '추천카드 알람', '알람 시간', '다운로드된 카드', '공지사항', '고객지원', '탈퇴', '구독정보', '학부모 대시보드', '자녀 설정', '자녀 성취도', '부모 설정', 'parent_settings.invite_child', '부모 계정 설정', '플랜 선택', '결제 정보', '결제 정보 수정', '구독 해지', '환불 신청', '결제 완료', '구독할 자녀 선택', 'payment.detail', '없음'];
     vm.availableRates = ['All', -1,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5];
+    vm.availableCategories = ['All', 'login', 'today', 'card', 'share', 'explore', 'settings', 'parent_management', 'student_request', 'invite_web', 'payment_web'];
+    vm.availableActions = ['All', 'classting_login', 'naver_login', 'join_classting', 'signup', 'logout', 'download', 'download_cancel', 'start_streaming', 'start_download', 'start', 'reset', 'view_again', 'continue', 'bookmark', 'bookmark_cancel', 'report_content', 'report_content_complete', 'complete', 'rate_card', 'end_card', 'start_subscription_ad', 'share_milestone', 'share_result', 'add_subject', 'delete_downloads', 'view_performance', 'unregister_child', 'parent_send_invite', 'parent_trail', 'student_send_invite', 'student_request_payment', 'student_start_subscription', 'accept_invitation_from_parent', 'accept_invitation_from_student', 'select_plan_complete', 'payment_info_complete', 'payment_info_confirm', 'change_plan', 'stop_subscription', 'refund_downgrade_plan', 'refund', 'change_payment_info'];
     vm.availableCountRows = ['yes', 'no'];
     vm.availableChartTypes = ['line', 'area', 'bar', 'column', 'pie', 'scatter', 'table'];
     vm.availableGroupBys = {

@@ -19,7 +19,6 @@
       'daily',
       'weekly',
       'monthly',
-      'yearly'
     ];
     vm.availableRoles = [
       'student',
@@ -143,7 +142,12 @@
     }
     function createEmptyData(selectedRange) {
       var range;
-      var startDateCopy = new Date(vm.basicToStandardDataForLineChart.data[0][0]);
+      var startDateCopy;
+      if (vm.basicToStandardDataForLineChart.data.length === 0) {
+        startDateCopy = new Date();
+      } else {
+        startDateCopy = new Date(vm.basicToStandardDataForLineChart.data[0][0]);
+      }
       var flag = false;
       vm.reversedData = [];
       if (selectedRange === 'daily') {

@@ -20,15 +20,21 @@
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
         result.data.hits.hits.forEach(function (row) {
-          if (row._source.event === '_null') {
-            newContainer.push(row._source.user_id);
-          } else if (row._source.event === 'stop') {
-            stopContainer.push(row._source.user_id);
-          } else {
-            refundContainer.push(row._source.user_id);
+          if (row._source.event === '_null' && checkTestId(row._source.user_id) === false) {
+            if (newContainer.indexOf(row._source.user_id) === -1) {
+              newContainer.push(row._source.user_id);
+            }
+          } else if (row._source.event === 'stop' && checkTestId(row._source.user_id) === false) {
+            if (stopContainer.indexOf(row._source.user_id) === -1) {
+              stopContainer.push(row._source.user_id);
+            }
+          } else if (row._source.event === 'refund' && checkTestId(row._source.user_id) === false) {
+            if (refundContainer.indexOf(row._source.user_id) === -1 && checkTestId(row._source.user_id) === false) {
+              refundContainer.push(row._source.user_id);
+            }
           }
         });
-        newContainer = compareData(newContainer, stopContainer);
+        newContainer = compareData(newContainer, refundContainer);
         deferred.resolve({ status: result.status, date:selectedDate, newUser: newContainer, stopUser:stopContainer, refundUser:refundContainer });
       }, deferred.reject);
       return deferred.promise;
@@ -39,7 +45,7 @@
       var startDate = dateMonthSet(1, selectedDate)[0];
       var endDate = dateMonthSet(1, selectedDate)[1];
       var query = createQueryString('continue', startDate, endDate, selectedDevice);
-      var stopUser = [],
+      var stopRefundUser = [],
           continueContainer = [];
       $http({
         url: APP_CONFIG.ELASTIC_SEARCH_SQL + '?sql=' + query,
@@ -47,13 +53,17 @@
         headers: { 'Content-Type': undefined }
       }).then(function (result) {
         result.data.hits.hits.forEach(function (row) {
-          if (row._source.event === '_null') {
-            continueContainer.push(row._source.user_id);
-          } else {
-            stopUser.push(row._source.user_id);
+          if (row._source.event === '_null' && checkTestId(row._source.user_id) === false) {
+            if (continueContainer.indexOf(row._source.user_id) === -1) {
+              continueContainer.push(row._source.user_id);
+            }
+          } else if ((row._source.event === 'stop' || row._source.event === 'refund') && checkTestId(row._source.user_id) === false) {
+            if (stopRefundUser.indexOf(row._source.user_id) === -1) {
+              stopRefundUser.push(row._source.user_id);
+            }
           }
         });
-        continueContainer = compareData(continueContainer, stopUser);
+        continueContainer = compareData(continueContainer, stopRefundUser);
         deferred.resolve({ status: result.status, date:selectedDate, continueUser : continueContainer });
       }, deferred.reject);
       return deferred.promise;
@@ -86,9 +96,9 @@
       var startDateStr = getTimeStampFromStr(startDate);
       var endDateStr = getTimeStampFromStr(endDate) + dayInMS;
       if (paymentFilter === 'new') {
-        return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"';
+        return ' AND @timestamp BETWEEN "' + startDateStr + '" AND "' + endDateStr + '"'+' limit 10000';
       } else {
-        return ' AND @timestamp<="' + endDateStr + '"';
+        return ' AND @timestamp<="' + endDateStr + '"' + ' limit 10000';
       }
     }
 
@@ -107,9 +117,9 @@
       return new Date(timestamp).getTime();
     }
     function compareData(firstArray, secondArray) {
-      secondArray.forEach(function (item, idx) {
+      secondArray.forEach(function (item) {
         if (lodash.includes(firstArray, item) === true) {
-          firstArray.splice(idx, 1);
+          firstArray.splice(firstArray.indexOf(item), 1);
         }
       });
       return firstArray;
@@ -120,6 +130,15 @@
 
       return [startDate, endDate];
     }
+    function checkTestId(userId) {
+      var testList = [1520, 1524, 10304, 10320];
+      if (testList.indexOf(userId) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
   }
   MonthlyPayment.$inject = [
     '$http',

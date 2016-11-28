@@ -43,8 +43,10 @@
             MonthlyPayment.getContinueSubscribers(response.date, vm.selectedDeviceFilter).then(function (response) {
               if (response.status === 200) {
                 tmp.continueUser = response.continueUser;
+                console.log(tmp)
                 vm.totalContainer.push(tmp);
                 sortAsc();
+                console.log(vm.totalContainer)
               }
             });
           }
@@ -58,7 +60,7 @@
       var start = new Date(stringToDate(vm.criteriaDate));
 
       while (startMonth <= todayMonth) {
-        var tmp = new Date(start.getFullYear(), start.getMonth() + (todayMonth - startMonth), 1);
+        var tmp = new Date(start.getFullYear(), start.getMonth() + (todayMonth - startMonth), 15);
         vm.dateList.push(tmp);
         startMonth += 1;
       }

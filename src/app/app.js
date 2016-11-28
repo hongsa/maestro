@@ -9,6 +9,7 @@
     'highcharts-ng',
     'ngAnimate',
     'ngLodash',
+    'hc.marked',
     // Common
     'dataDashboard.common',
     // Cumulative-UserData
@@ -48,6 +49,8 @@
     // AARRR Analytics
     'dataDashboard.aarrr',
     // Monthly Payment
-    'dataDashboard.monthlyPayment'
+    'dataDashboard.monthlyPayment',
+    // Change Log
+    'dataDashboard.changeLog'
   ]);
 }());

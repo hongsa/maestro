@@ -259,3 +259,7 @@ hr.default-active {
 .range-text {
   margin-top:10px;
 }
+.change-log {
+  color: #23527c;
+  padding: 15px 0px;
+}

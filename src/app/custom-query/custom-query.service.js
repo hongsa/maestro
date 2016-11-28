@@ -303,7 +303,7 @@
 
     function getRoleFilterClause(roleFilter) {
       if (roleFilter === 'All') {
-        return ' AND (role="parent" OR role="child")';
+        return '';
       } else if (roleFilter === 'child') {
         return ' AND role="child"';
       } else if (roleFilter === 'parent') {

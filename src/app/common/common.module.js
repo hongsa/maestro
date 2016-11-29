@@ -33,6 +33,7 @@
     'dataDashboard.common.filter.subject',
     'dataDashboard.common.filter.pageName',
     'dataDashboard.common.filter.pageName2',
+    'dataDashboard.common.filter.subscribe',
     // Utils
     'dataDashboard.common.utils.LinechartUtils',
     'dataDashboard.common.utils.BarchartUtils',

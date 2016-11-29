@@ -42,16 +42,44 @@
   </tr>
   </thead>
   <tbody>
-  <tr ng-repeat="item in monthlyPaymentVm.totalContainer">
+  <tr ng-repeat="item in monthlyPaymentVm.totalContainer" ng-click="monthlyPaymentVm.selectedData(item)">
     <td class="col-sm-2 text-left">{{item.date | date:'MM'}}&nbsp;월</td>
     <td class="col-sm-2 text-left">{{item.newUser.length | number}}</td>
     <td class="col-sm-2 text-left">{{item.continueUser.length | number}}</td>
     <td class="col-sm-2 text-left">{{item.newUser.length + item.continueUser.length | number}}</td>
     <td class="col-sm-2 text-left">{{item.stopUser.length | number}}</td>
     <td class="col-sm-2 text-left">{{item.refundUser.length | number}}</td>
-
   </tr>
   </tbody>
 </table>
+
+
+
+<div ng-if="monthlyPaymentVm.selectedDetailData.length !== 0">
+  <hr style="border: 1px solid #999;">
+  <h4>{{monthlyPaymentVm.selectedDetailData[0] | date:'MM'}}&nbsp;월 세부내용 (원달러 환율 : 1150 기준)</h4>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+      <th class="col-sm-2 text-left">구독 형태</th>
+      <th class="col-sm-2 text-left">Basic
+      <th class="col-sm-2 text-left">Standard
+      <th class="col-sm-2 text-left">Premium</th>
+      <th class="col-sm-2 text-left">Sales</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in monthlyPaymentVm.selectedDetailData" ng-if="$index >= 1">
+      <td class="col-sm-2 text-left">{{item.type | subscribe}}</td>
+      <td class="col-sm-2 text-left">{{item.basic | number}}</td>
+      <td class="col-sm-2 text-left">{{item.standard | number}}</td>
+      <td class="col-sm-2 text-left">{{item.premium| number}}</td>
+      <td class="col-sm-2 text-left">{{item.sales| number}}&nbsp;원</td>
+    </tr>
+    </tbody>
+  </table>
+  <h4 class="text-right">합계 {{monthlyPaymentVm.totalSales | number}}&nbsp;원</h4>
+
+</div>
 
 

@@ -21,16 +21,31 @@
       }).then(function (result) {
         result.data.hits.hits.forEach(function (row) {
           if (row._source.event === '_null' && checkTestId(row._source.user_id) === false) {
-            if (newContainer.indexOf(row._source.user_id) === -1) {
-              newContainer.push(row._source.user_id);
+            if (lodash.includes(lodash.flatten(newContainer, true), row._source.user_id) === false) {
+              newContainer.push([
+                row._source.user_id,
+                row._source.change_payment_plan,
+                row._source.original_price,
+                row._source.payment_method
+              ]);
             }
           } else if (row._source.event === 'stop' && checkTestId(row._source.user_id) === false) {
-            if (stopContainer.indexOf(row._source.user_id) === -1) {
-              stopContainer.push(row._source.user_id);
+            if (lodash.includes(lodash.flatten(stopContainer, true), row._source.user_id) === false) {
+              stopContainer.push([
+                row._source.user_id,
+                row._source.now_payment_plan,
+                row._source.original_price,
+                row._source.payment_method
+              ]);
             }
           } else if (row._source.event === 'refund' && checkTestId(row._source.user_id) === false) {
-            if (refundContainer.indexOf(row._source.user_id) === -1 && checkTestId(row._source.user_id) === false) {
-              refundContainer.push(row._source.user_id);
+            if (lodash.includes(lodash.flatten(refundContainer, true), row._source.user_id) === false) {
+              refundContainer.push([
+                row._source.user_id,
+                row._source.now_payment_plan,
+                row._source.original_price,
+                row._source.payment_method
+              ]);
             }
           }
         });
@@ -54,12 +69,22 @@
       }).then(function (result) {
         result.data.hits.hits.forEach(function (row) {
           if (row._source.event === '_null' && checkTestId(row._source.user_id) === false) {
-            if (continueContainer.indexOf(row._source.user_id) === -1) {
-              continueContainer.push(row._source.user_id);
+            if (lodash.includes(lodash.flatten(continueContainer, true), row._source.user_id) === false) {
+              continueContainer.push([
+                row._source.user_id,
+                row._source.change_payment_plan,
+                row._source.original_price,
+                row._source.payment_method
+              ]);
             }
           } else if ((row._source.event === 'stop' || row._source.event === 'refund') && checkTestId(row._source.user_id) === false) {
-            if (stopRefundUser.indexOf(row._source.user_id) === -1) {
-              stopRefundUser.push(row._source.user_id);
+            if (lodash.includes(lodash.flatten(stopRefundUser, true), row._source.user_id) === false) {
+              stopRefundUser.push([
+                row._source.user_id,
+                row._source.now_payment_plan,
+                row._source.original_price,
+                row._source.payment_method
+              ]);
             }
           }
         });
@@ -117,12 +142,25 @@
       return new Date(timestamp).getTime();
     }
     function compareData(firstArray, secondArray) {
+      var tmpList = [];
+      var deleteList = [];
+      firstArray.forEach(function (item) {
+        tmpList.push(parseInt(item[0]));
+      });
+
       secondArray.forEach(function (item) {
-        if (lodash.includes(firstArray, item) === true) {
-          firstArray.splice(firstArray.indexOf(item), 1);
+        if (lodash.includes(tmpList, item[0]) === true) {
+          deleteList.push(parseInt(item[0]));
         }
       });
-      return firstArray;
+
+      var result = lodash.remove(firstArray, function(n) {
+         if (lodash.includes(deleteList, n[0]) === false) {
+           return n;
+         }
+      });
+
+      return result;
     }
     function dateMonthSet(number, date) {
       var startDate = new Date(date.getFullYear(), date.getMonth()- number, 1),

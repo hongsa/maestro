@@ -71,9 +71,9 @@
     <tbody>
     <tr ng-repeat="item in monthlyPaymentVm.selectedDetailData" ng-if="$index >= 1">
       <td class="col-sm-2 text-left">{{item.type | subscribe}}</td>
-      <td class="col-sm-2 text-left">{{item.basic | number}}</td>
-      <td class="col-sm-2 text-left">{{item.standard | number}}</td>
-      <td class="col-sm-2 text-left">{{item.premium| number}}</td>
+      <td class="col-sm-2 text-left">{{item.basic[0] | number}} <br>{{item.basic[1]}}</td>
+      <td class="col-sm-2 text-left">{{item.standard[0] | number}} <br> {{item.standard[1]}}</td>
+      <td class="col-sm-2 text-left">{{item.premium[0] | number}} <br> {{item.premium[1]}}</td>
       <td class="col-sm-2 text-left">{{item.sales| number}}&nbsp;원</td>
     </tr>
     </tbody>

@@ -68,19 +68,22 @@
         if (key === 'newUser' || key === 'continueUser' || key === 'stopUser' || key === 'refundUser') {
           var tmp = {};
           tmp.type = key;
-          tmp.basic = 0;
-          tmp.standard = 0;
-          tmp.premium = 0;
+          tmp.basic = [0, []];
+          tmp.standard = [0, []];
+          tmp.premium = [0, []];
           tmp.sales = 0;
           value.forEach(function(item) {
             if (item[1] === 'basic') {
-              tmp.basic += 1;
+              tmp.basic[0] += 1;
+              tmp.basic[1].push(item[0]);
               tmp.sales += checkDollar(item[2]);
             } else if (item[1] === 'standard') {
-              tmp.standard += 1;
+              tmp.standard[0] += 1;
+              tmp.standard[1].push(item[0]);
               tmp.sales += checkDollar(item[2]);
             } else if (item[1] === 'premium') {
-              tmp.premium += 1;
+              tmp.premium[0] += 1;
+              tmp.premium[1].push(item[0]);
               tmp.sales += checkDollar(item[2]);
             }
           });

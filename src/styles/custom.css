@@ -1,0 +1,53 @@
+.bar-gauge {
+    width: 100%;
+    height: 30px;
+    margin: 10px;
+    /*border: 1px solid #aaa;*/
+    /*background-color: #f3f3f3;*/
+}
+.gauge-fill1 {
+    background-color: purple;
+    width: 0%;
+    height: 100%;
+    padding: 0px;
+}
+
+.gauge-fill2 {
+    background-color: green;
+    width: 0%;
+    height: 100%;
+    padding: 0px;
+}
+.gauge-fill3 {
+    background-color: tomato;
+    width: 0%;
+    height: 100%;
+    padding: 0px;
+}
+
+.gauge-fill4 {
+    background-color: blue;
+    width: 0%;
+    height: 100%;
+    padding: 0px;
+}
+.gauge-fill5 {
+    background-color: red;
+    width: 0%;
+    height: 100%;
+    padding: 0px;
+}
+
+.gauge-text {
+    color: white;
+    font-size: 9px;
+}
+.select-role {
+    border-radius: 100px !important;
+    cursor:pointer;
+}
+
+.select-role:hover {
+    color: white;
+    background-color: dimgrey;
+}

@@ -68,5 +68,5 @@
     };
   }
 
-  angular.module('dataDashboard.common.filter.grade', []).filter('grade', gradeFilter);
+  angular.module('maestro.common.filter.grade', []).filter('grade', gradeFilter);
 }());

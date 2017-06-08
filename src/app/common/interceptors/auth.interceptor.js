@@ -47,5 +47,5 @@
     '$q',
     '$injector'
   ];
-  angular.module('dataDashboard.common.interceptor.AuthInterceptor', []).factory('AuthInterceptor', AuthInterceptor);
+  angular.module('maestro.common.interceptor.AuthInterceptor', []).factory('AuthInterceptor', AuthInterceptor);
 }());

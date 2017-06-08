@@ -1,0 +1,10 @@
+.vis-tooltip-box {
+  width: 400px;
+  margin-bottom: 0px;
+}
+
+.vis-tooltip-box>div {
+  white-space: normal;
+  line-height: 22px;
+  font-size: 13px;
+}

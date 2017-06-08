@@ -7,5 +7,5 @@
     '$state',
     '$location'
   ];
-  angular.module('dataDashboard.common.run.RouterPermissionRun', []).run(RouterPermissionRun);
+  angular.module('maestro.common.run.RouterPermissionRun', []).run(RouterPermissionRun);
 }());

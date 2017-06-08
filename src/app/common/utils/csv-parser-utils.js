@@ -157,5 +157,5 @@
     }
   }
   CSVparserUtils.$inject = ['$filter'];
-  angular.module('dataDashboard.common.utils.CSVparserUtils', []).factory('CSVparserUtils', CSVparserUtils);
+  angular.module('maestro.common.utils.CSVparserUtils', []).factory('CSVparserUtils', CSVparserUtils);
 }());

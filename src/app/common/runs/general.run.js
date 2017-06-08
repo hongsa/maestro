@@ -15,5 +15,5 @@
     '$http',
     'APP_CONFIG'
   ];
-  angular.module('dataDashboard.common.run.FetchUserFromLocalStorageRun', []).run(FetchUserFromLocalStorageRun);
+  angular.module('maestro.common.run.FetchUserFromLocalStorageRun', []).run(FetchUserFromLocalStorageRun);
 }());

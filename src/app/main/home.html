@@ -1,63 +1,219 @@
-<div class="row">
-  <div class="col-sm-12">
-    <h1 class="page-header">Dashboard</h1>
+<div class="wrapper">
+
+  <!--=== Profile ===-->
+  <div class="container content profile">
+    <div class="row">
+      <!--Left Sidebar-->
+
+      <div class="col-md-3 md-margin-bottom-40">
+        <button class="btn btn-default" ng-click="mainVm.selectUser(9833, 4, '조하늘','a')">조하늘</button>
+        <button class="btn btn-default" ng-click="mainVm.selectUser(4469, 6, '양찬우','b')">양찬우</button>
+        <button class="btn btn-default" ng-click="mainVm.selectUser(1150, 4, '시진이','c')">시진이</button>
+        <button class="btn btn-default" ng-click="mainVm.selectUser(6623, 4, '박근혜','a')">박근혜</button>
+
+        <img class="img-responsive profile-img margin-bottom-20" src="images/{{mainVm.selectedImg}}.png" alt=""
+             style="display: block;margin-left: auto;margin-right: auto; margin-top: 15px;">
+        <h4 class="text-center">{{mainVm.selectedStudent}}</h4>
+        <ul class="list-group sidebar-nav-v1 margin-bottom-40" id="sidebar-nav-1">
+          <li class="list-group-item">
+            <a href="" ng-click="mainVm.selectTab(0)" ng-if="mainVm.selectedTab !== 0"><i class="fa fa-meh-o"></i>
+              요약</a>
+            <a href="" ng-click="mainVm.selectTab(0)" ng-if="mainVm.selectedTab === 0"
+               style="background-color: #717984; color:white;"><i class="fa fa-meh-o"></i>요약</a>
+          </li>
+          <li class="list-group-item">
+            <a href="" ng-click="mainVm.selectTab(1)" ng-if="mainVm.selectedTab !== 1"><i class="fa fa-bolt"></i>개념</a>
+            <a href="" ng-click="mainVm.selectTab(1)" ng-if="mainVm.selectedTab === 1"
+               style="background-color: #717984; color:white;"><i class="fa fa-bolt"></i>개념</a>
+          </li>
+          <li class="list-group-item">
+            <a href="" ng-click="mainVm.selectTab(2)" ng-if="mainVm.selectedTab !== 2"><i class="fa fa-bar-chart-o"></i>활동</a>
+            <a href="" ng-click="mainVm.selectTab(2)" ng-if="mainVm.selectedTab === 2"
+               style="background-color: #717984;color:white; "><i class="fa fa-bar-chart-o"></i>활동</a>
+          </li>
+          <li class="list-group-item">
+            <a href="http://192.168.0.62:8000/" target="_blank" style="text-decoration: none;color: black;">
+              <i class="fa fa-sitemap"></i>트리맵</a>
+          </li>
+
+        </ul>
+      </div>
+      <!--End Left Sidebar-->
+      <div class="col-md-9" ng-if="mainVm.selectedTab === 0">
+        <div class="panel-heading">
+          <h2 class="panel-title heading-sm pull-left">공부시간 분포도</h2>
+          <highchart id="activity-barchart" config="mainVm.activityBarChartConfig"></highchart>
+        </div>
+      </div>
+      <div class="col-md-9" ng-if="mainVm.selectedTab === 1">
+        <div class="panel-heading">
+          <h2 class="panel-title heading-sm pull-left">개념별 공부시간 점유율</h2>
+          <highchart id="skill-duration-piechart" config="mainVm.skillDurationPieChartConfig"></highchart>
+        </div>
+      </div>
+
+      <div class="col-md-9" ng-if="mainVm.selectedTab === 2">
+        <div class="panel-heading overflow-h">
+          <h2 class="panel-title heading-sm pull-left">일별 공부시간</h2>
+          <highchart config="mainVm.durationBarChartConfig"></highchart>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="row" ng-if="mainVm.selectedTab === 0">
+      <!--<h3 class="text-center">요약</h3>-->
+      <hr>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="panel-heading">
+            <h2 class="panel-title heading-sm pull-left">과제물</h2>
+            <highchart id="assign-piechart" config="mainVm.assignmentPieChartConfig"></highchart>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="panel-heading">
+            <h2 class="panel-title heading-sm pull-left">개념 숙련도</h2>
+            <highchart id="skill-piechart" config="mainVm.skillsPieChartConfig"></highchart>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="panel-heading">
+            <h2 class="panel-title heading-sm pull-left">공부시간 점유율</h2>
+            <highchart id="activity-piechart" config="mainVm.activityPieChartConfig"></highchart>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <!--<div class="row">-->
+      <!--<div class="panel-heading">-->
+      <!--<h2 class="panel-title heading-sm pull-left">공부시간 분포도</h2>-->
+      <!--<highchart id="activity-barchart" config="mainVm.activityBarChartConfig"></highchart>-->
+      <!--</div>-->
+      <!--</div>-->
+    </div>
+
+    <div class="row" ng-if="mainVm.selectedTab === 1">
+      <hr>
+      <!--Table Search v1-->
+      <!--<div class="panel-heading">-->
+      <!--<h2 class="panel-title heading-sm pull-left">개념별 공부시간 점유율</h2>-->
+      <!--<highchart id="skill-duration-piechart" config="mainVm.skillDurationPieChartConfig"></highchart>-->
+      <!--</div>-->
+      <div class="table-search-v1 margin-bottom-20">
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+              <th class="col-sm-1 text-center">개념명</th>
+              <th class="col-sm-5 text-center">설명</th>
+              <th class="col-sm-1 text-center">성취도</th>
+              <th class="col-sm-1 text-center">카드찾기</th>
+              <th class="col-sm-3 text-center">세부 성취도</th>
+              <th class="col-sm-1 text-center">총 소요 시간</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(key, value) in mainVm.skillsDetailData">
+              <td>
+                <span>{{value.name}}</span>
+              </td>
+              <td>
+                <span>{{value.description}}</span>
+              </td>
+              <td class="text-center">
+                <div class="">
+                  <!--<span class="list-group-item"><i class="fa fa-user" aria-hidden="true"></i>-->
+
+                  <span class="text-center" ng-style="mainVm.getAchievementColor(value.totalAchievement)">{{value.totalAchievement | achievement}}<br>
+                  <a href="" target="_blank" ui-sref="unitTree({ node: value.name })">
+                    <i class="fa fa-sitemap fa-fw fa-2x" aria-hidden="true"></i>
+                  </a>
+                  </span>
+                  <!--</span>-->
+                  <!--<a class="list-group-item" ui-sref="unitTree({ node: value.name })" target="_blank">-->
+                  <!--</a>-->
+                </div>
+              </td>
+              <td class="text-center">
+                <a ng-click="mainVm.goFindContent(value.name)"
+                   ng-if="value.totalAchievement <= 60"><i class="fa fa-pencil-square-o fa-fw fa-2x" aria-hidden="true" style="cursor:pointer;"></i></a>
+                <a ng-if="value.totalAchievement > 60" style="color: lightgrey;cursor: default;"><i class="fa fa-pencil-square-o fa-fw fa-2x" aria-hidden="true"></i></a>
+              </td>
+              <td>
+                <div class="row bar-gauge text-center">
+                  <div class="col-sm-2 gauge-fill1"
+                       ng-style="mainVm.getCardColor(value.achievement[0], value.achievement[5])"><span
+                      class="gauge-text">{{value.achievement[0] / value.achievement[5] | cardDetail}}%</span></div>
+                  <div class="col-sm-2 gauge-fill2"
+                       ng-style="mainVm.getCardColor(value.achievement[1], value.achievement[5])"><span
+                      class="gauge-text">{{value.achievement[1] / value.achievement[5] | cardDetail}}%</span></div>
+                  <div class="col-sm-2 gauge-fill3"
+                       ng-style="mainVm.getCardColor(value.achievement[2], value.achievement[5])"><span
+                      class="gauge-text">{{value.achievement[2] / value.achievement[5] | cardDetail}}%</span></div>
+                  <div class="col-sm-2 gauge-fill4"
+                       ng-style="mainVm.getCardColor(value.achievement[3], value.achievement[5])"><span
+                      class="gauge-text">{{value.achievement[3] / value.achievement[5] | cardDetail}}%</span></div>
+                  <div class="col-sm-2 gauge-fill5"
+                       ng-style="mainVm.getCardColor(value.achievement[4], value.achievement[5])"><span
+                      class="gauge-text">{{value.achievement[4] / value.achievement[5] | cardDetail}}%</span></div>
+                </div>
+                <div style="margin:10px;">{{value.achievement[5]}} 개 카드완료</div>
+              </td>
+
+              <!--<td>-->
+              <!--<button class="btn-u btn-block btn-u-aqua btn-u-xs"><i class="fa fa-level-down margin-right-5"></i>-->
+              <!--Low-->
+              <!--</button>-->
+              <!--</td>-->
+              <td>
+                <span>{{value.totalDuration | duration}}</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--End Table Search v1-->
+      <!-- End Profile Content -->
+    </div>
+
+    <div class="row" ng-if="mainVm.selectedTab === 2">
+      <!--<h3 class="text-center">활동</h3>-->
+      <hr>
+      <div class="row sm-margin-bottom-20">
+        <div class="service-block-v3 service-block-u">
+          <div class="row margin-bottom-20">
+            <div class="col-xs-4 service-in">
+              <i class="fa fa-check-square" aria-hidden="true"></i>
+              <small>만점 카드</small>
+              <h4 class="counter">{{mainVm.milestoneList[0]}}</h4>
+            </div>
+            <div class="col-xs-4 service-in">
+              <i class="fa fa-check-square" aria-hidden="true"></i>
+              <small>완료 카드</small>
+              <h4 class="counter">{{mainVm.milestoneList[1]}}</h4>
+            </div>
+            <div class="col-xs-4 service-in">
+              <i class="fa fa-check-square" aria-hidden="true"></i>
+              <small>문제 연속 맞추기</small>
+              <h4 class="counter">{{mainVm.milestoneList[2]}}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<br>-->
+      <!--<div class="row">-->
+      <!--<div class="panel-heading overflow-h">-->
+      <!--<h2 class="panel-title heading-sm pull-left">일별 공부시간</h2>-->
+      <!--<highchart id="linechart" config="mainVm.durationBarChartConfig"></highchart>-->
+      <!--</div>-->
+      <!--</div>-->
+    </div>
+
+
   </div>
 </div>
-<div class="row">
-  <div class="col-sm-4">
-    <div class="panel panel-primary">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>New Members (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="panel panel-yellow">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>New Downloads (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="panel panel-red">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>Visits (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-4">
-    <div class="panel panel-green">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>New Classes (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="panel panel-light-blue">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>New Posts (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-    <div class="panel panel-purple">
-      <div class="panel-heading text-center dashboard-main-panel">
-        <h1 class="huge">100</h1>
-        <h4>Active Users (Not Applied Yet)</h4>
-        <h6>in last 24 hours</h6>
-      </div>
-    </div>
-  </div>
-</div>
+</div><!--/container-->
+<!--=== End Profile ===-->

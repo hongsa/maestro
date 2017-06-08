@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   function MainConfig($urlRouterProvider) {
-    $urlRouterProvider.otherwise('/dashboard/home');
+    $urlRouterProvider.otherwise('/');
   }
   MainConfig.$inject = ['$urlRouterProvider'];
-  angular.module('dataDashboard.common.config.MainConfig', []).config(MainConfig);
+  angular.module('maestro.common.config.MainConfig', []).config(MainConfig);
 }());

@@ -4,5 +4,5 @@
     $httpProvider.interceptors.push('AuthInterceptor');
   }
   HTTPInterceptorsConfig.$inject = ['$httpProvider'];
-  angular.module('dataDashboard.common.config.HTTPInterceptorsConfig', []).config(HTTPInterceptorsConfig);
+  angular.module('maestro.common.config.HTTPInterceptorsConfig', []).config(HTTPInterceptorsConfig);
 }());

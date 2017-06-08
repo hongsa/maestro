@@ -33,5 +33,5 @@
       bindToController: true
     };
   }
-  angular.module('dataDashboard.common.directive.sidebarDirective', []).directive('sidebar', sidebarDirective);
+  angular.module('maestro.common.directive.sidebarDirective', []).directive('sidebar', sidebarDirective);
 }());

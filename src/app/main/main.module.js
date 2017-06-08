@@ -1,10 +1,19 @@
 (function () {
   'use strict';
-  angular.module('dataDashboard.main', [
+  angular.module('maestro.main', [
     // Controllers
-    'dataDashboard.main.controller.MainController',
+    'maestro.main.controller.MainController',
+    'maestro.main.controller.SkillDetailController',
+    'maestro.main.controller.FindContentController',
+    // Services
+    'maestro.main.service.Main',
+    'maestro.main.service.SkillDetail',
+    'maestro.main.service.FindContent',
     // Router
-    'dataDashboard.main.MainRouter',
-    'dataDashboard.main.HomeRouter'
+    'maestro.main.MainRouter',
+    'maestro.main.HomeRouter',
+    // Factory
+    'maestro.main.factory.SkillDetailFactory',
+    'maestro.main.factory.FindContentFactory'
   ]);
 }());

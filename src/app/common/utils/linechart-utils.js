@@ -132,5 +132,5 @@
     }
   }
   LinechartUtils.$inject = ['APP_CONFIG'];
-  angular.module('dataDashboard.common.utils.LinechartUtils', []).factory('LinechartUtils', LinechartUtils);
+  angular.module('maestro.common.utils.LinechartUtils', []).factory('LinechartUtils', LinechartUtils);
 }());

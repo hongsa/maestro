@@ -17,7 +17,7 @@
   /**
      * Config
      */
-  var moduleName = 'dataDashboard.common.directive.dirPagination';
+  var moduleName = 'maestro.common.directive.dirPagination';
   var DEFAULT_ID = '__default';
   /**
      * Module

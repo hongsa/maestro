@@ -8,5 +8,5 @@
       });
     }
   }
-  angular.module('dataDashboard.common.utils.CommonUtils', []).factory('CommonUtils', CommonUtils);
+  angular.module('maestro.common.utils.CommonUtils', []).factory('CommonUtils', CommonUtils);
 }());

@@ -7,5 +7,5 @@
       replace: true
     };
   }
-  angular.module('dataDashboard.common.directive.headerDirective', []).directive('header', headerDirective);
+  angular.module('maestro.common.directive.headerDirective', []).directive('header', headerDirective);
 }());

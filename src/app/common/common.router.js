@@ -28,5 +28,5 @@
     });
   }
   CommonRouter.$inject = ['$stateProvider'];
-  angular.module('dataDashboard.common.CommonRouter', []).config(CommonRouter);
+  angular.module('maestro.common.CommonRouter', []).config(CommonRouter);
 }());

@@ -16,5 +16,5 @@
       }
     };
   }
-  angular.module('dataDashboard.common.filter.device', []).filter('device', deviceFilter);
+  angular.module('maestro.common.filter.device', []).filter('device', deviceFilter);
 }());

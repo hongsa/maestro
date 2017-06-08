@@ -8,5 +8,5 @@
       });
     };
   }
-  angular.module('dataDashboard.common.filter.titleCase', []).filter('titleCase', titleCaseFilter);
+  angular.module('maestro.common.filter.titleCase', []).filter('titleCase', titleCaseFilter);
 }());

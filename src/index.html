@@ -2,13 +2,14 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Learning Card Data</title>
+    <title>Maestro</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel='stylesheet' href='bower_components/vis/dist/vis.min.css'>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -16,11 +17,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.3/css/flag-icon.min.css" type="text/css">
 
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/sb-admin-2.css">
-    <link rel="stylesheet" href="styles/timeline.css">
     <link rel="stylesheet" href="styles/loading-bar.css">
-    <link rel="stylesheet" href="bower_components/metisMenu/dist/metisMenu.min.css">
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/blocks.css">
+
+
+    <!-- CSS Header and Footer -->
+    <link rel="stylesheet" href="styles/headers/header-default.css">
+    <link rel="stylesheet" href="styles/footers/footer-v1.css">
+
+    <!-- CSS Implementing Plugins -->
+    <!--<link rel="stylesheet" href="styles/plugins/animate.css">-->
+    <!--<link rel="stylesheet" href="styles/plugins/line-icons/line-icons.css">-->
+    <!--<link rel="stylesheet" href="styles/plugins/font-awesome/css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" href="styles/plugins/scrollbar/css/jquery.mCustomScrollbar.css">-->
+    <!--<link rel="stylesheet" href="styles/plugins/sky-forms-pro/skyforms/css/sky-forms.css">-->
+    <!--<link rel="stylesheet" href="styles/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">-->
+
+    <link rel="stylesheet" href="styles/profile.css">
+    <!-- CSS Theme -->
+    <link rel="stylesheet" href="styles/theme-colors/default.css" id="style_color">
+    <link rel="stylesheet" href="styles/theme-skins/dark.css">
+
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="styles/custom.css">
+    <link rel="stylesheet" href="styles/unit-tree.css">
+
+
     <!-- endbuild -->
 
     <!-- build:js(.) app/vendor-main.js -->
@@ -37,10 +62,8 @@
 
     <script src="http://code.highcharts.com/highcharts.src.js"></script>
     <script src="http://code.highcharts.com/modules/heatmap.js"></script>
-    <!--<script src="https://code.highcharts.com/modules/data.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.15.min.js"></script>
-    <!--<script src="http://code.highcharts.com/mapdata/custom/world.js"></script>-->
 
     <!-- build:js(.) app/vendor-modules.js -->
     <!-- bower:js -->
@@ -57,18 +80,19 @@
     <script src="bower_components/jspdf-autotable/dist/jspdf.plugin.autotable.js"></script>
     <script src="bower_components/angular-marked/dist/angular-marked.js"></script>
     <script src="bower_components/marked/lib/marked.js"></script>
+    <script src='bower_components/vis/dist/vis.min.js'></script>
+    <script src='bower_components/angular-visjs/angular-vis.js'></script>
     <!-- endbower -->
     <!-- endbuild -->
 
   </head>
   <body>
-    <div ng-app="dataDashboard">
+    <div ng-app="maestro">
       <div ui-view></div>
     </div>
 
     <!-- build:js(.tmp) app/app.js -->
     <script src="app/app.js"></script>
-    <script src="app/sb-admin-2.js"></script>
     <!-- include: "type": "js", "files": ["app/**/*.js", "app/**/*.*.js"] -->
     <!-- endbuild -->
 
@@ -88,133 +112,44 @@
     <script src="app/common/runs/router-permission.run.js"></script>
     <script src="app/common/filters/percentage.filter.js"></script>
     <script src="app/common/filters/title-case.filter.js"></script>
-    <script src="app/common/filters/country-code.filter.js"></script>
-    <script src="app/common/filters/language-code.filter.js"></script>
     <script src="app/common/filters/device.filter.js"></script>
     <script src="app/common/filters/month.filter.js"></script>
-    <script src="app/common/filters/publisher.filter.js"></script>
-    <script src="app/common/filters/series.filter.js"></script>
     <script src="app/common/filters/grade.filter.js"></script>
-    <script src="app/common/filters/price.filter.js"></script>
     <script src="app/common/filters/subject.filter.js"></script>
-    <script src="app/common/filters/page.filter.js"></script>
-    <script src="app/common/filters/page2.filter.js"></script>
-    <script src="app/common/filters/subscribe.filter.js"></script>
+    <script src="app/common/filters/achievement.filter.js"></script>
+    <script src="app/common/filters/duration.filter.js"></script>
+    <script src="app/common/filters/card-detail.filter.js"></script>
     <script src="app/common/utils/linechart-utils.js"></script>
     <script src="app/common/utils/barchart-utils.js"></script>
     <script src="app/common/utils/piechart-utils.js"></script>
     <script src="app/common/utils/csv-parser-utils.js"></script>
     <script src="app/common/utils/common-utils.js"></script>
 
-    <script src="app/mobile-store-stats/mobile-store-stats.module.js"></script>
-    <script src="app/mobile-store-stats/mobile-store-stats.service.js"></script>
-    <script src="app/mobile-store-stats/mobile-store-stats.controller.js"></script>
-    <script src="app/mobile-store-stats/mobile-store-stats.router.js"></script>
-    <script src="app/mobile-store-stats/android-daily-device-stats/android-daily-device-stats.controller.js"></script>
-    <script src="app/mobile-store-stats/android-daily-user-stats/android-daily-user-stats.controller.js"></script>
-    <script src="app/mobile-store-stats/android-cumulative-stats/android-cumulative-stats.controller.js"></script>
-    <script src="app/mobile-store-stats/android-language-stats/android-language-stats.controller.js"></script>
-    <script src="app/mobile-store-stats/android-country-stats/android-country-stats.controller.js"></script>
-
-    <script src="app/active-users/active-users.module.js"></script>
-    <script src="app/active-users/active-users.service.js"></script>
-    <script src="app/active-users/active-users.controller.js"></script>
-    <script src="app/active-users/active-users.router.js"></script>
-
-    <script src="app/user-contacts/user-contacts.module.js"></script>
-    <script src="app/user-contacts/user-contacts.service.js"></script>
-    <script src="app/user-contacts/user-contacts.controller.js"></script>
-    <script src="app/user-contacts/user-contacts.router.js"></script>
-
-    <script src="app/cohort-analysis/cohort-analysis.module.js"></script>
-    <script src="app/cohort-analysis/cohort-analysis.dummy.js"></script>
-    <script src="app/cohort-analysis/cohort-analysis.service.js"></script>
-    <script src="app/cohort-analysis/cohort-analysis.controller.js"></script>
-    <script src="app/cohort-analysis/cohort-analysis.router.js"></script>
-
-    <script src="app/user-page-flow/user-page-flow.module.js"></script>
-    <script src="app/user-page-flow/user-page-flow.service.js"></script>
-    <script src="app/user-page-flow/user-page-flow.controller.js"></script>
-    <script src="app/user-page-flow/user-page-flow.router.js"></script>
-
-    <script src="app/custom-query/custom-query.module.js"></script>
-    <script src="app/custom-query/custom-query.service.js"></script>
-    <script src="app/custom-query/custom-query.controller.js"></script>
-    <script src="app/custom-query/custom-query.router.js"></script>
-
-    <script src="app/cumulative-userdata/cumulative-userdata.module.js"></script>
-    <script src="app/cumulative-userdata/cumulative-userdata.service.js"></script>
-    <script src="app/cumulative-userdata/cumulative-userdata.controller.js"></script>
-    <script src="app/cumulative-userdata/cumulative-userdata.router.js"></script>
-
-    <script src="app/subscribe-userdata/subscribe-userdata.module.js"></script>
-    <script src="app/subscribe-userdata/subscribe-userdata.service.js"></script>
-    <script src="app/subscribe-userdata/subscribe-userdata.controller.js"></script>
-    <script src="app/subscribe-userdata/subscribe-userdata.router.js"></script>
-
-    <script src="app/cancel-userdata/cancel-userdata.module.js"></script>
-    <script src="app/cancel-userdata/cancel-userdata.service.js"></script>
-    <script src="app/cancel-userdata/cancel-userdata.controller.js"></script>
-    <script src="app/cancel-userdata/cancel-userdata.router.js"></script>
-
-    <script src="app/monthly-recurring-revenue/monthly-recurring-revenue.module.js"></script>
-    <script src="app/monthly-recurring-revenue/monthly-recurring-revenue.service.js"></script>
-    <script src="app/monthly-recurring-revenue/monthly-recurring-revenue.controller.js"></script>
-    <script src="app/monthly-recurring-revenue/monthly-recurring-revenue.router.js"></script>
-
     <script src="app/main/main.module.js"></script>
     <script src="app/main/main.controller.js"></script>
+    <script src="app/main/main.service.js"></script>
     <script src="app/main/main.router.js"></script>
     <script src="app/main/home.router.js"></script>
 
-    <script src="app/signin/signin.module.js"></script>
-    <script src="app/signin/signin.service.js"></script>
-    <script src="app/signin/signin.controller.js"></script>
-    <script src="app/signin/signin.router.js"></script>
+    <script src="app/main/skill-detail/skill-detail.controller.js"></script>
+    <script src="app/main/skill-detail/skill-detail.factory.js"></script>
+    <script src="app/main/skill-detail/skill-detail.service.js"></script>
 
-    <script src="app/card-rate/card-rate.module.js"></script>
-    <script src="app/card-rate/card-rate.service.js"></script>
-    <script src="app/card-rate/card-rate.controller.js"></script>
-    <script src="app/card-rate/card-rate.router.js"></script>
+    <script src="app/main/find-content/find-content.controller.js"></script>
+    <script src="app/main/find-content/find-content.factory.js"></script>
+    <script src="app/main/find-content/find-content.service.js"></script>
 
-    <script src="app/card-rate/rate-modal/rate-modal.service.js"></script>
-    <script src="app/card-rate/rate-modal/rate-modal.factory.js"></script>
-    <script src="app/card-rate/rate-modal/rate-modal.controller.js"></script>
+    <script src="app/kmap/kmap.module.js"></script>
+    <script src="app/kmap/kmap.router.js"></script>
 
-    <script src="app/downloaded-card/downloaded-card.module.js"></script>
-    <script src="app/downloaded-card/downloaded-card.service.js"></script>
-    <script src="app/downloaded-card/downloaded-card.controller.js"></script>
-    <script src="app/downloaded-card/downloaded-card.router.js"></script>
+    <script src="app/unit-tree/unit-descriptions.js"></script>
+    <script src="app/unit-tree/unit-tree.controller.js"></script>
+    <script src="app/unit-tree/unit-tree.module.js"></script>
+    <script src="app/unit-tree/unit-tree.router.js"></script>
 
-    <script src="app/upgrade-downgrade/upgrade-downgrade.module.js"></script>
-    <script src="app/upgrade-downgrade/upgrade-downgrade.service.js"></script>
-    <script src="app/upgrade-downgrade/upgrade-downgrade.controller.js"></script>
-    <script src="app/upgrade-downgrade/upgrade-downgrade.router.js"></script>
+    <script src="app/select-role/select-role.router.js"></script>
+    <script src="app/select-role/select-role.module.js"></script>
 
-    <script src="app/publisher-rate/publisher-rate.module.js"></script>
-    <script src="app/publisher-rate/publisher-rate.service.js"></script>
-    <script src="app/publisher-rate/publisher-rate.controller.js"></script>
-    <script src="app/publisher-rate/publisher-rate.router.js"></script>
-
-    <script src="app/preferred-subjects/preferred-subjects.module.js"></script>
-    <script src="app/preferred-subjects/preferred-subjects.service.js"></script>
-    <script src="app/preferred-subjects/preferred-subjects.controller.js"></script>
-    <script src="app/preferred-subjects/preferred-subjects.router.js"></script>
-
-    <script src="app/aarrr/aarrr.module.js"></script>
-    <script src="app/aarrr/aarrr.service.js"></script>
-    <script src="app/aarrr/aarrr.controller.js"></script>
-    <script src="app/aarrr/aarrr.router.js"></script>
-
-    <script src="app/monthly-payment/monthly-payment.module.js"></script>
-    <script src="app/monthly-payment/monthly-payment.service.js"></script>
-    <script src="app/monthly-payment/monthly-payment.controller.js"></script>
-    <script src="app/monthly-payment/monthly-payment.router.js"></script>
-
-    <script src="app/change-log/change-log.module.js"></script>
-    <script src="app/change-log/change-log.service.js"></script>
-    <script src="app/change-log/change-log.controller.js"></script>
-    <script src="app/change-log/change-log.router.js"></script>
 
     <!-- endbuild -->
 

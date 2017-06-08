@@ -19,5 +19,5 @@
       return monthNames[input];
     };
   }
-  angular.module('dataDashboard.common.filter.month', []).filter('month', monthFilter);
+  angular.module('maestro.common.filter.month', []).filter('month', monthFilter);
 }());

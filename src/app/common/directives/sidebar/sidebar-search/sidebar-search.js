@@ -14,5 +14,5 @@
       controllerAs: 'sidebarSearchVm'
     };
   }
-  angular.module('dataDashboard.common.directive.sidebarSearchDirective', []).directive('sidebarSearch', sidebarSearchDirective);
+  angular.module('maestro.common.directive.sidebarSearchDirective', []).directive('sidebarSearch', sidebarSearchDirective);
 }());

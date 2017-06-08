@@ -17,5 +17,5 @@
       controllerAs: 'headerNotificationVm'
     };
   }
-  angular.module('dataDashboard.common.directive.headerNotificationDirective', []).directive('headerNotification', headerNotificationDirective);
+  angular.module('maestro.common.directive.headerNotificationDirective', []).directive('headerNotification', headerNotificationDirective);
 }());

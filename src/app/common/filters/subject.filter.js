@@ -69,5 +69,5 @@
     };
   }
 
-  angular.module('dataDashboard.common.filter.subject', []).filter('subject', subjectFilter);
+  angular.module('maestro.common.filter.subject', []).filter('subject', subjectFilter);
 }());

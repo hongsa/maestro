@@ -8,3 +8,5 @@ bower_components
 .DS_Store
 aws-global.json
 aws-china.json
+dist
+test
